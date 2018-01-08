@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="classpath/core.jar"/>
+	<classpathentry kind="lib" path="classpath/video.jar"/>
+	<classpathentry kind="lib" path="classpath/jogl-all.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/LX"/>
+	<classpathentry kind="lib" path="lib/gson-2.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/coremidi4j-0.9.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
