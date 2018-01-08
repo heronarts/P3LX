@@ -260,7 +260,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
    * Subclasses may optionally override to decrement value in response to arrows.
    * Decrement is invoked for the left or down arrow keys.
    *
-   * @param keyEvent
+   * @param keyEvent Key event in response to
    */
   @Override
   protected void decrementValue(KeyEvent keyEvent) {
@@ -281,7 +281,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
    * Subclasses may optionally override to decrement value in response to arrows.
    * Increment is invoked for the right or up keys.
    *
-   * @param keyEvent
+   * @param keyEvent Key event in response to
    */
   @Override
   protected void incrementValue(KeyEvent keyEvent) {
@@ -361,7 +361,9 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   /**
    * Given a base color for a control, return the color used to display the modulated component of its value.
    * Currently, just dims the base color.
-   * @param baseColor
+   *
+   * @param baseColor Base color to determine modulated color from
+   * @return Color to use for modulated value
    */
    public int getModulatedValueColor(int baseColor) {
     int DIM_AMOUNT = 20;

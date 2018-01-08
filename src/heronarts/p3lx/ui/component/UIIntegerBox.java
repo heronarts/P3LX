@@ -130,7 +130,7 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
   /**
    * Subclasses may override to handle value changes
    *
-   * @param value
+   * @param value New value being set
    */
   protected void onValueChange(int value) {}
 

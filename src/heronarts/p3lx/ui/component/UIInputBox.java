@@ -181,7 +181,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
    * Subclasses may optionally override to decrement value in response to arrows.
    * Decrement is invoked for the left or down arrow keys.
    *
-   * @param keyEvent
+   * @param keyEvent Key event
    */
   protected void decrementValue(KeyEvent keyEvent) {}
 
@@ -189,7 +189,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
    * Subclasses may optionally override to decrement value in response to arrows.
    * Increment is invoked for the right or up keys.
    *
-   * @param keyEvent
+   * @param keyEvent Key event
    */
   protected void incrementValue(KeyEvent keyEvent) {}
 
@@ -240,6 +240,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
   /**
    * Subclasses may optionally implement to change value based upon mouse click+drag in the box.
    *
+   * @param mouseEvent Mouse event
    * @param offset Units of mouse movement, positive or negative
    */
   protected void incrementMouseValue(MouseEvent mouseEvent, int offset) {}

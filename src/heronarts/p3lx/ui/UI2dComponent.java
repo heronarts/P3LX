@@ -235,7 +235,7 @@ public abstract class UI2dComponent extends UIObject {
   /**
    * Sets the width of this component
    *
-   * @param width
+   * @param width Width of the component
    * @return Width of this component
    */
   public UI2dComponent setWidth(float width) {
@@ -496,8 +496,8 @@ public abstract class UI2dComponent extends UIObject {
    * adherence to this offset is not strictly enforced by all subclasses, it is
    * up to them to implement it.
    *
-   * @param textOffsetX
-   * @param textOffsetY
+   * @param textOffsetX Text position x offset
+   * @param textOffsetY Text position y offset
    * @return this
    */
   public UI2dComponent setTextOffset(int textOffsetX, int textOffsetY) {
@@ -514,7 +514,7 @@ public abstract class UI2dComponent extends UIObject {
    *
    * @param horizontalAlignment From PConstants LEFT/RIGHT/CENTER
    * @param verticalAlignment From PConstants TOP/BOTTOM/BASELINE/CENTER
-   * @return
+   * @return this
    */
   public UI2dComponent setTextAlignment(int horizontalAlignment, int verticalAlignment) {
     if (this.textAlignHorizontal != horizontalAlignment ||
@@ -532,7 +532,7 @@ public abstract class UI2dComponent extends UIObject {
    * @param pg PGraphics
    * @param str String
    * @param width Width to fit in
-   * @return
+   * @return Clipped version of the string that will fit in the bounds
    */
   public static String clipTextToWidth(PGraphics pg, String str, float width) {
     while (str.length() > 0 && pg.textWidth(str) > width) {
@@ -544,14 +544,19 @@ public abstract class UI2dComponent extends UIObject {
   /**
    * Sets whether this component can ever be used for mapping control
    *
-   * @param mappable
-   * @return
+   * @param mappable Whether this component is a mappable control
+   * @return this
    */
   public UI2dComponent setMappable(boolean mappable) {
     this.mappable = mappable;
     return this;
   }
 
+  /**
+   * Determines whether component is permitted to be a mappable control
+   *
+   * @return Whether this component is a mappable control
+   */
   protected boolean isMappable() {
     return this.mappable;
   }
@@ -580,7 +585,7 @@ public abstract class UI2dComponent extends UIObject {
   /**
    * Get the parent object that this is in
    *
-   * @return
+   * @return Parent of this component
    */
   @Override
   public UIObject getParent() {
@@ -590,7 +595,7 @@ public abstract class UI2dComponent extends UIObject {
   /**
    * Returns the 2d container that this is in
    *
-   * @return
+   * @return Container of this component
    */
   public UI2dContainer getContainer() {
     return (UI2dContainer) this.parent;
@@ -612,6 +617,7 @@ public abstract class UI2dComponent extends UIObject {
    * other container that is currently holding it.
    *
    * @param container Container to place in
+   * @param index At which index to place this object in parent container
    * @return this
    */
   public UI2dComponent addToContainer(UIContainer container, int index) {

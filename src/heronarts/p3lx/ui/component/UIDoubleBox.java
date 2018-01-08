@@ -159,7 +159,7 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
   /**
    * Invoked when value changes, subclasses may override to handle.
    *
-   * @param value
+   * @param value New value that is being set
    */
   protected /* abstract */ void onValueChange(double value) {}
 

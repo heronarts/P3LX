@@ -518,8 +518,8 @@ public class UI implements LXEngine.Dispatch {
   /**
    * Sets an object to handle top-level input events
    *
-   * @param eventHandler
-   * @return
+   * @param eventHandler Event handler
+   * @return this
    */
   public UI setTopLevelKeyEventHandler(UIEventHandler eventHandler) {
     this.topLevelKeyEventHandler = eventHandler;
@@ -579,8 +579,8 @@ public class UI implements LXEngine.Dispatch {
   /**
    * Sets whether the UI should be resizable.
    *
-   * @param resizable
-   * @return
+   * @param resizable Whether UI is resizable
+   * @return this
    */
   public UI setResizable(boolean resizable) {
     this.applet.getSurface().setResizable(this.resizable = resizable);
@@ -608,8 +608,8 @@ public class UI implements LXEngine.Dispatch {
   /**
    * Add a task to be performed on every loop of the UI engine.
    *
-   * @param loopTask
-   * @return
+   * @param loopTask Task to perform on every UI loop
+   * @return this
    */
   public UI addLoopTask(LXLoopTask loopTask) {
     this.root.addLoopTask(loopTask);
@@ -619,8 +619,8 @@ public class UI implements LXEngine.Dispatch {
   /**
    * Remove a task from the UI engine
    *
-   * @param loopTask
-   * @return
+   * @param loopTask Task to stop performing on every UI loop
+   * @return this
    */
   public UI removeLoopTask(LXLoopTask loopTask) {
     this.root.removeLoopTask(loopTask);

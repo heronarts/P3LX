@@ -92,7 +92,7 @@ public class UITextBox extends UIInputBox {
   /**
    * Subclasses may override to handle value changes
    *
-   * @param value
+   * @param value New value being set
    */
   protected /* abstract */ void onValueChange(String value) {}
 

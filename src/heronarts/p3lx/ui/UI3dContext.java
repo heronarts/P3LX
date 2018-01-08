@@ -471,7 +471,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   /**
    * Sets the cue position index of the camera
    *
-   * @param index
+   * @param index Camera index
    * @return this
    */
   public UI3dContext setCamera(int index) {

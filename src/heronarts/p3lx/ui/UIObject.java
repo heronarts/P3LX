@@ -80,8 +80,8 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   /**
    * Add a task to be performed on every loop of the UI engine.
    *
-   * @param loopTask
-   * @return
+   * @param loopTask Task to be performed on every UI frame
+   * @return this
    */
   protected UIObject addLoopTask(LXLoopTask loopTask) {
     this.loopTasks.add(loopTask);
@@ -91,8 +91,8 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   /**
    * Remove a task from the UI engine
    *
-   * @param loopTask
-   * @return
+   * @param loopTask Task to be removed from work list
+   * @return this
    */
   protected UIObject removeLoopTask(LXLoopTask loopTask) {
     this.loopTasks.remove(loopTask);
@@ -409,8 +409,8 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
    * Subclasses may override this method to perform operations before their
    * onDraw method is called or any children are drawn.
    *
-   * @param ui
-   * @param pg
+   * @param ui UI context
+   * @param pg Graphics context
    */
   protected void beginDraw(UI ui, PGraphics pg) {}
 
@@ -426,8 +426,8 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
    * Subclasses may override this method to perform operations after their onDraw
    * method has been called and after all children have been drawn
    *
-   * @param ui
-   * @param pg
+   * @param ui UI context
+   * @param pg Graphics context
    */
   protected void endDraw(UI ui, PGraphics pg) {}
 
@@ -447,7 +447,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   /**
    * Checks whether key event was already consumed
    *
-   * @return
+   * @return Whether the key event is already handled
    */
   protected boolean keyEventConsumed() {
     return this.keyEventConsumed;
@@ -457,7 +457,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
    * Called in a mouse wheel handler to stop this mouse wheel event from
    * bubbling. Invoked by nested scroll views.
    *
-   * @return
+   * @return this
    */
   protected UIObject consumeMouseWheelEvent() {
     this.mouseWheelEventConsumed = true;

@@ -98,7 +98,7 @@ public interface UIItemList {
     /**
      * Action handler, invoked when an item is renamed. Only applies when setRenamable(true)
      *
-     * @param name
+     * @param name New name for item
      */
     public void onRename(String name);
 
@@ -106,7 +106,7 @@ public interface UIItemList {
      * Action handler, invoked when an item is reordered. Only applies to the item that the action
      * was taken upon, not other items affected by the reordering. Only applies when setReorderable(true)
      *
-     * @param order
+     * @param order New position for item
      */
     public void onReorder(int order);
 
@@ -935,8 +935,8 @@ public interface UIItemList {
    * Sets whether a column of checkboxes should be shown on the item list, to the
    * left of the labels. Useful for a secondary selection state.
    *
-   * @param showCheckboxes
-   * @return
+   * @param showCheckboxes Whether to show checkboxes
+   * @return this
    */
   public UIItemList setShowCheckboxes(boolean showCheckboxes);
 
@@ -944,7 +944,7 @@ public interface UIItemList {
    * Sets whether renaming items is allowed
    *
    * @param isRenamable If items may be renamed
-   * @return
+   * @return this
    */
   public UIItemList setRenamable(boolean isRenamable);
 
@@ -952,7 +952,7 @@ public interface UIItemList {
    * Sets whether the item list is momentary. If so, then clicking on an item
    * or pressing ENTER/SPACE sends a deactivate action after the click ends.
    *
-   * @param momentary
+   * @param momentary Whether items are momentary
    * @return this
    */
   public UIItemList setMomentary(boolean momentary);
@@ -961,7 +961,7 @@ public interface UIItemList {
    * Sets whether the list is reorderable. If so, then pressing the modifier key
    * with the up or down arrows will reorder the items.
    *
-   * @param reorderable
+   * @param reorderable Whether items are reorderable
    * @return this
    */
   public UIItemList setReorderable(boolean reorderable);

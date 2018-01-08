@@ -61,7 +61,7 @@ public abstract class UINumberBox extends UIInputBox {
    * larger jumps, depending on the component.
    *
    * @param shiftMultiplier Amount to multiply by
-   * @return
+   * @return this
    */
   public UINumberBox setShiftMultiplier(float shiftMultiplier) {
     this.hasShiftMultiplier = true;
