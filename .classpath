@@ -5,8 +5,8 @@
 	<classpathentry kind="lib" path="classpath/video.jar"/>
 	<classpathentry kind="lib" path="classpath/jogl-all.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/LX"/>
-	<classpathentry kind="lib" path="lib/gson-2.8.0.jar"/>
-	<classpathentry kind="lib" path="lib/coremidi4j-0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/LX/lib/coremidi4j-0.9.jar"/>
+	<classpathentry kind="lib" path="/LX/lib/gson-2.8.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
