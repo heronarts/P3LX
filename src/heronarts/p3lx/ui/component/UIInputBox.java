@@ -43,6 +43,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
   private static final int TEXT_MARGIN = 2;
 
   protected boolean enabled = true;
+  protected boolean editable = true;
 
   protected boolean editing = false;
   protected String editBuffer = "";
@@ -54,6 +55,8 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
 
   private ProgressIndicator progressMeter;
   private int progressPixels = 0;
+  private boolean hasProgressColor = false;
+  private int progressColor = 0;
 
   protected UIInputBox() {
     this(0, 0, 0, 0);
@@ -64,6 +67,19 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
     setBorderColor(UI.get().theme.getControlBorderColor());
     setBackgroundColor(UI.get().theme.getControlBackgroundColor());
     setTextAlignment(PConstants.CENTER);
+  }
+
+  public UIInputBox setProgressColor(boolean hasProgressColor) {
+    this.hasProgressColor = hasProgressColor;
+    redraw();
+    return this;
+  }
+
+  public UIInputBox setProgressColor(int progressColor) {
+    this.hasProgressColor = true;
+    this.progressColor = progressColor;
+    redraw();
+    return this;
   }
 
   public UIInputBox setProgressIndicator(ProgressIndicator meter) {
@@ -99,6 +115,17 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
   protected abstract String getValueString();
 
   protected abstract void saveEditBuffer();
+
+  public UIInputBox setEditable(boolean editable) {
+    if (this.editable != editable) {
+      if (this.editing) {
+        this.editing = false;
+        redraw();
+      }
+      this.editable = editable;
+    }
+    return this;
+  }
 
   public UIInputBox setEnabled(boolean enabled) {
     if (this.enabled != enabled) {
@@ -137,7 +164,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
   protected void onDraw(UI ui, PGraphics pg) {
     if (this.progressPixels > 0) {
       pg.noFill();
-      pg.stroke(ui.theme.getPrimaryColor());
+      pg.stroke(this.hasProgressColor ? this.progressColor : ui.theme.getPrimaryColor());
       pg.line(2, this.height-2, 2 + this.progressPixels, this.height-2);
     }
 
@@ -217,7 +244,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
         this.editing = false;
         redraw();
       }
-    } else if (this.enabled) {
+    } else if (this.enabled && this.editable) {
       // Not editing
       if (this.immediateEdit && isValidCharacter(keyChar)) {
         consumeKeyEvent();
@@ -254,7 +281,7 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
 
   @Override
   protected void onMouseDragged(MouseEvent mouseEvent, float mx, float my, float dx, float dy) {
-    if (this.enabled) {
+    if (this.enabled && this.editable) {
       this.dAccum -= dy;
       int offset = (int) (this.dAccum / 5);
       this.dAccum = this.dAccum - (offset * 5);
