@@ -137,14 +137,14 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
    * Whether to animate between camera positions
    */
   public final BooleanParameter animation =
-    new BooleanParameter("Anim", false)
+    new BooleanParameter("Animation", false)
     .setDescription("Whether animation between camera positions is enabled");
 
   /**
    * Animation time
    */
   public final BoundedParameter animationTime = (BoundedParameter)
-    new BoundedParameter("AnimTime", 1000, 100, 300000)
+    new BoundedParameter("Animation Time", 1000, 100, 300000)
     .setExponent(2)
     .setUnits(LXParameter.Units.MILLISECONDS)
     .setDescription("Animation duration between camera positions");
