@@ -724,7 +724,7 @@ public class UI implements LXEngine.Dispatch {
     this.threadSafeRedrawList.add(object);
   }
 
-  protected void resize(int width, int height) {
+  public void resize(int width, int height) {
     this.resizeWidth = width;
     this.resizeHeight = height;
   }
