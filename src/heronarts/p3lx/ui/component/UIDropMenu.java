@@ -175,9 +175,9 @@ public class UIDropMenu extends UI2dComponent implements UIFocus, UIControlTarge
     pg.textFont(hasFont() ? getFont() : ui.theme.getControlFont());
     pg.fill(ui.theme.getControlTextColor());
     pg.textAlign(PConstants.LEFT, PConstants.TOP);
-    pg.text(clipTextToWidth(pg, text, this.width - 12), 4, textY + 4);
+    pg.text(clipTextToWidth(pg, text, this.width - 12), 4 + this.textOffsetX, 4 + textY + this.textOffsetY);
     pg.textAlign(PConstants.RIGHT, PConstants.TOP);
-    pg.text("▼", this.width-4, textY + 4);
+    pg.text("▼", this.width-4, 4 + textY + this.textOffsetY);
 
     if (this.expanded) {
       int range = this.parameter.getRange();
@@ -233,9 +233,7 @@ public class UIDropMenu extends UI2dComponent implements UIFocus, UIControlTarge
   @Override
   public void onMousePressed(MouseEvent mouseEvent, float x, float y) {
     if (!this.expanded) {
-      if (!this.mousePressFocused) {
-        toggleExpanded();
-      }
+      toggleExpanded();
     } else {
       int selected = this.getSelectedIndex(y);
       if (selected >= 0) {
