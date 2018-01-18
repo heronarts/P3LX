@@ -216,7 +216,7 @@ public class UIGLPointCloud extends UIPointCloud {
     pgl.enableVertexAttribArray(this.vertexLocation);
     pgl.vertexAttribPointer(this.vertexLocation, 3, PGL.FLOAT, false, 3 * Float.SIZE/8, 0);
 
-    this.shader.set("pointSize", this.pointSize);
+    this.shader.set("pointSize", this.pointSize.getValuef());
     if (this.pointSizeAttenuation != null) {
       this.shader.set("attenuation", this.pointSizeAttenuation, 3);
     } else {
@@ -228,7 +228,7 @@ public class UIGLPointCloud extends UIPointCloud {
     gl2.glEnable(GL2.GL_POINT_SPRITE);
     gl2.glEnable(GL2.GL_POINT_SMOOTH);
     gl2.glDisable(GL2.GL_TEXTURE_2D);
-    gl2.glPointSize(this.pointSize);
+    gl2.glPointSize(this.pointSize.getValuef());
     gl2.glEnable(GL2.GL_VERTEX_PROGRAM_POINT_SIZE);
     if (this.alphaTestEnabled) {
       gl2.glEnable(GL2.GL_ALPHA_TEST);

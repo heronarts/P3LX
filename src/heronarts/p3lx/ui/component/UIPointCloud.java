@@ -24,8 +24,13 @@
 
 package heronarts.p3lx.ui.component;
 
+import com.google.gson.JsonObject;
+
+import heronarts.lx.LX;
+import heronarts.lx.LXSerializable;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
+import heronarts.lx.parameter.BoundedParameter;
 import heronarts.p3lx.P3LX;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UI3dComponent;
@@ -35,16 +40,14 @@ import processing.core.PGraphics;
 /**
  * Draws a cloud of points in the layer
  */
-public class UIPointCloud extends UI3dComponent {
+public class UIPointCloud extends UI3dComponent implements LXSerializable {
 
   protected final P3LX lx;
 
   protected final LXModel model;
 
-  /**
-   * Weight of points
-   */
-  protected float pointSize = 2;
+  public final BoundedParameter pointSize = new BoundedParameter("Point Size", 2, 1, 10)
+  .setDescription("Size of points in the UI");
 
   protected float[] pointSizeAttenuation = null;
 
@@ -75,7 +78,7 @@ public class UIPointCloud extends UI3dComponent {
    * @return this
    */
   public UIPointCloud setPointSize(float pointSize) {
-    this.pointSize = pointSize;
+    this.pointSize.setValue(pointSize);
     return this;
   }
 
@@ -111,7 +114,7 @@ public class UIPointCloud extends UI3dComponent {
   protected void onDraw(UI ui, PGraphics pg) {
     int[] colors = this.lx.getColors();
     pg.noFill();
-    pg.strokeWeight(this.pointSize);
+    pg.strokeWeight(this.pointSize.getValuef());
     pg.beginShape(PConstants.POINTS);
     for (LXPoint p : this.model.points) {
       pg.stroke(colors[p.index]);
@@ -119,5 +122,18 @@ public class UIPointCloud extends UI3dComponent {
     }
     pg.endShape();
     pg.strokeWeight(1);
+  }
+
+  private static final String KEY_POINT_SIZE = "pointSize";
+
+  @Override
+  public void save(LX lx, JsonObject object) {
+    object.addProperty(KEY_POINT_SIZE, this.pointSize.getValue());
+  }
+
+  @Override
+  public void load(LX lx, JsonObject object) {
+    LXSerializable.Utils.loadDouble(this.pointSize, object, KEY_POINT_SIZE);
+
   }
 }
