@@ -356,6 +356,9 @@ public class UI implements LXEngine.Dispatch {
    */
   int height;
 
+  private int resizeWidth;
+  private int resizeHeight;
+
   private boolean resizable = false;
 
   boolean midiMapping = false;
@@ -385,13 +388,14 @@ public class UI implements LXEngine.Dispatch {
   private UI(PApplet applet, final P3LX lx) {
     this.lx = lx;
     this.applet = applet;
-    this.width = lx.applet.width;
-    this.height = lx.applet.height;
+    this.width = this.resizeWidth = lx.applet.width;
+    this.height = this.resizeHeight = lx.applet.height;
     this.theme = new UITheme(applet);
     LX.initTimer.log("P3LX: UI: Theme");
     this.root = new UIRoot();
     this.dropMenuOverlay = new UIDropMenuOverlay();
     LX.initTimer.log("P3LX: UI: Root");
+    applet.registerMethod("pre", this);
     applet.registerMethod("draw", this);
     applet.registerMethod("keyEvent", this);
     applet.registerMethod("mouseEvent", this);
@@ -720,19 +724,32 @@ public class UI implements LXEngine.Dispatch {
     this.threadSafeRedrawList.add(object);
   }
 
-  /**
-   * Draws the UI
-   */
-  public final void draw() {
+  protected void resize(int width, int height) {
+    this.resizeWidth = width;
+    this.resizeHeight = height;
+  }
+
+  public final void pre() {
     // Check for a resize event
     if (this.resizable) {
-      if (this.applet.width != width || this.applet.height != height) {
-        this.width = this.applet.width;
-        this.height = this.applet.height;
+      // A resize has been requested, make it happen
+      if (this.width != this.resizeWidth || this.height != this.resizeHeight) {
+        this.applet.getSurface().setSize(this.resizeWidth, this.resizeHeight);
+      }
+      // The resize has actually happened, update ourselves
+      if (this.applet.width != this.width || this.applet.height != this.height) {
+        this.width = this.resizeWidth = this.applet.width;
+        this.height = this.resizeHeight = this.applet.height;
         this.root.resize(this);
         onResize();
       }
     }
+  }
+
+  /**
+   * Draws the UI
+   */
+  public final void draw() {
 
     beginDraw();
 
