@@ -313,6 +313,11 @@ public class UI implements LXEngine.Dispatch {
         while (component != root && component != null) {
           x += component.getX();
           y += component.getY();
+          if (component instanceof UI2dScrollContext) {
+            UI2dScrollContext scrollContext = (UI2dScrollContext) component;
+            x += scrollContext.getScrollX();
+            y += scrollContext.getScrollY();
+          }
           component = component.getParent();
         }
         setPosition(x, y);
