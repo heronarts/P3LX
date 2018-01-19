@@ -54,15 +54,15 @@ public class UIChannelControl extends UIWindow {
   }
 
   public UIChannelControl(UI ui, LX lx, int numKnobs, float x, float y) {
-    this(ui, lx.engine.getChannel(0), numKnobs, x, y);
+    this(ui, lx.engine.getDefaultChannel(), numKnobs, x, y);
   }
 
   public UIChannelControl(UI ui, LX lx, String label, float x, float y) {
-    this(ui, lx.engine.getChannel(0), label, x, y);
+    this(ui, lx.engine.getDefaultChannel(), label, x, y);
   }
 
   public UIChannelControl(UI ui, LX lx, String label, int numKnobs, float x, float y) {
-    this(ui, lx.engine.getChannel(0), label, numKnobs, x, y);
+    this(ui, lx.engine.getDefaultChannel(), label, numKnobs, x, y);
   }
 
   public UIChannelControl(UI ui, LXChannel channel, int numKnobs, float x, float y) {
