@@ -106,7 +106,7 @@ public class P3LX extends LX {
   }
 
   public P3LX(PApplet applet, LXModel model) {
-    super(model);
+    super(model, true);
     this.applet = applet;
 
     String sketchPath = applet.sketchPath();
