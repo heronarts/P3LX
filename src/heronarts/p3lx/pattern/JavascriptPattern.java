@@ -33,10 +33,10 @@ import heronarts.p3lx.ui.UIObject;
 import heronarts.p3lx.ui.component.UIButton;
 import heronarts.p3lx.ui.component.UIKnob;
 import heronarts.p3lx.ui.component.UITextBox;
-import heronarts.p3lx.ui.UIDevice;
+import heronarts.p3lx.ui.CustomDeviceUI;
 import processing.core.PConstants;
 
-public class JavascriptPattern extends LXScriptPattern implements UIDevice {
+public class JavascriptPattern extends LXScriptPattern implements CustomDeviceUI {
 
   private static final int MIN_WIDTH = 120;
 

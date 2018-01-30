@@ -20,7 +20,7 @@ package heronarts.p3lx.pattern;
 
 import heronarts.lx.LX;
 import heronarts.lx.LXUtils;
-import heronarts.lx.parameter.BoundedParameter;
+import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UI;
@@ -28,12 +28,13 @@ import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UI2dContainer;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIFocus;
-import heronarts.p3lx.ui.UIDevice;
+import heronarts.p3lx.ui.UIModulationTarget;
+import heronarts.p3lx.ui.CustomDeviceUI;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern implements UIDevice {
+public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern implements CustomDeviceUI {
 
   public SolidColorPattern(LX lx) {
     super(lx);
@@ -55,11 +56,11 @@ public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern im
     device.setContentWidth(xp - SLIDER_MARGIN);
   }
 
-  private abstract class Slider extends UI2dComponent implements UIFocus, UIControlTarget {
+  private abstract class Slider extends UI2dComponent implements UIFocus, UIControlTarget, UIModulationTarget {
 
-    private final BoundedParameter parameter;
+    private final CompoundParameter parameter;
 
-    Slider(UI ui, BoundedParameter parameter, float x, float y, float w, float h) {
+    Slider(UI ui, CompoundParameter parameter, float x, float y, float w, float h) {
       super(x, y, w, h);
       this.parameter = parameter;
       setBorderColor(ui.theme.getControlBorderColor());
@@ -81,9 +82,9 @@ public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern im
         amt = .1;
       }
       if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
-        this.parameter.setNormalized(this.parameter.getNormalized() - amt);
+        this.parameter.setNormalized(this.parameter.getBaseNormalized() - amt);
       } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
-        this.parameter.setNormalized(this.parameter.getNormalized() + amt);
+        this.parameter.setNormalized(this.parameter.getBaseNormalized() + amt);
       }
     }
 
@@ -98,13 +99,32 @@ public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern im
     }
 
     protected void drawValue(UI ui, PGraphics pg) {
-      pg.stroke(0xffe9e9e9);
-      float y = LXUtils.constrainf(this.height-1 - this.parameter.getNormalizedf() * (this.height-1), 1, this.height-2);
-      pg.line(0, y, this.width-1, y);
+      int y = (int) LXUtils.constrainf(this.height - 1 - this.parameter.getBaseNormalizedf() * (this.height-1), 1, this.height-2);
+
+      pg.noFill();
+      pg.stroke(0xff111111);
+      pg.point(1, y-1);
+      pg.point(1, y);
+      pg.point(1, y+1);
+      pg.point(2, y);
+
+      pg.point(this.width-2, y-1);
+      pg.point(this.width-2, y);
+      pg.point(this.width-2, y+1);
+      pg.point(this.width-3, y);
+
+      pg.stroke(0x66ffffff);
+      pg.line(3, y, this.width-4, y);
+
     }
 
     @Override
     public LXParameter getControlTarget() {
+      return this.parameter;
+    }
+
+    @Override
+    public CompoundParameter getModulationTarget() {
       return this.parameter;
     }
   }
