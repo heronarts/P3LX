@@ -20,6 +20,7 @@ package heronarts.p3lx.pattern;
 
 import java.io.IOException;
 
+import heronarts.lx.LXCategory;
 import heronarts.lx.LX;
 import heronarts.lx.parameter.BoundedParameter;
 import heronarts.lx.parameter.DiscreteParameter;
@@ -36,6 +37,7 @@ import heronarts.p3lx.ui.component.UITextBox;
 import heronarts.p3lx.ui.CustomDeviceUI;
 import processing.core.PConstants;
 
+@LXCategory(LXCategory.OTHER)
 public class JavascriptPattern extends LXScriptPattern implements CustomDeviceUI {
 
   private static final int MIN_WIDTH = 120;

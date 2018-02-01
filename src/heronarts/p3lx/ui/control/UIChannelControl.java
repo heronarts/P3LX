@@ -135,7 +135,7 @@ public class UIChannelControl extends UIWindow {
     lxListener.patternDidChange(channel, channel.getActivePattern());
   }
 
-  private class PatternScrollItem extends UIItemList.AbstractItem {
+  private class PatternScrollItem extends UIItemList.Item {
 
     private LXPattern pattern;
 

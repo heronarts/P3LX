@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -47,21 +48,25 @@ public interface UIItemList {
   /**
    * Interface to which items in the list must conform
    */
-  public static interface Item {
+  public static abstract class Item {
 
     /**
      * Whether this item is in a special active state
      *
      * @return If this item is active
      */
-    public boolean isActive();
+    public boolean isActive() {
+      return false;
+    }
 
     /**
      * Whether the item is checked, applies only if checkbox mode set on the list.
      *
      * @return If this item is checked
      */
-    public boolean isChecked();
+    public boolean isChecked() {
+      return false;
+    }
 
     /**
      * Active background color for this item
@@ -69,38 +74,44 @@ public interface UIItemList {
      * @param ui UI context
      * @return Background color
      */
-    public int getActiveColor(UI ui);
+    public int getActiveColor(UI ui) {
+      return ui.theme.getControlBackgroundColor();
+    }
 
     /**
      * String label that displays on this item
      *
      * @return Label for the item
      */
-    public String getLabel();
+    public abstract String getLabel();
 
     /**
      * Action handler, invoked when item is activated
      */
-    public void onActivate();
+    public void onActivate() {}
 
     /**
      * Action handler invoked when item is checked
      *
      * @param checked If checked
      */
-    public void onCheck(boolean checked);
+    public void onCheck(boolean checked) {
+      throw new UnsupportedOperationException("Item does not implement checkbox operation");
+    }
 
     /**
      * Action handler, invoked when item is deactivated. Only applies when setMomentary(true)
      */
-    public void onDeactivate();
+    public void onDeactivate() {}
 
     /**
      * Action handler, invoked when an item is renamed. Only applies when setRenamable(true)
      *
      * @param name New name for item
      */
-    public void onRename(String name);
+    public void onRename(String name) {
+      throw new UnsupportedOperationException("Item does not implement renaming");
+    }
 
     /**
      * Action handler, invoked when an item is reordered. Only applies to the item that the action
@@ -108,53 +119,67 @@ public interface UIItemList {
      *
      * @param order New position for item
      */
-    public void onReorder(int order);
+    public void onReorder(int order) {
+      throw new UnsupportedOperationException("Item does not implement reordering");
+    }
 
     /**
      * Action handler, invoked when item is deleted
      */
-    public void onDelete();
+    public void onDelete() {}
 
     /**
      * Action handler, invoked when item is focused
      */
-    public void onFocus();
+    public void onFocus() {}
+
+    /**
+     * Section that this item belongs to
+     *
+     * @return section or null
+     */
+    public Section getSection() {
+      return null;
+    }
   }
 
   /**
-   * Helper class to make item construction easier
+   * A section is an item in the list that indents the items beneath it.
    */
-  public static abstract class AbstractItem implements Item {
+  public static abstract class Section extends Item {
 
-    public boolean isActive() {
-      return false;
+    private final List<Item> items = new ArrayList<Item>();
+
+    private boolean expanded = true;
+
+    private void addItem(Item item) {
+      this.items.add(item);
     }
 
-    public boolean isChecked() {
-      return false;
+    private void removeItem(Item item) {
+      this.items.remove(item);
     }
 
-    public int getActiveColor(UI ui) {
-      return ui.theme.getControlBackgroundColor();
+    private void toggle() {
+      this.expanded = !expanded;
     }
 
-    public void onActivate() {}
-
-    public void onDeactivate() {}
-
-    public void onCheck(boolean on) {}
-
-    public void onDelete() {}
-
-    public void onRename(String name) {
-      throw new UnsupportedOperationException("Item does not implement renaming");
+    @Override
+    public final Section getSection() {
+      // We're not supporting nested sections!
+      return null;
     }
 
-    public void onReorder(int index) {
-      throw new UnsupportedOperationException("Item does not implement reordering");
+    @Override
+    public void onActivate() {
+      this.expanded = true;
     }
 
-    public void onFocus()  {}
+    @Override
+    public void onDeactivate() {
+      this.expanded = false;
+    }
+
   }
 
   public static class Impl {
@@ -201,6 +226,18 @@ public interface UIItemList {
       list.setBorderRounding(4);
     }
 
+    private void focusNext(int increment) {
+      int index = this.focusIndex + increment;
+      while (index >= 0 && index < this.items.size()) {
+        Section section = this.items.get(index).getSection();
+        if (section == null || section.expanded) {
+          setFocusIndex(index);
+          return;
+        }
+        index += increment;
+      }
+    }
+
     private void setFocusIndex(int focusIndex) {
       setFocusIndex(focusIndex, true);
     }
@@ -237,6 +274,22 @@ public interface UIItemList {
       return null;
     }
 
+    private void recomputeContentHeight() {
+      int itemCount = 0;
+      for (Item item : this.items) {
+        Section section = item.getSection();
+        if (section == null || section.expanded) {
+          ++itemCount;
+        }
+      }
+      setContentHeight(ROW_SPACING * itemCount + ROW_MARGIN);
+
+    }
+
+    private void addSection(Section section) {
+      addItem(section);
+    }
+
     /**
      * Adds an item to the list
      *
@@ -244,8 +297,15 @@ public interface UIItemList {
      * @return this
      */
     private void addItem(Item item) {
-      this.items.add(item);
-      setContentHeight(ROW_SPACING * this.items.size() + ROW_MARGIN);
+      Section section = item.getSection();
+      if (section != null) {
+        section.addItem(item);
+        int sectionIndex = this.items.indexOf(section);
+        this.items.add(sectionIndex + section.items.size(), item);
+      } else {
+        this.items.add(item);
+      }
+      recomputeContentHeight();
       this.list.redraw();
     }
 
@@ -256,6 +316,11 @@ public interface UIItemList {
      * @return this
      */
     private void removeItem(Item item) {
+      Section section = item.getSection();
+      if (section != null) {
+        section.removeItem(item);
+      }
+
       int itemIndex = this.items.indexOf(item);
       if (itemIndex < 0) {
         throw new IllegalArgumentException("Item is not in UIItemList: " + item);
@@ -266,7 +331,7 @@ public interface UIItemList {
       } else if (this.focusIndex >= 0) {
         this.items.get(this.focusIndex).onFocus();
       }
-      setContentHeight(ROW_SPACING * this.items.size() + ROW_MARGIN);
+      recomputeContentHeight();
       this.list.redraw();
     }
 
@@ -319,7 +384,14 @@ public interface UIItemList {
 
     private void activate() {
       if (this.focusIndex >= 0) {
-        this.items.get(this.focusIndex).onActivate();
+        Item item = this.items.get(this.focusIndex);
+        if (item instanceof Section) {
+          ((Section) item).toggle();
+          recomputeContentHeight();
+          this.list.redraw();
+        } else {
+          item.onActivate();
+        }
       }
     }
 
@@ -332,8 +404,10 @@ public interface UIItemList {
     private void check() {
       if (this.focusIndex >= 0) {
         Item item = this.items.get(this.focusIndex);
-        item.onCheck(!item.isChecked());
-        this.list.redraw();
+        if (!(item instanceof Section)) {
+          item.onCheck(!item.isChecked());
+          this.list.redraw();
+        }
       }
     }
 
@@ -373,8 +447,23 @@ public interface UIItemList {
       return (getScrollHeight() > this.list.getHeight()) ? this.list.getWidth() - SCROLL_BAR_WIDTH - PADDING : this.list.getWidth();
     }
 
+    private int getVisibleFocusIndex() {
+      int counter = 0;
+      int itemIndex = -1;
+      for (Item item : this.items) {
+        Section section = item.getSection();
+        if (section == null || section.expanded) {
+          ++itemIndex;
+        }
+        if (counter++ >= this.focusIndex) {
+          break;
+        }
+      }
+      return itemIndex;
+    }
+
     private void drawFocus(UI ui, PGraphics pg) {
-      float yp = ROW_MARGIN + ROW_SPACING * this.focusIndex + getScrollY();
+      float yp = ROW_MARGIN + getScrollY() + ROW_SPACING * getVisibleFocusIndex();
       UI2dComponent.drawFocus(ui, pg, ui.theme.getFocusColor(), PADDING, yp, getRowWidth() - 2*PADDING, ROW_HEIGHT, 2);
     }
 
@@ -398,6 +487,15 @@ public interface UIItemList {
       }
 
       for (Item item : this.items) {
+        Section section = item.getSection();
+        boolean isSection = item instanceof Section;
+
+        // Skip rendering items that are in a collapsed section
+        if (section != null && !section.expanded) {
+          ++i;
+          continue;
+        }
+
         boolean renameItem = this.renaming && (this.focusIndex == i);
 
         int backgroundColor, textColor;
@@ -406,23 +504,42 @@ public interface UIItemList {
           textColor = UI.WHITE;
         } else {
           backgroundColor = (i == this.focusIndex) ? 0xff333333 : ui.theme.getControlBackgroundColor();
-          textColor = (i == this.focusIndex) ? UI.WHITE : ui.theme.getControlTextColor();
+          textColor = isSection ? 0xffaaaaaa : ((i == this.focusIndex) ? UI.WHITE : ui.theme.getControlTextColor());
         }
         pg.noStroke();
         pg.fill(backgroundColor);
         pg.rect(PADDING, yp, rowWidth-2*PADDING, ROW_HEIGHT, 4);
 
         int textX = 6;
-        if (this.showCheckboxes) {
-         pg.stroke(textColor);
-         pg.noFill();
-         pg.rect(textX, yp+4, CHECKBOX_SIZE-1, CHECKBOX_SIZE-1);
-         if (item.isChecked()) {
-           pg.noStroke();
-           pg.fill(textColor);
-           pg.rect(textX+2, yp+6, CHECKBOX_SIZE/2, CHECKBOX_SIZE/2);
-         }
-         textX += CHECKBOX_SIZE + 4;
+        if (isSection) {
+          pg.noStroke();
+          pg.fill(0xff666666);
+          pg.beginShape();
+          if (((Section) item).expanded) {
+            pg.vertex(textX-1, yp + 6);
+            pg.vertex(textX+5, yp + 6);
+            pg.vertex(textX+2, yp + 12);
+          } else {
+            pg.vertex(textX, yp + 5);
+            pg.vertex(textX, yp + 11);
+            pg.vertex(textX + 6, yp + 8);
+          }
+          pg.endShape(PConstants.CLOSE);
+          textX += 8;
+        } else if (section != null) {
+          textX += 14;
+        }
+
+        if (this.showCheckboxes && !isSection) {
+          pg.stroke(textColor);
+          pg.noFill();
+          pg.rect(textX, yp+4, CHECKBOX_SIZE-1, CHECKBOX_SIZE-1);
+          if (item.isChecked()) {
+            pg.noStroke();
+            pg.fill(textColor);
+            pg.rect(textX+2, yp+6, CHECKBOX_SIZE/2, CHECKBOX_SIZE/2);
+          }
+          textX += CHECKBOX_SIZE + 4;
         }
         if (renameItem) {
           pg.noStroke();
@@ -435,6 +552,7 @@ public interface UIItemList {
           pg.text(UI2dComponent.clipTextToWidth(pg, item.getLabel(), rowWidth - textX - 2), textX, yp + 4);
         }
         yp += ROW_SPACING;
+
         ++i;
       }
 
@@ -452,8 +570,24 @@ public interface UIItemList {
     }
 
     private int getMouseItemIndex(float my) {
-      int index = (int) (my / (ROW_HEIGHT + ROW_MARGIN));
-      return ((my % (ROW_HEIGHT + ROW_MARGIN)) >= ROW_MARGIN) ? index : -1;
+      if ((my % (ROW_HEIGHT + ROW_MARGIN)) < ROW_MARGIN) {
+        // Don't detect clicks on strip between rows
+        return -1;
+      }
+
+      int visibleIndex = (int) (my / (ROW_HEIGHT + ROW_MARGIN));
+      int counter = 0;
+      int itemIndex = -1;
+      for (Item item : this.items) {
+        ++itemIndex;
+        Section section = item.getSection();
+        if (section == null || section.expanded) {
+          if (counter++ >= visibleIndex) {
+            break;
+          }
+        }
+      }
+      return itemIndex;
     }
 
     private void onMouseClicked(MouseEvent mouseEvent, float mx, float my) {
@@ -547,7 +681,7 @@ public interface UIItemList {
             }
           } else {
             if (this.focusIndex > 0) {
-              setFocusIndex(this.focusIndex - 1);
+              focusNext(-1);
               this.list.redraw();
             }
           }
@@ -562,7 +696,7 @@ public interface UIItemList {
               this.list.redraw();
             }
           } else {
-            setFocusIndex(this.focusIndex + 1);
+            focusNext(1);
             this.list.redraw();
           }
         } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
@@ -639,6 +773,11 @@ public interface UIItemList {
 
     public UIItemList.Item getFocusedItem() {
       return this.impl.getFocusedItem();
+    }
+
+    public UIItemList addSection(Section section) {
+      this.impl.addSection(section);
+      return this;
     }
 
     public UIItemList addItem(Item item) {
@@ -766,6 +905,11 @@ public interface UIItemList {
 
     public UIItemList.Item getFocusedItem() {
       return this.impl.getFocusedItem();
+    }
+
+    public UIItemList addSection(Section section) {
+      this.impl.addSection(section);
+      return this;
     }
 
     public UIItemList addItem(Item item) {

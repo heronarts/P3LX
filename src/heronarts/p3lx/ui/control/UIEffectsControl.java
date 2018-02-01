@@ -125,7 +125,7 @@ public class UIEffectsControl extends UIWindow {
     }
   }
 
-  private class EffectScrollItem extends UIItemList.AbstractItem {
+  private class EffectScrollItem extends UIItemList.Item {
 
     private final LXEffect effect;
 
@@ -133,6 +133,7 @@ public class UIEffectsControl extends UIWindow {
       this.effect = effect;
     }
 
+    @Override
     public String getLabel() {
       return this.effect.getLabel();
     }

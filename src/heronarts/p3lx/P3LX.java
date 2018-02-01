@@ -113,6 +113,12 @@ public class P3LX extends LX {
     this.engine.script.setScriptPath(sketchPath);
     this.engine.audio.output.setMediaPath(sketchPath);
 
+    registerPattern(heronarts.p3lx.pattern.SolidPattern.class);
+    registerPattern(heronarts.p3lx.pattern.JavascriptPattern.class);
+    registerPattern(heronarts.lx.pattern.GraphicEqualizerPattern.class);
+    registerPattern(heronarts.lx.pattern.GradientPattern.class);
+    registerPattern(heronarts.lx.pattern.IteratorPattern.class);
+
     for (Class<?> cls : applet.getClass().getDeclaredClasses()) {
       if (!Modifier.isAbstract(cls.getModifiers())) {
         if (LXPattern.class.isAssignableFrom(cls)) {

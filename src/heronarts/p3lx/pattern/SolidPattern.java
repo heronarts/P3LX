@@ -18,8 +18,12 @@
 
 package heronarts.p3lx.pattern;
 
+import heronarts.lx.LXCategory;
+import heronarts.lx.LXPattern;
 import heronarts.lx.LX;
 import heronarts.lx.LXUtils;
+import heronarts.lx.color.ColorParameter;
+import heronarts.lx.color.LXColor;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
@@ -28,35 +32,59 @@ import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UI2dContainer;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIFocus;
-import heronarts.p3lx.ui.UIModulationTarget;
+import heronarts.p3lx.ui.component.UIKnob;
 import heronarts.p3lx.ui.CustomDeviceUI;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern implements CustomDeviceUI {
+@LXCategory(LXCategory.COLOR)
+public class SolidPattern extends LXPattern implements CustomDeviceUI {
 
-  public SolidColorPattern(LX lx) {
-    super(lx);
+  public final ColorParameter color =
+    new ColorParameter("Color")
+    .setDescription("Color of the pattern");
+
+  public SolidPattern(LX lx) {
+    this(lx, LXColor.RED);
   }
 
-  private static final int SLIDER_WIDTH = 16;
-  private static final int SLIDER_MARGIN = 4;
-  private static final int SLIDER_SPACING = SLIDER_WIDTH + SLIDER_MARGIN;
+  public SolidPattern(LX lx, int color) {
+    super(lx);
+    this.color.setColor(color);
+    addParameter("color", this.color);
+  }
+
+  @Override
+  public void run(double deltaMs) {
+    setColors(LXColor.hsb(
+      this.color.hue.getValue(),
+      this.color.saturation.getValue(),
+      this.color.brightness.getValue()
+    ));
+  }
+
+  private static final int SLIDER_WIDTH = UIKnob.WIDTH;
+  private static final int SLIDER_MARGIN = 6;
+  private static final int SLIDER_SPACING = SLIDER_WIDTH + 4;
 
   @Override
   public void buildDeviceUI(UI ui, UI2dContainer device) {
+    float knobY = device.getContentHeight() - UIKnob.HEIGHT;
     float xp = 0;
-    new HueSlider(ui, xp, 0, SLIDER_WIDTH, device.getContentHeight()).addToContainer(device);
+    new UIKnob(xp, knobY).setParameter(this.color.hue).addToContainer(device);
+    new HueSlider(ui, xp, 0, SLIDER_WIDTH, knobY - SLIDER_MARGIN).addToContainer(device);
     xp += SLIDER_SPACING;
-    new SaturationSlider(ui, xp, 0, SLIDER_WIDTH, device.getContentHeight()).addToContainer(device);
+    new UIKnob(xp, knobY).setParameter(this.color.saturation).addToContainer(device);
+    new SaturationSlider(ui, xp, 0, SLIDER_WIDTH, knobY - SLIDER_MARGIN).addToContainer(device);
     xp += SLIDER_SPACING;
-    new BrightnessSlider(ui, xp, 0, SLIDER_WIDTH, device.getContentHeight()).addToContainer(device);
+    new UIKnob(xp, knobY).setParameter(this.color.brightness).addToContainer(device);
+    new BrightnessSlider(ui, xp, 0, SLIDER_WIDTH, knobY - SLIDER_MARGIN).addToContainer(device);
     xp += SLIDER_SPACING;
     device.setContentWidth(xp - SLIDER_MARGIN);
   }
 
-  private abstract class Slider extends UI2dComponent implements UIFocus, UIControlTarget, UIModulationTarget {
+  private abstract class Slider extends UI2dComponent implements UIFocus, UIControlTarget {
 
     private final CompoundParameter parameter;
 
@@ -123,10 +151,6 @@ public class SolidColorPattern extends heronarts.lx.pattern.SolidColorPattern im
       return this.parameter;
     }
 
-    @Override
-    public CompoundParameter getModulationTarget() {
-      return this.parameter;
-    }
   }
 
   private class HueSlider extends Slider {
