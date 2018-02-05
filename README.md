@@ -11,7 +11,7 @@ Please note that LX is not open-source software. The license grants permission t
 
 P3LX is a Processing 3 wrapper library for the [LX](https://github.com/heronarts/LX) lighting engine and the basis of the [LX Studio](http://lx.studio/) application. It allows you to simply embed LX inside a Processing sketch with a rich UI library that makes it easy and painless to render 3D simulations alongside versatile 2D controls.
 
-The simplest way to start an LXStudio project is by downloading this repository and making a copy of the [examples/LXStudioDemo](https://github.com/heronarts/P3LX/tree/master/examples/LXStudioDemo) Processing sketch for your own project.
+Directly working with the P3LX library is only recommended for advanced users of LX. The easiest way to start an LX project is to clone or fork the [LXStudio](https://github.com/heronarts/LXStudio) repository and use that as the basis for your project.
 
 ### Development Environment ###
 
