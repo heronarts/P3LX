@@ -161,7 +161,7 @@ public interface UIItemList {
     }
 
     private void toggle() {
-      this.expanded = !expanded;
+      this.expanded = !this.expanded;
     }
 
     @Override
@@ -175,11 +175,6 @@ public interface UIItemList {
       this.expanded = true;
     }
 
-    @Override
-    public void onDeactivate() {
-      this.expanded = false;
-    }
-
   }
 
   public static class Impl {
@@ -190,6 +185,7 @@ public interface UIItemList {
     private static final int ROW_MARGIN = 2;
     private static final int ROW_SPACING = ROW_HEIGHT + ROW_MARGIN;
     private static final int CHECKBOX_SIZE = 8;
+    private static final int SECTION_CHEVRON_WIDTH = 14;
 
     private final UI2dContainer list;
 
@@ -212,6 +208,8 @@ public interface UIItemList {
     private String renameBuffer = "";
 
     private boolean dragging;
+
+    private boolean mouseChevronPress = false;
 
     private int mouseActivate = -1;
 
@@ -591,7 +589,7 @@ public interface UIItemList {
     }
 
     private void onMouseClicked(MouseEvent mouseEvent, float mx, float my) {
-      if (!this.isMomentary && !this.singleClickActivate && (mouseEvent.getCount() == 2)) {
+      if (!this.mouseChevronPress && !this.isMomentary && !this.singleClickActivate && (mouseEvent.getCount() == 2)) {
         int index = getMouseItemIndex(my);
         if (index >= 0) {
           setFocusIndex(index);
@@ -602,6 +600,7 @@ public interface UIItemList {
 
     private void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
       this.mouseActivate = -1;
+      this.mouseChevronPress = false;
       if (getScrollHeight() > getHeight() && mx >= getRowWidth()) {
         this.dragging = true;
       } else {
@@ -613,9 +612,12 @@ public interface UIItemList {
             if (mx >= 2*PADDING) {
               check();
             }
-          } else if (this.isMomentary || this.singleClickActivate) {
-            this.mouseActivate = this.focusIndex;
-            activate();
+          } else {
+            this.mouseChevronPress = (mx < SECTION_CHEVRON_WIDTH) && (getFocusedItem() instanceof Section);
+            if (this.isMomentary || this.singleClickActivate || this.mouseChevronPress) {
+              this.mouseActivate = this.focusIndex;
+              activate();
+            }
           }
         }
       }
