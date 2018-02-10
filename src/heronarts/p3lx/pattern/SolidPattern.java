@@ -176,7 +176,7 @@ public class SolidPattern extends LXPattern implements CustomDeviceUI {
     @Override
     public void onDraw(UI ui, PGraphics pg) {
       for (int i = 0; i < this.height; ++i) {
-        pg.stroke(LX.hsb(color.hue.getValuef(), i * 100.f / (this.height-1), color.brightness.getValuef()));
+        pg.stroke(LX.hsb(color.hue.getBaseValuef(), i * 100.f / (this.height-1), color.brightness.getValuef()));
         pg.line(0, this.height-1-i, this.width-1, this.height-1-i);
       }
       drawValue(ui, pg);
@@ -191,7 +191,7 @@ public class SolidPattern extends LXPattern implements CustomDeviceUI {
     @Override
     public void onDraw(UI ui, PGraphics pg) {
       for (int i = 0; i < this.height; ++i) {
-        pg.stroke(LX.hsb(color.hue.getValuef(), color.saturation.getValuef(), i * 100.f / (this.height-1)));
+        pg.stroke(LX.hsb(color.hue.getBaseValuef(), color.saturation.getBaseValuef(), i * 100.f / (this.height-1)));
         pg.line(0, this.height-1-i, this.width-1, this.height-1-i);
       }
       drawValue(ui, pg);
