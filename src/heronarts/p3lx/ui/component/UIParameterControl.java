@@ -222,7 +222,27 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void saveEditBuffer() {
     if (this.parameter != null) {
       try {
-        this.parameter.setValue(Double.parseDouble(this.editBuffer));
+        if (this.editBuffer.indexOf(':') >= 0) {
+          double multiplier = 1;
+          switch (this.parameter.getUnits()) {
+          case MILLISECONDS:
+            multiplier = 1000;
+            // intentional pass-thru
+          case SECONDS:
+            String[] parts = this.editBuffer.split(":");
+            double value = 0;
+            for (String part : parts) {
+              value = value * 60 + Double.parseDouble(part);
+            }
+            this.parameter.setValue(value * multiplier);
+            break;
+          default:
+            // No colon character allowed for other types
+            break;
+          }
+        } else {
+          this.parameter.setValue(Double.parseDouble(this.editBuffer));
+        }
       } catch (NumberFormatException nfx) {}
     }
   }
