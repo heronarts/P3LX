@@ -119,6 +119,10 @@ public class P3LX extends LX {
     registerPattern(heronarts.lx.pattern.GradientPattern.class);
     registerPattern(heronarts.lx.pattern.IteratorPattern.class);
 
+    registerEffect(heronarts.lx.effect.BlurEffect.class);
+    registerEffect(heronarts.lx.effect.DesaturationEffect.class);
+    registerEffect(heronarts.lx.effect.FlashEffect.class);
+
     for (Class<?> cls : applet.getClass().getDeclaredClasses()) {
       if (!Modifier.isAbstract(cls.getModifiers())) {
         if (LXPattern.class.isAssignableFrom(cls)) {
