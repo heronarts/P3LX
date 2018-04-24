@@ -46,11 +46,11 @@ import heronarts.p3lx.ui.UI;
 public class UIGLPointCloud extends UIPointCloud {
 
   private PShader shader;
-  private final FloatBuffer vertexData;
-  private final int vertexBufferObjectName;
+  private FloatBuffer vertexData;
+  private int vertexBufferObjectName;
 
-  private final FloatBuffer colorData;
-  private final int colorBufferObjectName;
+  private FloatBuffer colorData;
+  private int colorBufferObjectName;
 
   private int vertexLocation = -1;
   private int colorLocation = -1;
@@ -60,6 +60,7 @@ public class UIGLPointCloud extends UIPointCloud {
   private static final float[] NO_ATTENUATION = { 1, 0, 0 };
 
   private boolean updateVertexPositions = false;
+  private LXModel updateModel = null;
 
   /**
    * Point cloud for everything in the LX instance
@@ -90,7 +91,10 @@ public class UIGLPointCloud extends UIPointCloud {
 
     // Load shader
     loadShader();
+    buildModelBuffers(model);
+  }
 
+  private void buildModelBuffers(LXModel model) {
     // Create a buffer for vertex data
     this.vertexData = ByteBuffer
       .allocateDirect(model.size * 3 * Float.SIZE/8)
@@ -142,6 +146,19 @@ public class UIGLPointCloud extends UIPointCloud {
   }
 
   /**
+   * Sets the model to be used by this point cloud. It is not actually updated until the next
+   * rendering pass on the GL thread.
+   *
+   * @param model New model
+   * @return this
+   */
+  @Override
+  public UIPointCloud setModel(LXModel model) {
+    this.updateModel = model;
+    return this;
+  }
+
+  /**
    * Mark the vertex positions to be updated on next rendering pass.
    *
    * @return this
@@ -176,6 +193,13 @@ public class UIGLPointCloud extends UIPointCloud {
   @Override
   protected void onDraw(UI ui, PGraphics pg) {
     int[] colors = this.lx.getColors();
+
+    // New model has been set!
+    if (this.updateModel != null) {
+      this.buildModelBuffers(this.updateModel);
+      super.setModel(this.updateModel);
+      this.updateModel = null;
+    }
 
     // Put our new colors in the VBO
     int i = 0;

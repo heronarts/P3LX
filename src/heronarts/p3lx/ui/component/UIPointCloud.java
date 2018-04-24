@@ -44,7 +44,7 @@ public class UIPointCloud extends UI3dComponent implements LXSerializable {
 
   protected final P3LX lx;
 
-  protected final LXModel model;
+  protected LXModel model;
 
   public final BoundedParameter pointSize = new BoundedParameter("Point Size", 2, 1, 10)
   .setDescription("Size of points in the UI");
@@ -69,6 +69,17 @@ public class UIPointCloud extends UI3dComponent implements LXSerializable {
   public UIPointCloud(P3LX lx, LXModel model) {
     this.lx = lx;
     this.model = model;
+  }
+
+  /**
+   * Update the model
+   *
+   * @param model
+   * @return
+   */
+  public UIPointCloud setModel(LXModel model) {
+    this.model = model;
+    return this;
   }
 
   /**
