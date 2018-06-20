@@ -218,6 +218,8 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return UIDoubleBox.isValidInputCharacter(keyChar);
   }
 
+
+  @SuppressWarnings("fallthrough")
   @Override
   protected void saveEditBuffer() {
     if (this.parameter != null) {
