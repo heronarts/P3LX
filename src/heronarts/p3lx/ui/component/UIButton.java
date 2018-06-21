@@ -60,6 +60,8 @@ public class UIButton extends UI2dComponent implements UIControlTarget, UITrigge
   private EnumParameter<? extends Object> enumParameter = null;
   private BooleanParameter booleanParameter = null;
 
+  private float iconOffsetX = 0, iconOffsetY = 0;
+
   protected long exactToggleTime = -1;
 
   private final LXParameterListener booleanParameterListener = new LXParameterListener() {
@@ -152,6 +154,38 @@ public class UIButton extends UI2dComponent implements UIControlTarget, UITrigge
     return this;
   }
 
+  public UIButton setIconOffset(float iconOffsetX, float iconOffsetY) {
+    boolean redraw = false;
+    if (this.iconOffsetX != iconOffsetX) {
+      this.iconOffsetX = iconOffsetX;
+      redraw = true;
+    }
+    if (this.iconOffsetY != iconOffsetY) {
+      this.iconOffsetY = iconOffsetY;
+      redraw = true;
+    }
+    if (redraw) {
+      redraw();
+    }
+    return this;
+  }
+
+  public UIButton setIconOffsetX(float iconOffsetX) {
+    if (this.iconOffsetX != iconOffsetX) {
+      this.iconOffsetX = iconOffsetX;
+      redraw();
+    }
+    return this;
+  }
+
+  public UIButton setIconOffsetY(float iconOffsetY) {
+    if (this.iconOffsetY != iconOffsetY) {
+      this.iconOffsetY = iconOffsetY;
+      redraw();
+    }
+    return this;
+  }
+
   @Override
   protected void onDraw(UI ui, PGraphics pg) {
     if (!this.enabled) {
@@ -165,7 +199,7 @@ public class UIButton extends UI2dComponent implements UIControlTarget, UITrigge
       if (!this.active) {
         pg.tint(getFontColor());
       }
-      pg.image(icon, this.width/2 - icon.width/2, this.height/2 - icon.height/2);
+      pg.image(icon, this.width/2 - icon.width/2 + this.iconOffsetX, this.height/2 - icon.height/2 + this.iconOffsetY);
       pg.noTint();
     } else {
       String label = this.active ? this.activeLabel : this.inactiveLabel;
