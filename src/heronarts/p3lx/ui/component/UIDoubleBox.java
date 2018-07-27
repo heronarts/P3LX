@@ -27,15 +27,17 @@ package heronarts.p3lx.ui.component;
 import heronarts.lx.LXUtils;
 import heronarts.lx.parameter.BoundedParameter;
 import heronarts.lx.parameter.CompoundParameter;
+import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UIControlTarget;
+import heronarts.p3lx.ui.UIModulationSource;
 import heronarts.p3lx.ui.UIModulationTarget;
 import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModulationTarget {
+public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModulationSource, UIModulationTarget {
 
   private double minValue = 0;
   private double maxValue = Double.MAX_VALUE;
@@ -243,13 +245,28 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
 
   @Override
   public LXParameter getControlTarget() {
-    return isMappable() ? this.parameter : null;
+    return isMappable() ? getMappableParameter() : null;
+  }
+
+  @Override
+  public LXNormalizedParameter getModulationSource() {
+    if (isMappable()) {
+      return getMappableParameter();
+    }
+    return null;
   }
 
   @Override
   public CompoundParameter getModulationTarget() {
     if (isMappable() && (this.parameter instanceof CompoundParameter)) {
-      return (CompoundParameter) this.parameter;
+      return (CompoundParameter) getMappableParameter();
+    }
+    return null;
+  }
+
+  private BoundedParameter getMappableParameter() {
+    if (this.parameter != null && this.parameter.getComponent() != null) {
+      return this.parameter;
     }
     return null;
   }

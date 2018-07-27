@@ -364,18 +364,25 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
 
   @Override
   public LXParameter getControlTarget() {
-    return isMappable() ? this.parameter : null;
+    return isMappable() ? getMappableParameter() : null;
   }
 
   @Override
   public LXNormalizedParameter getModulationSource() {
-    return isMappable() ? this.parameter : null;
+    return isMappable() ? getMappableParameter() : null;
   }
 
   @Override
   public CompoundParameter getModulationTarget() {
     if (this.parameter instanceof CompoundParameter) {
-      return isMappable() ? (CompoundParameter) this.parameter : null;
+      return isMappable() ? (CompoundParameter) getMappableParameter() : null;
+    }
+    return null;
+  }
+
+  private LXListenableNormalizedParameter getMappableParameter() {
+    if (this.parameter != null && this.parameter.getComponent() != null) {
+      return this.parameter;
     }
     return null;
   }

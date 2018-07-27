@@ -231,7 +231,10 @@ public class UIToggleSet extends UI2dComponent implements UIFocus, UIControlTarg
 
   @Override
   public LXParameter getControlTarget() {
-    return this.parameter;
+    if (isMappable() && this.parameter != null && this.parameter.getComponent() != null) {
+      return this.parameter;
+    }
+    return null;
   }
 
 }

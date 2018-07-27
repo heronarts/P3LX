@@ -370,17 +370,33 @@ public class UIButton extends UI2dComponent implements UIControlTarget, UITrigge
 
   @Override
   public LXParameter getControlTarget() {
-    return isMappable() ? this.booleanParameter : null;
+    if (isMappable()) {
+      if (this.enumParameter != null) {
+        if (this.enumParameter.getComponent() != null) {
+          return this.enumParameter;
+        }
+      } else {
+        return getTriggerParameter();
+      }
+    }
+    return null;
   }
 
   @Override
   public BooleanParameter getTriggerSource() {
-    return this.triggerable ? this.booleanParameter : null;
+    return this.triggerable ? getTriggerParameter() : null;
   }
 
   @Override
   public BooleanParameter getTriggerTarget() {
-    return this.triggerable ? this.booleanParameter : null;
+    return this.triggerable ? getTriggerParameter() : null;
+  }
+
+  private BooleanParameter getTriggerParameter() {
+    if (this.booleanParameter != null && this.booleanParameter.getComponent() != null) {
+      return this.booleanParameter;
+    }
+    return null;
   }
 
 }

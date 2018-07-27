@@ -67,12 +67,19 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
 
   @Override
   public BooleanParameter getTriggerTarget() {
-    return getBooleanParameter();
+    return isMappable() ? getTriggerParameter() : null;
   }
 
   @Override
   public BooleanParameter getTriggerSource() {
-    return getBooleanParameter();
+    return isMappable() ? getTriggerParameter() : null;
+  }
+
+  private BooleanParameter getTriggerParameter() {
+    if (this.parameter != null && this.parameter.getComponent() != null) {
+      return getBooleanParameter();
+    }
+    return null;
   }
 
   @Override
