@@ -45,11 +45,11 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
   public final static int HEIGHT = KNOB_SIZE + LABEL_MARGIN + LABEL_HEIGHT;
 
   private final static float KNOB_INDENT = .4f;
-  private final static int ARC_CENTER_X = WIDTH / 2;
-  private final static int ARC_CENTER_Y = KNOB_SIZE / 2;
-  private final static float ARC_START = PConstants.HALF_PI + KNOB_INDENT;
-  private final static float ARC_RANGE = PConstants.TWO_PI - 2 * KNOB_INDENT;
-  private final static float ARC_END = ARC_START + ARC_RANGE;
+  final static int ARC_CENTER_X = WIDTH / 2;
+  final static int ARC_CENTER_Y = KNOB_SIZE / 2;
+  final static float ARC_START = PConstants.HALF_PI + KNOB_INDENT;
+  final static float ARC_RANGE = PConstants.TWO_PI - 2 * KNOB_INDENT;
+  final static float ARC_END = ARC_START + ARC_RANGE;
 
   public UIKnob(LXListenableNormalizedParameter parameter) {
     this();
