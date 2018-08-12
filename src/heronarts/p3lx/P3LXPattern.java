@@ -24,15 +24,22 @@
 
 package heronarts.p3lx;
 
+import heronarts.lx.LX;
 import heronarts.lx.LXPattern;
 import processing.core.PApplet;
 
 public abstract class P3LXPattern extends LXPattern {
 
+  protected final P3LX lx;
+
   protected final PApplet applet;
 
-  protected P3LXPattern(P3LX lx) {
+  protected P3LXPattern(LX lx) {
     super(lx);
-    this.applet = lx.applet;
+    if (!(lx instanceof P3LX)) {
+      throw new IllegalArgumentException("P3LXPattern must be given a P3LX instance");
+    }
+    this.lx = (P3LX) lx;
+    this.applet = this.lx.applet;
   }
 }

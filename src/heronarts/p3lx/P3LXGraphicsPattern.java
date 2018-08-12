@@ -24,6 +24,7 @@
 
 package heronarts.p3lx;
 
+import heronarts.lx.LX;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
@@ -31,7 +32,7 @@ public abstract class P3LXGraphicsPattern extends P3LXPattern {
 
   private final PGraphics pg;
 
-  protected P3LXGraphicsPattern(P3LX lx) {
+  protected P3LXGraphicsPattern(LX lx) {
     super(lx);
     this.pg = this.applet.createGraphics(lx.width, lx.height, PConstants.P2D);
   }
