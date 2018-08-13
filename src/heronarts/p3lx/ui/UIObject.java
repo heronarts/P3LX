@@ -31,6 +31,7 @@ import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+import heronarts.lx.parameter.LXParameterModulation;
 import heronarts.lx.parameter.LXTriggerModulation;
 import heronarts.lx.parameter.LXCompoundModulation;
 
@@ -484,10 +485,19 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     } else if (isModulationTargetMapping() && !isModulationSource()) {
       LXNormalizedParameter source = this.ui.getModulationSource().getModulationSource();
       CompoundParameter target = ((UIModulationTarget)this).getModulationTarget();
+      String error = null;
       if (source != null && target != null) {
-        this.ui.modulationEngine.addModulation(new LXCompoundModulation(source, target));
+        try {
+          this.ui.modulationEngine.addModulation(new LXCompoundModulation(source, target));
+        } catch (LXParameterModulation.CircularDependencyException cdx) {
+          error = cdx.getMessage();
+          System.err.println(cdx.getMessage());
+        }
       }
       this.ui.mapModulationSource(null);
+      if (error != null) {
+        this.ui.contextualHelpText.setValue(error);
+      }
       return;
     } else if (isTriggerSourceMapping()) {
       this.ui.mapTriggerSource((UITriggerSource) this);
@@ -495,10 +505,19 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     } else if (isTriggerTargetMapping() && !isTriggerSource()) {
       BooleanParameter source = this.ui.getTriggerSource().getTriggerSource();
       BooleanParameter target = ((UITriggerTarget)this).getTriggerTarget();
+      String error = null;
       if (source != null && target != null) {
-        this.ui.modulationEngine.addTrigger(new LXTriggerModulation(source, target));
+        try {
+          this.ui.modulationEngine.addTrigger(new LXTriggerModulation(source, target));
+        } catch (LXParameterModulation.CircularDependencyException cdx) {
+          error = cdx.getMessage();
+          System.err.println(cdx.getMessage());
+        }
       }
       this.ui.mapTriggerSource(null);
+      if (error != null) {
+        this.ui.contextualHelpText.setValue(error);
+      }
       return;
     }
     for (int i = this.mutableChildren.size() - 1; i >= 0; --i) {
