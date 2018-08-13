@@ -153,7 +153,7 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     // Compute colors for base/value fills
     int baseColor;
     int valueColor;
-    if (isEnabled()) {
+    if (isEnabled() && isEditable()) {
       baseColor = ui.theme.getPrimaryColor();
       valueColor = getModulatedValueColor(baseColor);
     } else {
@@ -188,7 +188,7 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
     super.onMousePressed(mouseEvent, mx, my);
     this.dragValue = getNormalized();
-    if ((this.parameter != null) && (mouseEvent.getCount() > 1)) {
+    if (isEditable() && (this.parameter != null) && (mouseEvent.getCount() > 1)) {
       LXCompoundModulation modulation = getModulation(mouseEvent.isShiftDown());
       if (modulation != null && (mouseEvent.isControlDown() || mouseEvent.isMetaDown())) {
         modulation.range.reset();
@@ -215,7 +215,7 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
 
   @Override
   protected void onMouseDragged(MouseEvent mouseEvent, float mx, float my, float dx, float dy) {
-    if (!isEnabled()) {
+    if (!isEnabled() || !isEditable()) {
       return;
     }
 

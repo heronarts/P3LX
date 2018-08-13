@@ -25,7 +25,7 @@
 package heronarts.p3lx.ui.component;
 
 import heronarts.lx.parameter.BooleanParameter;
-import heronarts.lx.parameter.LXListenableNormalizedParameter;
+import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITriggerSource;
@@ -52,7 +52,7 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
   }
 
   @Override
-  public UIParameterControl setParameter(LXListenableNormalizedParameter parameter) {
+  public UIParameterControl setParameter(LXNormalizedParameter parameter) {
     if (!(parameter instanceof BooleanParameter)) {
       throw new IllegalArgumentException("UISwitch may only take BooleanParameter");
     }

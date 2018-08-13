@@ -34,7 +34,8 @@ import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.DiscreteParameter;
-import heronarts.lx.parameter.LXListenableNormalizedParameter;
+import heronarts.lx.parameter.FunctionalParameter;
+import heronarts.lx.parameter.LXListenableParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
@@ -54,7 +55,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
 
   private boolean showValue = false;
 
-  protected LXListenableNormalizedParameter parameter = null;
+  protected LXNormalizedParameter parameter = null;
 
   protected LXParameter.Polarity polarity = LXParameter.Polarity.UNIPOLAR;
 
@@ -102,8 +103,17 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return getDescription(this.parameter);
   }
 
+  @Override
   public boolean isEnabled() {
     return (this.parameter != null) && this.enabled;
+  }
+
+  @Override
+  public UIInputBox setEditable(boolean editable) {
+    if (editable && this.parameter instanceof FunctionalParameter) {
+      throw new IllegalStateException("May not set control of FunctionalParameter to be editable");
+    }
+    return super.setEditable(editable);
   }
 
   public UIParameterControl setShowLabel(boolean showLabel) {
@@ -129,7 +139,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
 
   @Override
   protected int getFocusColor(UI ui) {
-    if (!isEnabled()) {
+    if (!isEnabled() || !isEditable()) {
       return ui.theme.getControlDisabledColor();
     }
     return super.getFocusColor(ui);
@@ -150,13 +160,16 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   }
 
   protected UIParameterControl setNormalized(double normalized) {
+    if (!isEditable()) {
+      throw new IllegalStateException("May not setNormalized on a non-editable UIParameterControl");
+    }
     if (this.parameter != null) {
       this.parameter.setNormalized(normalized);
     }
     return this;
   }
 
-  public LXListenableNormalizedParameter getParameter() {
+  public LXNormalizedParameter getParameter() {
     return this.parameter;
   }
 
@@ -168,14 +181,21 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return this;
   }
 
-  public UIParameterControl setParameter(LXListenableNormalizedParameter parameter) {
-    if (this.parameter != null) {
-      this.parameter.removeListener(this);
+  public UIParameterControl setParameter(LXNormalizedParameter parameter) {
+    if (this.parameter instanceof LXListenableParameter) {
+      ((LXListenableParameter) this.parameter).removeListener(this);
     }
     this.parameter = parameter;
+    this.editing = false;
     if (this.parameter != null) {
       this.polarity = this.parameter.getPolarity();
-      this.parameter.addListener(this);
+      if (this.parameter instanceof FunctionalParameter) {
+        setEditable(false);
+      } else if (this.parameter instanceof LXListenableParameter) {
+        ((LXListenableParameter) this.parameter).addListener(this);
+      }
+    } else {
+      setEditable(false);
     }
     redraw();
     return this;
@@ -218,10 +238,12 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return UIDoubleBox.isValidInputCharacter(keyChar);
   }
 
-
   @SuppressWarnings("fallthrough")
   @Override
   protected void saveEditBuffer() {
+    if (!isEditable()) {
+      throw new IllegalStateException("Cannot save edit buffer on non-editable parameter");
+    }
     if (this.parameter != null) {
       try {
         if (this.editBuffer.indexOf(':') >= 0) {
@@ -326,7 +348,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
       if ((keyCode == java.awt.event.KeyEvent.VK_SPACE) || (keyCode == java.awt.event.KeyEvent.VK_ENTER)) {
         consumeKeyEvent();
         setShowValue(true);
-      } else if (this.enabled && keyEvent.isShiftDown() && keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
+      } else if (isEnabled() && isEditable() && keyEvent.isShiftDown() && keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
         consumeKeyEvent();
         if (this.parameter != null) {
           this.parameter.reset();
@@ -334,7 +356,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
       }
     }
 
-    if (this.keyEditable && !keyEventConsumed()) {
+    if (isEditable() && this.keyEditable && !keyEventConsumed()) {
       super.onKeyPressed(keyEvent, keyChar, keyCode);
     }
   }
@@ -364,24 +386,24 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
 
   @Override
   public LXParameter getControlTarget() {
-    return isMappable() ? getMappableParameter() : null;
+    return getMappableParameter();
   }
 
   @Override
   public LXNormalizedParameter getModulationSource() {
-    return isMappable() ? getMappableParameter() : null;
+    return getMappableParameter();
   }
 
   @Override
   public CompoundParameter getModulationTarget() {
     if (this.parameter instanceof CompoundParameter) {
-      return isMappable() ? (CompoundParameter) getMappableParameter() : null;
+      return (CompoundParameter) getMappableParameter();
     }
     return null;
   }
 
-  private LXListenableNormalizedParameter getMappableParameter() {
-    if (this.parameter != null && this.parameter.getComponent() != null) {
+  private LXNormalizedParameter getMappableParameter() {
+    if (isMappable() && this.parameter != null && this.parameter.getComponent() != null) {
       return this.parameter;
     }
     return null;

@@ -245,27 +245,24 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
 
   @Override
   public LXParameter getControlTarget() {
-    return isMappable() ? getMappableParameter() : null;
+    return getMappableParameter();
   }
 
   @Override
   public LXNormalizedParameter getModulationSource() {
-    if (isMappable()) {
-      return getMappableParameter();
-    }
-    return null;
+    return getMappableParameter();
   }
 
   @Override
   public CompoundParameter getModulationTarget() {
-    if (isMappable() && (this.parameter instanceof CompoundParameter)) {
+    if (this.parameter instanceof CompoundParameter) {
       return (CompoundParameter) getMappableParameter();
     }
     return null;
   }
 
   private BoundedParameter getMappableParameter() {
-    if (this.parameter != null && this.parameter.getComponent() != null) {
+    if (isMappable() && this.parameter != null && this.parameter.getComponent() != null) {
       return this.parameter;
     }
     return null;

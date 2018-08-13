@@ -116,6 +116,10 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
 
   protected abstract void saveEditBuffer();
 
+  public boolean isEditable() {
+    return this.editable;
+  }
+
   public UIInputBox setEditable(boolean editable) {
     if (this.editable != editable) {
       if (this.editing) {
@@ -125,6 +129,10 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
       this.editable = editable;
     }
     return this;
+  }
+
+  public boolean isEnabled() {
+    return this.enabled;
   }
 
   public UIInputBox setEnabled(boolean enabled) {
@@ -139,6 +147,9 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
   }
 
   public void edit() {
+    if (!this.editable) {
+      throw new IllegalStateException("May not edit a non-editable UIInputBox");
+    }
     if (this.enabled && !this.editing) {
       this.editing = true;
       this.editBuffer = "";
@@ -222,44 +233,46 @@ public abstract class UIInputBox extends UI2dComponent implements UIFocus {
 
   @Override
   protected void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
-    if (this.editing) {
-      // Editing!
-      if (isValidCharacter(keyChar)) {
-        consumeKeyEvent();
-        this.editBuffer += keyChar;
-        redraw();
-      } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
-        consumeKeyEvent();
-        this.editing = false;
-        saveEditBuffer();
-        redraw();
-      } else if (keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
-        consumeKeyEvent();
-        if (this.editBuffer.length() > 0) {
-          this.editBuffer = this.editBuffer.substring(0, this.editBuffer.length() - 1);
+    if (this.editable) {
+      if (this.editing) {
+        // Editing!
+        if (isValidCharacter(keyChar)) {
+          consumeKeyEvent();
+          this.editBuffer += keyChar;
+          redraw();
+        } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
+          consumeKeyEvent();
+          this.editing = false;
+          saveEditBuffer();
+          redraw();
+        } else if (keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
+          consumeKeyEvent();
+          if (this.editBuffer.length() > 0) {
+            this.editBuffer = this.editBuffer.substring(0, this.editBuffer.length() - 1);
+            redraw();
+          }
+        } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+          consumeKeyEvent();
+          this.editing = false;
           redraw();
         }
-      } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
-        consumeKeyEvent();
-        this.editing = false;
-        redraw();
-      }
-    } else if (this.enabled && this.editable) {
-      // Not editing
-      if (this.immediateEdit && isValidCharacter(keyChar)) {
-        consumeKeyEvent();
-        this.editing = true;
-        this.editBuffer = Character.toString(keyChar);
-        redraw();
-      } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
-        consumeKeyEvent();
-        this.editing = true;
-        this.editBuffer = "";
-        redraw();
-      } else if ((keyCode == java.awt.event.KeyEvent.VK_LEFT) || (keyCode == java.awt.event.KeyEvent.VK_DOWN)) {
-        decrementValue(keyEvent);
-      } else if ((keyCode == java.awt.event.KeyEvent.VK_RIGHT) || (keyCode == java.awt.event.KeyEvent.VK_UP)) {
-        incrementValue(keyEvent);
+      } else if (this.enabled) {
+        // Not editing
+        if (this.immediateEdit && isValidCharacter(keyChar)) {
+          consumeKeyEvent();
+          this.editing = true;
+          this.editBuffer = Character.toString(keyChar);
+          redraw();
+        } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
+          consumeKeyEvent();
+          this.editing = true;
+          this.editBuffer = "";
+          redraw();
+        } else if ((keyCode == java.awt.event.KeyEvent.VK_LEFT) || (keyCode == java.awt.event.KeyEvent.VK_DOWN)) {
+          decrementValue(keyEvent);
+        } else if ((keyCode == java.awt.event.KeyEvent.VK_RIGHT) || (keyCode == java.awt.event.KeyEvent.VK_UP)) {
+          incrementValue(keyEvent);
+        }
       }
     }
   }
