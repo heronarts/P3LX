@@ -27,8 +27,8 @@ package heronarts.p3lx.ui.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXListenableParameter;
+import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.LXCompoundModulation;
@@ -65,7 +65,7 @@ public class UICompoundParameterControl extends UIParameterControl {
   }
 
   @Override
-  public UIParameterControl setParameter(LXListenableNormalizedParameter parameter) {
+  public UIParameterControl setParameter(LXNormalizedParameter parameter) {
     for (LXListenableParameter p : this.modulationParameters) {
       p.removeListener(this.redrawListener);
     }

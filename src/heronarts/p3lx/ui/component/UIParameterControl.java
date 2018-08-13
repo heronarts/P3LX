@@ -32,6 +32,7 @@ import processing.event.MouseEvent;
 
 import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.parameter.BooleanParameter;
+import heronarts.lx.parameter.BoundedFunctionalParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
@@ -54,7 +55,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
 
   private boolean showValue = false;
 
-  protected LXListenableNormalizedParameter parameter = null;
+  protected LXNormalizedParameter parameter = null;
 
   protected LXParameter.Polarity polarity = LXParameter.Polarity.UNIPOLAR;
 
@@ -156,7 +157,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return this;
   }
 
-  public LXListenableNormalizedParameter getParameter() {
+  public LXNormalizedParameter getParameter() {
     return this.parameter;
   }
 
@@ -168,14 +169,18 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return this;
   }
 
-  public UIParameterControl setParameter(LXListenableNormalizedParameter parameter) {
+  public UIParameterControl setParameter(LXNormalizedParameter parameter) {
     if (this.parameter != null) {
-      this.parameter.removeListener(this);
+      if (parameter instanceof LXListenableNormalizedParameter) {
+        ((LXListenableNormalizedParameter)this.parameter).removeListener(this);
+      }
     }
     this.parameter = parameter;
     if (this.parameter != null) {
       this.polarity = this.parameter.getPolarity();
-      this.parameter.addListener(this);
+      if (parameter instanceof LXListenableNormalizedParameter) {
+        ((LXListenableNormalizedParameter)this.parameter).addListener(this);
+      }
     }
     redraw();
     return this;
@@ -197,6 +202,8 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
         return ((BooleanParameter) this.parameter).isOn() ? "ON" : "OFF";
       } else if (this.parameter instanceof CompoundParameter) {
         return this.parameter.getFormatter().format(((CompoundParameter) this.parameter).getBaseValue());
+      } else if (this.parameter instanceof BoundedFunctionalParameter) {
+        return this.parameter.getFormatter().format(((BoundedFunctionalParameter) this.parameter).getValue());
       } else {
         return this.parameter.getFormatter().format(this.parameter.getValue());
       }
@@ -380,7 +387,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return null;
   }
 
-  private LXListenableNormalizedParameter getMappableParameter() {
+  private LXNormalizedParameter getMappableParameter() {
     if (this.parameter != null && this.parameter.getComponent() != null) {
       return this.parameter;
     }
