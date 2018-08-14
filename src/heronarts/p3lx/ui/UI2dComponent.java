@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui;
 
+import heronarts.lx.parameter.LXParameterModulation;
 import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PGraphics;
@@ -747,9 +748,7 @@ public abstract class UI2dComponent extends UIObject {
     if (needsBorder) {
       drawBorder(ui, pg);
       if (isModulationSource() || isTriggerSource()) {
-        pg.noFill();
-        pg.stroke(0xff000000 | ui.theme.getModulationTargetMappingColor());
-        pg.rect(0, 0, this.width-1, this.height-1, this.borderRounding);
+        drawMappingBorder(ui, pg);
       }
     }
     if (needsMappingOverlay) {
@@ -757,9 +756,15 @@ public abstract class UI2dComponent extends UIObject {
     }
   }
 
+  private void drawMappingBorder(UI ui, PGraphics pg) {
+    pg.noFill();
+    pg.stroke(0xff000000 | ui.theme.getModulationTargetMappingColor());
+    pg.rect(0, 0, this.width-1, this.height-1, this.borderRounding);
+  }
+
   private void drawMappingOverlay(UI ui, PGraphics pg, float x, float y, float w, float h) {
     if (isModulationSource() || isTriggerSource()) {
-      // Do nothing!
+      // Do nothing! Handled by drawMappingBorder
     } else if (isMidiMapping()) {
       pg.noStroke();
       pg.fill(ui.theme.getMidiMappingColor());
@@ -775,6 +780,15 @@ public abstract class UI2dComponent extends UIObject {
       pg.noStroke();
       pg.fill(ui.theme.getModulationTargetMappingColor());
       pg.rect(x, y, w, h);
+    } else if (isModulationHighlight()) {
+      LXParameterModulation modulation = this.ui.highlightParameterModulation;
+      if (modulation != null) {
+        int color = modulation.color.getColor();
+        color = (color & 0x00ffffff) | (0x33000000);
+        pg.noStroke();
+        pg.fill(color);
+        pg.rect(x, y, w, h);
+      }
     }
   }
 

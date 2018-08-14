@@ -37,6 +37,7 @@ import heronarts.lx.midi.LXMidiMapping;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+import heronarts.lx.parameter.LXParameterModulation;
 import heronarts.lx.parameter.StringParameter;
 import heronarts.p3lx.P3LX;
 import heronarts.p3lx.ui.component.UIDropMenu;
@@ -367,6 +368,7 @@ public class UI implements LXEngine.Dispatch {
   boolean triggerSourceMapping = false;
   boolean triggerTargetMapping = false;
   LXModulationEngine modulationEngine = null;
+  LXParameterModulation highlightParameterModulation = null;
 
   private UIControlTarget controlTarget = null;
   private UITriggerSource triggerSource = null;
@@ -468,6 +470,14 @@ public class UI implements LXEngine.Dispatch {
     }
 
     UI.instance = this;
+  }
+
+  public UI setHighlightParameterModulation(LXParameterModulation highlightParameterModulation) {
+    if (this.highlightParameterModulation != highlightParameterModulation) {
+      this.highlightParameterModulation = highlightParameterModulation;
+      this.root.redraw();
+    }
+    return this;
   }
 
   public UI setCoordinateSystem(CoordinateSystem coordinateSystem) {

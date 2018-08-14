@@ -326,16 +326,37 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     }
   }
 
+  /**
+   * Returns true if this is a MIDI control target that has been selected for
+   * mapping. It is highlighted while the system waits for a MIDI event to map.
+   *
+   * @return true if this is a MIDI control target that has been selected for
+   * mapping. It is highlighted while the system waits for a MIDI event to map.
+   */
   boolean isControlTarget() {
     return this.ui.getControlTarget() == this;
   }
 
+  /**
+   * Returns true if this is a trigger source that has been selected for trigger
+   * mapping. It is highlighted while the user selects a trigger target.
+   *
+   * @return true if this is a trigger source that has been selected for trigger
+   * mapping. It is highlighted while the user selects a trigger target.
+   */
   boolean isTriggerSource() {
     return
       this.ui.triggerTargetMapping &&
       (this == this.ui.getTriggerSource());
   }
 
+  /**
+   * Returns true if the UI is in a trigger source mapping state and this element
+   * is an eligible trigger source. It is highlighted if so.
+   *
+   * @return true if the UI is in a trigger source mapping state and this element
+   * is an eligible trigger source. It is highlighted if so.
+   */
   boolean isTriggerSourceMapping() {
     return
       this.ui.triggerSourceMapping &&
@@ -343,6 +364,13 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       ((UITriggerSource) this).getTriggerSource() != null;
   }
 
+  /**
+   * Returns true if the UI is in trigger target mapping state and this element
+   * is a valid, selectable trigger target.
+   *
+   * @return true if the UI is in trigger target mapping state and this element
+   * is a valid, selectable trigger target.
+   */
   boolean isTriggerTargetMapping() {
     return
       this.ui.triggerTargetMapping &&
@@ -350,6 +378,13 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       ((UITriggerTarget) this).getTriggerTarget() != null;
   }
 
+  /**
+   * Returns true if the UI is in modulation target mapping mode and this element
+   * is the modulation source that is being mapped.
+   *
+   * @return true if the UI is in modulation target mapping mode and this element
+   * is the modulation source that is being mapped.
+   */
   boolean isModulationSource() {
     if (this.ui.modulationTargetMapping) {
       UIModulationSource modulationSource = this.ui.getModulationSource();
@@ -368,6 +403,13 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     return false;
   }
 
+  /**
+   * Returns true if the UI is in modulation source mapping mode and this element
+   * is a valid modulation source.
+   *
+   * @return true if the UI is in modulation source mapping mode and this element
+   * is a valid modulation source.
+   */
   boolean isModulationSourceMapping() {
     return
       this.ui.modulationSourceMapping && (
@@ -376,6 +418,13 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       );
   }
 
+  /**
+   * Returns true if the UI is in modulation target mapping mode and this element
+   * is a valid modulation target.
+   *
+   * @return true if the UI is in modulation target mapping mode and this element
+   * is a valid modulation target.
+   */
   boolean isModulationTargetMapping() {
     if (this.ui.modulationTargetMapping && (this instanceof UIModulationTarget)) {
       CompoundParameter target = ((UIModulationTarget) this).getModulationTarget();
@@ -384,6 +433,27 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     return false;
   }
 
+  boolean isModulationHighlight() {
+    if (this.ui.highlightParameterModulation != null) {
+      LXParameter target = this.ui.highlightParameterModulation.getTarget();
+      LXParameter thisParameter = null;
+      if (this instanceof UITriggerTarget) {
+        thisParameter = ((UITriggerTarget) this).getTriggerTarget();
+      } else if (this instanceof UIModulationTarget) {
+        thisParameter = ((UIModulationTarget) this).getModulationTarget();
+      }
+      return target == thisParameter;
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if the UI is in MIDI mapping mode and this element is a valid
+   * control target that could be selected to receive MIDI input.
+   *
+   * @return true if the UI is in MIDI mapping mode and this element is a valid
+   * control target that could be selected to receive MIDI input.
+   */
   boolean isMidiMapping() {
     return
       this.ui.midiMapping &&
