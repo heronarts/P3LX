@@ -45,6 +45,12 @@ import processing.event.MouseEvent;
  */
 public interface UIItemList {
 
+  public interface Listener {
+    public void onItemFocused(Item item);
+    public void onItemActivated(Item item);
+    public void onItemDeactivated(Item item);
+  }
+
   /**
    * Interface to which items in the list must conform
    */
@@ -189,7 +195,9 @@ public interface UIItemList {
 
     private final UI2dContainer list;
 
-    private List<Item> items = new CopyOnWriteArrayList<Item>();
+    private final List<Item> items = new CopyOnWriteArrayList<Item>();
+
+    private final List<Listener> listeners = new ArrayList<Listener>();
 
     private int focusIndex = -1;
 
@@ -224,6 +232,14 @@ public interface UIItemList {
       list.setBorderRounding(4);
     }
 
+    private void addListener(Listener listener) {
+      this.listeners.add(listener);
+    }
+
+    private void removeListener(Listener listener) {
+      this.listeners.remove(listener);
+    }
+
     private void focusNext(int increment) {
       int index = this.focusIndex + increment;
       while (index >= 0 && index < this.items.size()) {
@@ -254,10 +270,18 @@ public interface UIItemList {
         }
         this.focusIndex = focusIndex;
         if (this.focusIndex >= 0) {
-          this.items.get(this.focusIndex).onFocus();
+          Item item = this.items.get(this.focusIndex);
+          item.onFocus();
+          for (Listener listener : this.listeners) {
+            listener.onItemFocused(item);
+          }
         }
         this.list.redraw();
       }
+    }
+
+    private int getFocusedIndex() {
+      return this.focusIndex;
     }
 
     /**
@@ -327,7 +351,11 @@ public interface UIItemList {
       if (this.focusIndex >= this.items.size()) {
         setFocusIndex(items.size() - 1);
       } else if (this.focusIndex >= 0) {
-        this.items.get(this.focusIndex).onFocus();
+        Item focusItem = this.items.get(this.focusIndex);
+        focusItem.onFocus();
+        for (Listener listener : this.listeners) {
+          listener.onItemFocused(focusItem);
+        }
       }
       recomputeContentHeight();
       this.list.redraw();
@@ -345,7 +373,11 @@ public interface UIItemList {
       if (this.focusIndex >= items.size()) {
         setFocusIndex(items.size() - 1);
       } else if (this.focusIndex >= 0) {
-        this.items.get(this.focusIndex).onFocus();
+        Item item = this.items.get(this.focusIndex);
+        item.onFocus();
+        for (Listener listener : this.listeners) {
+          listener.onItemFocused(item);
+        }
       }
       setContentHeight(ROW_SPACING * items.size() + ROW_MARGIN);
       this.list.redraw();
@@ -389,6 +421,9 @@ public interface UIItemList {
           this.list.redraw();
         } else {
           item.onActivate();
+          for (Listener listener : this.listeners) {
+            listener.onItemActivated(item);
+          }
         }
       }
     }
@@ -632,7 +667,11 @@ public interface UIItemList {
     private void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
       this.dragging = false;
       if (this.mouseActivate >= 0 && this.mouseActivate < this.items.size()) {
-        this.items.get(this.mouseActivate).onDeactivate();
+        Item item = this.items.get(this.mouseActivate);
+        item.onDeactivate();
+        for (Listener listener : this.listeners) {
+          listener.onItemDeactivated(item);
+        }
       }
       this.mouseActivate = -1;
     }
@@ -743,7 +782,11 @@ public interface UIItemList {
         if (this.isMomentary) {
           if (this.keyActivate >= 0 && this.keyActivate < this.items.size()) {
             consume = true;
-            this.items.get(this.keyActivate).onDeactivate();
+            Item item = this.items.get(this.keyActivate);
+            item.onDeactivate();
+            for (Listener listener : this.listeners) {
+              listener.onItemDeactivated(item);
+            }
           }
           this.keyActivate = -1;
         }
@@ -771,6 +814,10 @@ public interface UIItemList {
     public UIItemList setFocusIndex(int focusIndex) {
       this.impl.setFocusIndex(focusIndex);
       return this;
+    }
+
+    public int getFocusedIndex() {
+      return this.impl.getFocusedIndex();
     }
 
     public UIItemList.Item getFocusedItem() {
@@ -829,6 +876,18 @@ public interface UIItemList {
     @Override
     public UIItemList setControlSurfaceFocus(int index, int length) {
       this.impl.setControlSurfaceFocus(index, length);
+      return this;
+    }
+
+    @Override
+    public UIItemList addListener(Listener listener) {
+      this.impl.addListener(listener);
+      return this;
+    }
+
+    @Override
+    public UIItemList removeListener(Listener listener) {
+      this.impl.removeListener(listener);
       return this;
     }
 
@@ -905,6 +964,10 @@ public interface UIItemList {
       return this;
     }
 
+    public int getFocusedIndex() {
+      return this.impl.getFocusedIndex();
+    }
+
     public UIItemList.Item getFocusedItem() {
       return this.impl.getFocusedItem();
     }
@@ -960,6 +1023,18 @@ public interface UIItemList {
 
     public UIItemList setControlSurfaceFocus(int index, int length) {
       this.impl.setControlSurfaceFocus(index, length);
+      return this;
+    }
+
+    @Override
+    public UIItemList addListener(Listener listener) {
+      this.impl.addListener(listener);
+      return this;
+    }
+
+    @Override
+    public UIItemList removeListener(Listener listener) {
+      this.impl.removeListener(listener);
       return this;
     }
 
@@ -1029,6 +1104,13 @@ public interface UIItemList {
    * @return this
    */
   public UIItemList setFocusIndex(int focusIndex);
+
+  /**
+   * Returns the index of the currently focused item in the list
+   *
+   * @return Index of focused item
+   */
+  public int getFocusedIndex();
 
   /**
    * Retrieves the currently focused item in the list.
@@ -1120,5 +1202,21 @@ public interface UIItemList {
    * @return this
    */
   public UIItemList setControlSurfaceFocus(int index, int length);
+
+  /**
+   * Adds a listener to receive notifications about list operations
+   *
+   * @param listener Listener
+   * @return this
+   */
+  public UIItemList addListener(Listener listener);
+
+  /**
+   * Removes a listener from receiving notifications about list operations
+   *
+   * @param listener Listener
+   * @return this
+   */
+  public UIItemList removeListener(Listener listener);
 
 }
