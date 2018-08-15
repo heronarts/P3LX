@@ -1,4 +1,4 @@
-<project name="P3LX" default="clean" basedir="../">
+<project name="P3LX" default="jar" basedir="../">
 
 	<property file="./build/build.properties" />
 
@@ -7,10 +7,6 @@
   	</description>
 
 	<property name="line" value="------------------------------------------------------------------------------------------------" />
-
-	<condition property="is.normal">
-		<equals arg1="${project.compile}" arg2="normal" />
-	</condition>
 
 	<!-- set the OS properties -->
 	<condition property="is.mac">
@@ -73,8 +69,8 @@ ${line}
 		<antcall target="generate.structure">
 			<param name="folder" value="library" />
 		</antcall>
+		<antcall target="jar" />
 		<antcall target="generate.source" />
-		<antcall target="compile" />
 		<antcall target="generate.jar">
 			<param name="folder" value="library" />
 		</antcall>
@@ -88,7 +84,7 @@ ${line}
 		<delete dir="${project.tmp}" />
 	</target>
 
-	<target name="generate.libprops" if="is.normal">
+	<target name="generate.libprops">
 		<property name="libprops.destination" location="${project.tmp}/${project.name}/library.properties" />
 		<copy file="${libprops.source}" tofile="${libprops.destination}" />
 		<antcall target="parse.file">
@@ -114,15 +110,12 @@ ${line}
 			<compilerarg value="-Xlint" />
 		</javac>
 		<copy todir="${project.bin.data}">
-			<fileset dir="${project.data}" excludes="README" />
+			<fileset dir="${project.data}" />
 		</copy>
 	</target>
 
-	<target name="generate.jar">
-		<jar jarfile="${project.tmp}/${project.name}/${folder}/${project.jar.name}" basedir="${project.bin}">
-			<zipgroupfileset dir="${project.lib}" includes="coremidi4j-0.9.jar" />
-			<zipgroupfileset dir="${project.lib}" includes="gson-2.8.0.jar" />
-		</jar>
+	<target name="generate.jar" depends="jar">
+		<copy file="${project.bin}/${project.jar.name}" todir="${project.tmp}/${project.name}/${folder}" />
 	</target>
 
 	<target name="generate.structure">
@@ -141,7 +134,7 @@ ${line}
 		</copy>
 	</target>
 
-	<target name="generate.source" if="is.normal">
+	<target name="generate.source">
 		<antcall target="generate.source.win" />
 		<antcall target="generate.source.nix" />
 	</target>
@@ -164,7 +157,7 @@ ${line}
 		<foreach list="${src.list}" param="file" target="parse.file" delimiter=":" />
 	</target>
 
-	<target name="generate.distribution" if="is.normal">
+	<target name="generate.distribution">
 		<mkdir dir="${project.dist}" />
 		<delete dir="${project.dist.version}" />
 		<mkdir dir="${project.dist.version}" />
@@ -172,9 +165,9 @@ ${line}
 		<move file="${project.tmp}/${project.name}" toDir="${project.dist.version}" />
 	</target>
 
-	<target name="generate.javadoc" if="is.normal">
+	<target name="generate.javadoc">
 		<!-- create the java reference of the library -->
-		<javadoc bottom="Processing library ${project.name} by ${author.name}. ${library.copyright}" classpath="${classpath.local.location}/video.jar;${classpath.local.location}/core.jar;${classpath.local.location}/jogl-all.jar;${project.lib}/gson-2.8.0.jar;{project.bin}" destdir="${project.tmp}/${project.name}/reference" verbose="false" stylesheetfile="build/stylesheet.css" doctitle="${project.name} API Specification" version="false" windowtitle="${project.name} API">
+		<javadoc bottom="Processing library ${project.name} by ${author.name}. ${library.copyright}" classpath="${classpath.local.location}/video.jar;${classpath.local.location}/core.jar;${classpath.local.location}/jogl-all.jar;${project.lib}/coremidi4j-0.9.jar;${project.lib}/gson-2.8.0.jar;{project.bin}" destdir="${project.tmp}/${project.name}/reference" verbose="false" stylesheetfile="build/stylesheet.css" doctitle="${project.name} API Specification" version="false" windowtitle="${project.name} API">
 
 			<link href="${javadoc.java.href}" />
 			<link href="${javadoc.processing.href}" />
@@ -218,7 +211,7 @@ ${line}
 		<replaceregexp file="${file}" match="##tested.processingVersion##" replace="${tested.processingVersion}" flags="g" />
 	</target>
 
-	<target name="generate.zip" if="is.normal">
+	<target name="generate.zip">
 		<!-- zip the distribution of the library -->
 		<move todir="${project.dist.version}/tmp/${project.name}-${library.version}">
 			<fileset dir="${project.dist.version}/${project.name}" />
@@ -229,7 +222,7 @@ ${line}
 		<delete dir="${project.dist.version}/tmp" />
 	</target>
 
-	<target name="lightning">
+	<target name="jar">
 		<delete file="${project.bin}/${project.jar.name}" />
 		<mkdir dir="${project.bin}" />
 		<javac destdir="${project.bin}" source="${java.target.version}" target="${java.target.version}" includeantruntime="false">
@@ -240,29 +233,31 @@ ${line}
 			</classpath>
 			<compilerarg value="-Xlint" />
 		</javac>
-		<copy todir="${project.bin.data}">
-			<fileset dir="${project.data}" />
-		</copy>
 		<jar jarfile="${project.bin}/${project.jar.name}" basedir="${project.bin}">
+			<fileset dir="${basedir}" includes="LICENSE VERSION data/**" />
 			<zipgroupfileset dir="${project.lib}" includes="coremidi4j-0.9.jar" />
 			<zipgroupfileset dir="${project.lib}" includes="gson-2.8.0.jar" />
 		</jar>
 	</target>
 
-	<target name="clean" depends="library.run">
-		<delete dir="${project.bin}" />
-		<delete dir="${project.tmp}" />
+	<target name="library">
+		<antcall target="clean" />
+		<antcall target="library.run" />
 		<echo>
 		
 ${line}
 Name        ${project.name} 
 Version     ${library.prettyVersion} (${library.version})
-Compiled    ${project.compile}
 Sketchbook  ${sketchbook.location}
 ${line}
 done, finished.
 ${line}
 		</echo>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${project.bin}" />
+		<delete dir="${project.tmp}" />
 	</target>
 
 </project>

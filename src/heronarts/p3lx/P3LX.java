@@ -45,9 +45,7 @@ import processing.core.PGraphics;
  */
 public class P3LX extends LX {
 
-  public final static String VERSION = "##library.prettyVersion##";
-
-  public static boolean isProcessing2X = false;
+  public final static String VERSION = LX.VERSION;
 
   /**
    * Returns the version of the library.
