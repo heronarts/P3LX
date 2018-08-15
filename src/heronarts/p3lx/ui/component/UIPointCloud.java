@@ -74,8 +74,8 @@ public class UIPointCloud extends UI3dComponent implements LXSerializable {
   /**
    * Update the model
    *
-   * @param model
-   * @return
+   * @param model Model to draw
+   * @return this
    */
   public UIPointCloud setModel(LXModel model) {
     this.model = model;
