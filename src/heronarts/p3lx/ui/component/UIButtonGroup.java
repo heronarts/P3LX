@@ -24,13 +24,18 @@
 
 package heronarts.p3lx.ui.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UI2dContainer;
+import heronarts.p3lx.ui.UIContextActions;
 import heronarts.p3lx.ui.UIControlTarget;
 
-public class UIButtonGroup extends UI2dContainer implements UIControlTarget {
+public class UIButtonGroup extends UI2dContainer implements UIControlTarget, UIContextActions {
 
   private final static int DEFAULT_BUTTON_MARGIN = 4;
 
@@ -102,4 +107,15 @@ public class UIButtonGroup extends UI2dContainer implements UIControlTarget {
     }
     return null;
   }
+
+  @Override
+  public List<Action> getContextActions() {
+    String oscAddress = LXOscEngine.getOscAddress(this.parameter);
+    if (oscAddress != null) {
+      List<Action> list = new ArrayList<Action>();
+      list.add(new UIContextActions.Action.CopyOscAddress(oscAddress));
+    }
+    return null;
+  }
+
 }

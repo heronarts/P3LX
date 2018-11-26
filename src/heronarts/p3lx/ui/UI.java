@@ -40,8 +40,7 @@ import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.LXParameterModulation;
 import heronarts.lx.parameter.StringParameter;
 import heronarts.p3lx.P3LX;
-import heronarts.p3lx.ui.component.UIDropMenu;
-
+import heronarts.p3lx.ui.component.UIContextMenu;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +49,6 @@ import java.util.List;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
-import processing.core.PGraphics;
 import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -84,6 +82,20 @@ public class UI implements LXEngine.Dispatch {
     }
 
     @Override
+    void mousePressed(MouseEvent mouseEvent, float mx, float my) {
+      // If a context menu is open
+      boolean hideContext = false;
+      if (contextMenuOverlay.contextMenu != null) {
+        hideContext = true;
+        contextMenuOverlay.mousePressed = false;
+      }
+      super.mousePressed(mouseEvent, mx, my);
+      if (hideContext && !contextMenuOverlay.mousePressed) {
+        hideContextMenu();
+      }
+    }
+
+    @Override
     protected void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
       if (topLevelKeyEventHandler != null) {
         topLevelKeyEventHandler.onKeyPressed(keyEvent, keyChar, keyCode);
@@ -95,6 +107,8 @@ public class UI implements LXEngine.Dispatch {
           } else {
             focusNext();
           }
+        } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+          hideContextMenu();
         }
       }
     }
@@ -270,47 +284,30 @@ public class UI implements LXEngine.Dispatch {
 
   private UIEventHandler topLevelKeyEventHandler = null;
 
-  private class UIDropMenuOverlay extends UI2dContext {
+  private class UIContextMenuOverlay extends UI2dContext {
 
-    private UIDropMenu dropMenu = null;
+    private boolean mousePressed = false;
 
-    public UIDropMenuOverlay() {
+    private UIContextMenu contextMenu = null;
+
+    public UIContextMenuOverlay() {
       super(UI.this, 0, 0, 0, 0);
       this.parent = root;
       setUI(UI.this);
     }
 
-    @Override
-    protected void onMouseMoved(MouseEvent mouseEvent, float mx, float my) {
-      if (this.dropMenu != null) {
-        this.dropMenu.onMouseMoved(mouseEvent, mx, my);
-      }
-    }
-
-    @Override
-    protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
-      if (this.dropMenu != null) {
-        this.dropMenu.onMousePressed(mouseEvent, mx, my);
-      }
-    }
-
-    @Override
-    public void onDraw(UI ui, PGraphics pg) {
-      if (this.dropMenu != null) {
-        this.dropMenu.onDraw(ui, pg, true);
-      }
-    }
-
-    private void setDropMenu(UIDropMenu dropMenu) {
-      if (this.dropMenu != null) {
+    private void setContextMenu(UIContextMenu contextMenu) {
+      if (this.contextMenu != null) {
+        this.contextMenu.setVisible(false);
+        this.contextMenu.removeFromContainer();
         root.mutableChildren.remove(this);
       }
-      this.dropMenu = dropMenu;
-      if (dropMenu != null) {
-        setSize(dropMenu.getWidth(), dropMenu.getHeight());
+      this.contextMenu = contextMenu;
+      if (contextMenu != null) {
+        setSize(contextMenu.getWidth(), contextMenu.getHeight());
         float x = 0;
         float y = 0;
-        UIObject component = dropMenu;
+        UIObject component = contextMenu;
         while (component != root && component != null) {
           x += component.getX();
           y += component.getY();
@@ -322,15 +319,24 @@ public class UI implements LXEngine.Dispatch {
           component = component.getParent();
         }
         setPosition(x, y);
+        contextMenu.setVisible(true);
+        contextMenu.setPosition(0, 0);
+        contextMenu.addToContainer(this);
         root.mutableChildren.add(this);
       }
+    }
+
+    @Override
+    public void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
+      super.onMousePressed(mouseEvent, mx, my);
+      this.mousePressed = false;
     }
   }
 
   /**
    * Drop menu overlay object
    */
-  private UIDropMenuOverlay dropMenuOverlay;
+  private UIContextMenuOverlay contextMenuOverlay;
 
   /**
    * UI look and feel
@@ -395,7 +401,7 @@ public class UI implements LXEngine.Dispatch {
     this.theme = new UITheme(applet);
     LX.initTimer.log("P3LX: UI: Theme");
     this.root = new UIRoot();
-    this.dropMenuOverlay = new UIDropMenuOverlay();
+    this.contextMenuOverlay = new UIContextMenuOverlay();
     LX.initTimer.log("P3LX: UI: Root");
     applet.registerMethod("pre", this);
     applet.registerMethod("draw", this);
@@ -702,21 +708,13 @@ public class UI implements LXEngine.Dispatch {
     return this;
   }
 
-  public UI redrawDropMenu() {
-    this.dropMenuOverlay.redraw();
+  public UI hideContextMenu() {
+    showContextMenu(null);
     return this;
   }
 
-  public UI hideDropMenu() {
-    showDropMenu(null);
-    // TODO(mcslee): this fixes the drop menu resizing
-    // out of its container and overdrawing neighbors
-    this.root.redraw();
-    return this;
-  }
-
-  public UI showDropMenu(UIDropMenu dropMenu) {
-    this.dropMenuOverlay.setDropMenu(dropMenu);
+  public UI showContextMenu(UIContextMenu contextMenu) {
+    this.contextMenuOverlay.setContextMenu(contextMenu);
     return this;
   }
 

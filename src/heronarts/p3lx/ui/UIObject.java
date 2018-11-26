@@ -33,6 +33,7 @@ import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.LXParameterModulation;
 import heronarts.lx.parameter.LXTriggerModulation;
+import heronarts.p3lx.ui.component.UIContextMenu;
 import heronarts.lx.parameter.LXCompoundModulation;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -590,6 +592,21 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       }
       return;
     }
+
+    // Show a context menu!
+    if (this instanceof UIContextActions && (mouseEvent.getButton() == PConstants.RIGHT)) {
+      UIContextActions contextParent = (UIContextActions) this;
+      List<UIContextActions.Action> contextActions = contextParent.getContextActions();
+      if (contextActions != null && contextActions.size() > 0) {
+        getUI().showContextMenu(
+          new UIContextMenu(mx, my, 120, 0)
+          .setPosition((UI2dComponent) this, mx, my)
+          .setActions(contextActions.toArray(new UIContextActions.Action[0]))
+        );
+      }
+      return;
+    }
+
     for (int i = this.mutableChildren.size() - 1; i >= 0; --i) {
       UIObject child = this.mutableChildren.get(i);
       if (child.isVisible() && child.contains(mx, my)) {

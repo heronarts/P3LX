@@ -39,6 +39,7 @@ import heronarts.lx.parameter.LXListenableParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+
 import heronarts.lx.color.LXColor;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIControlTarget;
@@ -169,6 +170,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     return this;
   }
 
+  @Override
   public LXNormalizedParameter getParameter() {
     return this.parameter;
   }

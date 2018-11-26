@@ -26,10 +26,10 @@ package heronarts.p3lx.ui.component;
 
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.EnumParameter;
+import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UI;
-import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITriggerSource;
 import heronarts.p3lx.ui.UITriggerTarget;
@@ -40,7 +40,7 @@ import processing.core.PImage;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class UIButton extends UI2dComponent implements UIControlTarget, UITriggerSource, UITriggerTarget, UIFocus {
+public class UIButton extends UIParameterComponent implements UIControlTarget, UITriggerSource, UITriggerTarget, UIFocus {
 
   protected boolean active = false;
   protected boolean isMomentary = false;
@@ -111,8 +111,9 @@ public class UIButton extends UI2dComponent implements UIControlTarget, UITrigge
     return super.getDescription();
   }
 
-  public BooleanParameter getParameter() {
-    return this.booleanParameter;
+  @Override
+  public LXListenableNormalizedParameter getParameter() {
+    return (this.booleanParameter != null) ? this.booleanParameter : this.enumParameter;
   }
 
   private void removeParameter() {

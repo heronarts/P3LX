@@ -596,10 +596,13 @@ public abstract class UI2dComponent extends UIObject {
   /**
    * Returns the 2d container that this is in
    *
-   * @return Container of this component
+   * @return Container of this component, or null if not in a 2d container
    */
   public UI2dContainer getContainer() {
-    return (UI2dContainer) this.parent;
+    if (this.parent instanceof UI2dContainer) {
+      return (UI2dContainer) this.parent;
+    }
+    return null;
   }
 
   /**

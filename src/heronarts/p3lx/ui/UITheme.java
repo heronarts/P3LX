@@ -60,6 +60,7 @@ public class UITheme {
   private PFont controlFont;
   private int controlBackgroundColor = 0xff222222;
   private int controlBorderColor = 0xff292929;
+  private int controlHighlightColor = 0xff494949;
   private int controlTextColor = 0xffcccccc;
   private int controlDisabledColor = 0xff666666;
 
@@ -494,7 +495,7 @@ public class UITheme {
    * @return color
    */
   public int getControlBorderColor() {
-    return controlBorderColor;
+    return this.controlBorderColor;
   }
 
   /**
@@ -508,13 +509,34 @@ public class UITheme {
     return this;
   }
 
+
+  /**
+   * Get control highlight color
+   *
+   * @return color
+   */
+  public int getControlHighlightColor() {
+    return this.controlHighlightColor;
+  }
+
+  /**
+   * Set control highlight color
+   *
+   * @param controlHighlightColor color
+   * @return this
+   */
+  public UITheme setControlHighlightColor(int controlHighlightColor) {
+    this.controlHighlightColor = controlHighlightColor;
+    return this;
+  }
+
   /**
    * Control text color
    *
    * @return the controlTextColor
    */
   public int getControlTextColor() {
-    return controlTextColor;
+    return this.controlTextColor;
   }
 
   /**
@@ -534,7 +556,7 @@ public class UITheme {
    * @return font
    */
   public PFont getLabelFont() {
-    return labelFont;
+    return this.labelFont;
   }
 
   /**
@@ -558,7 +580,7 @@ public class UITheme {
    * @return color
    */
   public int getLabelColor() {
-    return labelColor;
+    return this.labelColor;
   }
 
   /**

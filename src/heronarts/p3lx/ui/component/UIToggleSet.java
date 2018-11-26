@@ -29,7 +29,6 @@ import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UI;
-import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIFocus;
 import processing.core.PConstants;
@@ -37,7 +36,7 @@ import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class UIToggleSet extends UI2dComponent implements UIFocus, UIControlTarget, LXParameterListener {
+public class UIToggleSet extends UIParameterComponent implements UIFocus, UIControlTarget, LXParameterListener {
 
   private String[] options = null;
 
@@ -76,6 +75,11 @@ public class UIToggleSet extends UI2dComponent implements UIFocus, UIControlTarg
       redraw();
     }
     return this;
+  }
+
+  @Override
+  public DiscreteParameter getParameter() {
+    return this.parameter;
   }
 
   public UIToggleSet setParameter(DiscreteParameter parameter) {

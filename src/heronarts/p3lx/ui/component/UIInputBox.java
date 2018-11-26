@@ -25,7 +25,6 @@
 package heronarts.p3lx.ui.component;
 
 import heronarts.p3lx.ui.UI;
-import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITimerTask;
 import processing.core.PConstants;
@@ -33,7 +32,7 @@ import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public abstract class UIInputBox extends UI2dComponent implements UIFocus {
+public abstract class UIInputBox extends UIParameterComponent implements UIFocus {
 
   public interface ProgressIndicator {
     public boolean hasProgress();
