@@ -34,7 +34,7 @@ import processing.event.MouseEvent;
 
 public class UIContextMenu extends UI2dComponent {
 
-  private static final float ROW_HEIGHT = 16;
+  private static final float ROW_HEIGHT = 18;
 
   private UIContextActions.Action[] actions;
 
@@ -43,8 +43,8 @@ public class UIContextMenu extends UI2dComponent {
   public UIContextMenu(float x, float y, float w, float h) {
     super(x, y, w, h);
     setVisible(false);
-    setBackgroundColor(UI.get().theme.getControlBackgroundColor());
-    setBorderColor(UI.get().theme.getControlBorderColor());
+    setBackgroundColor(UI.get().theme.getContextBackgroundColor());
+    setBorderColor(UI.get().theme.getContextBorderColor());
   }
 
   public UIContextMenu setActions(UIContextActions.Action[] actions) {
@@ -74,7 +74,7 @@ public class UIContextMenu extends UI2dComponent {
   @Override
   public void onDraw(UI ui, PGraphics pg) {
     if (this.highlight >= 0) {
-      pg.fill(ui.theme.getControlHighlightColor());
+      pg.fill(ui.theme.getContextHighlightColor());
       pg.rect(0, this.highlight * ROW_HEIGHT, this.width, ROW_HEIGHT);
     }
 
@@ -82,8 +82,8 @@ public class UIContextMenu extends UI2dComponent {
     for (UIContextActions.Action action : this.actions) {
       pg.textFont(hasFont() ? getFont() : ui.theme.getControlFont());
       pg.fill(ui.theme.getControlTextColor());
-      pg.textAlign(PConstants.LEFT, PConstants.TOP);
-      pg.text(clipTextToWidth(pg, action.getLabel(), this.width - 6), 4, 4 + yp);
+      pg.textAlign(PConstants.LEFT, PConstants.CENTER);
+      pg.text(clipTextToWidth(pg, action.getLabel(), this.width - 6), 4, yp + ROW_HEIGHT / 2);
       yp += ROW_HEIGHT;
     }
   }

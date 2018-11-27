@@ -62,9 +62,12 @@ public class UITheme {
   private PFont controlFont;
   private int controlBackgroundColor = 0xff222222;
   private int controlBorderColor = 0xff292929;
-  private int controlHighlightColor = 0xff494949;
   private int controlTextColor = 0xffcccccc;
   private int controlDisabledColor = 0xff666666;
+
+  private int contextBackgroundColor = controlBackgroundColor;
+  private int contextBorderColor = 0xff000000;
+  private int contextHighlightColor = 0xff494949;
 
   private int midiMappingColor = 0x33ff0000;
   private int modulationSourceMappingColor = 0x3300ff00;
@@ -267,6 +270,46 @@ public class UITheme {
    */
   public UITheme setDeviceBorderColor(int color) {
     this.deviceBorderColor = color;
+    return this;
+  }
+
+  /**
+   * Get context background color
+   *
+   * @return Context background color
+   */
+  public int getContextBackgroundColor() {
+    return this.contextBackgroundColor;
+  }
+
+  /**
+   * Set context background color
+   *
+   * @param contextBackgroundColor
+   * @return this
+   */
+  public UITheme setContextBackgroundColor(int contextBackgroundColor) {
+    this.contextBackgroundColor = contextBackgroundColor;
+    return this;
+  }
+
+  /**
+   * Get context border color
+   *
+   * @return Context border color
+   */
+  public int getContextBorderColor() {
+    return this.contextBorderColor;
+  }
+
+  /**
+   * Set context border color
+   *
+   * @param contextBorderColor
+   * @return this
+   */
+  public UITheme setContextBorderColor(int contextBorderColor) {
+    this.contextBorderColor = contextBorderColor;
     return this;
   }
 
@@ -557,18 +600,18 @@ public class UITheme {
    *
    * @return color
    */
-  public int getControlHighlightColor() {
-    return this.controlHighlightColor;
+  public int getContextHighlightColor() {
+    return this.contextHighlightColor;
   }
 
   /**
    * Set control highlight color
    *
-   * @param controlHighlightColor color
+   * @param contextHighlightColor color
    * @return this
    */
-  public UITheme setControlHighlightColor(int controlHighlightColor) {
-    this.controlHighlightColor = controlHighlightColor;
+  public UITheme setContextHighlightColor(int contextHighlightColor) {
+    this.contextHighlightColor = contextHighlightColor;
     return this;
   }
 
