@@ -87,8 +87,12 @@ public class UICompoundParameterControl extends UIParameterControl {
     if (!this.modulationParameters.contains(modulation.range)) {
       this.modulationParameters.add(modulation.range);
       this.modulationParameters.add(modulation.polarity);
+      this.modulationParameters.add(modulation.enabled);
       modulation.range.addListener(this.redrawListener);
       modulation.polarity.addListener(this.redrawListener);
+      modulation.enabled.addListener(this.redrawListener);
+
+      // Colors may be shared across multiple modulations from same source component
       if (!this.modulationParameters.contains(modulation.color)) {
         this.modulationParameters.add(modulation.color);
         modulation.color.addListener(this.redrawListener);

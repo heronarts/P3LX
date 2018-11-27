@@ -113,7 +113,7 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
         ColorParameter modulationColor = modulation.color;
         int modColor = ui.theme.getControlDisabledColor();
         int modColorInv = modColor;
-        if (isEnabled()) {
+        if (isEnabled() && modulation.enabled.isOn()) {
           modColor = modulationColor.getColor();
           modColorInv = LXColor.hsb(LXColor.h(modColor), 50, 75);
         }

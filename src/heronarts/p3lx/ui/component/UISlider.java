@@ -117,7 +117,7 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
         LXCompoundModulation modulation = compound.modulations.get(i);
         int modColor = ui.theme.getControlDisabledColor();
         int modColorInv = modColor;
-        if (isEnabled()) {
+        if (isEnabled() && modulation.enabled.isOn()) {
           modColor = modulation.color.getColor();
           modColorInv = LXColor.hsb(LXColor.h(modColor), 50, 75);
         }
