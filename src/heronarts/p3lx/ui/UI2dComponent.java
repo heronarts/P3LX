@@ -474,7 +474,7 @@ public abstract class UI2dComponent extends UIObject {
    * @return this
    */
   public UI2dComponent setFontColor(int fontColor) {
-    if (!this.hasFontColor|| (this.fontColor != fontColor)) {
+    if (!this.hasFontColor || (this.fontColor != fontColor)) {
       this.hasFontColor = true;
       this.fontColor = fontColor;
       redraw();
