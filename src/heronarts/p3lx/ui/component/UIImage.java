@@ -33,6 +33,10 @@ public class UIImage extends UI2dComponent {
 
   private final PImage image;
 
+  private boolean hasTint = false;
+
+  private int tint = UI.WHITE;
+
   public UIImage(PImage image) {
     this(image, 0, 0);
   }
@@ -42,9 +46,30 @@ public class UIImage extends UI2dComponent {
     this.image = image;
   }
 
+  public UIImage setTint(boolean hasTint) {
+    if (this.hasTint != hasTint) {
+      this.hasTint = hasTint;
+      redraw();
+    }
+    return this;
+  }
+
+  public UIImage setTintColor(int tint) {
+    if (!this.hasTint || (this.tint != tint)) {
+      this.hasTint = true;
+      this.tint = tint;
+      redraw();
+    }
+    return this;
+  }
+
   @Override
   public void onDraw(UI ui, PGraphics pg) {
+    if (this.hasTint) {
+      pg.tint(this.tint);
+    }
     pg.image(this.image, 0, 0, this.width, this.height);
+    pg.noTint();
   }
 
 }
