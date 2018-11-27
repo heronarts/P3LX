@@ -41,6 +41,8 @@ public class UITheme {
 
   private int deviceBackgroundColor = 0xff404040;
   private int deviceFocusedBackgroundColor = 0xff4c4c4c;
+  private int deviceSelectionColor = 0xff586658;
+  private int deviceSelectionTextColor = 0xffe0e0e0;
   private int deviceBorderColor = 0xff292929;
 
   private int paneBackgroundColor = 0xff040404;
@@ -209,9 +211,49 @@ public class UITheme {
   }
 
   /**
-   * Gets border color
+   * Sets device selection color
    *
-   * @return bordercolor
+   * @param color color
+   * @return this UI
+   */
+  public UITheme setDeviceSelectionColor(int deviceSelectionColor) {
+    this.deviceSelectionColor = deviceSelectionColor;
+    return this;
+  }
+
+  /**
+   * Gets device selection color
+   *
+   * @return device selection color
+   */
+  public int getDeviceSelectionTextColor() {
+    return this.deviceSelectionTextColor;
+  }
+
+  /**
+   * Sets device selection color
+   *
+   * @param color color
+   * @return this UI
+   */
+  public UITheme setDeviceSelectionTextColor(int deviceSelectionTextColor) {
+    this.deviceSelectionTextColor = deviceSelectionTextColor;
+    return this;
+  }
+
+  /**
+   * Gets device selection color
+   *
+   * @return device selection color
+   */
+  public int getDeviceSelectionColor() {
+    return this.deviceSelectionColor;
+  }
+
+  /**
+   * Gets device border color
+   *
+   * @return device border color
    */
   public int getDeviceBorderColor() {
     return this.deviceBorderColor;
@@ -231,7 +273,7 @@ public class UITheme {
   /**
    * Gets border color
    *
-   * @return bordercolor
+   * @return border color
    */
   public int getPaneBackgroundColor() {
     return this.paneBackgroundColor;
@@ -249,9 +291,9 @@ public class UITheme {
   }
 
   /**
-   * Gets border color
+   * Gets pane inset color
    *
-   * @return bordercolor
+   * @return Pane inset color
    */
   public int getPaneInsetColor() {
     return this.paneInsetColor;

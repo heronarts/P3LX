@@ -198,7 +198,7 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
       }
     }
 
-    pg.fill(this.editing ? ui.theme.getPrimaryColor() : ui.theme.getControlTextColor());
+    pg.fill(this.editing ? ui.theme.getPrimaryColor() : (hasFontColor() ? getFontColor() : ui.theme.getControlTextColor()));
 
     String displayString = clipTextToWidth(pg, this.editing ? this.editBuffer : getValueString(), this.width - TEXT_MARGIN);
 
