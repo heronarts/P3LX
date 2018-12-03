@@ -62,7 +62,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   private UIObject pressedChild = null;
   private UIObject overChild = null;
 
-  private boolean hasFocus = false;
+  protected boolean hasFocus = false;
 
   private final List<LXLoopTask> loopTasks = new ArrayList<LXLoopTask>();
 

@@ -59,6 +59,10 @@ public abstract class UI2dComponent extends UIObject {
 
   private int backgroundColor = 0xFF000000;
 
+  private boolean hasFocusBackground = false;
+
+  private int focusBackgroundColor = 0xFF000000;
+
   private boolean hasBorder = false;
 
   private int borderColor = 0xFF000000;
@@ -313,6 +317,39 @@ public abstract class UI2dComponent extends UIObject {
       this.hasBackground = true;
       this.backgroundColor = backgroundColor;
       redraw();
+    }
+    return this;
+  }
+
+  /**
+   * Sets whether a focus background color is used
+   *
+   * @param focusBackground Focus background color
+   * @return this
+   */
+  public UI2dComponent setFocusBackground(boolean focusBackground) {
+    if (this.hasFocusBackground != focusBackground) {
+      this.hasFocusBackground = focusBackground;
+      if (hasFocus()) {
+        redraw();
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Sets a background color to be used when the component is focused
+   *
+   * @param focusBackgroundColor Color
+   * @return this
+   */
+  public UI2dComponent setFocusBackgroundColor(int focusBackgroundColor) {
+    if (!this.hasFocusBackground || (this.focusBackgroundColor != focusBackgroundColor)) {
+      this.hasFocusBackground = true;
+      this.focusBackgroundColor = focusBackgroundColor;
+      if (hasFocus()) {
+        redraw();
+      }
     }
     return this;
   }
@@ -796,16 +833,19 @@ public abstract class UI2dComponent extends UIObject {
   }
 
   private void drawBackground(UI ui, PGraphics pg) {
-    if (!this.hasBackground || (this.borderRounding > 0)) {
+
+    boolean ownBackground = this.hasBackground || (this.hasFocus && this.hasFocusBackground);
+
+    if (!ownBackground || (this.borderRounding > 0)) {
       // If we don't have our own background, or our borders are rounded,
       // then we need to walk up the UI tree to figure out how to paint
       // in the background.
       UIObject component = this.parent;
       while ((component != null) && (component instanceof UI2dComponent)) {
         UI2dComponent component2d = (UI2dComponent) component;
-        if (component2d.hasBackground) {
+        if (component2d.hasBackground || (component2d.hasFocus && component2d.hasFocusBackground)) {
           pg.noStroke();
-          pg.fill(component2d.backgroundColor);
+          pg.fill((component2d.hasFocus && component2d.hasFocusBackground) ? component2d.focusBackgroundColor : component2d.backgroundColor);
           pg.rect(0, 0, this.width, this.height);
           break;
         }
@@ -813,9 +853,9 @@ public abstract class UI2dComponent extends UIObject {
       }
     }
 
-    if (this.hasBackground) {
+    if (ownBackground) {
       pg.noStroke();
-      pg.fill(this.backgroundColor);
+      pg.fill((this.hasFocus && this.hasFocusBackground) ? this.focusBackgroundColor : this.backgroundColor);
       pg.rect(0, 0, this.width, this.height, this.borderRounding);
     }
 
