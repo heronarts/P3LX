@@ -29,6 +29,7 @@ import heronarts.p3lx.ui.UI2dContainer;
 import heronarts.p3lx.ui.UIMouseFocus;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 /**
@@ -60,6 +61,7 @@ public class UICollapsibleSection extends UI2dContainer implements UIMouseFocus 
   public UICollapsibleSection(UI ui, float x, float y, float w, float h) {
     super(x, y, w, h);
     setBackgroundColor(ui.theme.getDeviceBackgroundColor());
+    setFocusBackgroundColor(ui.theme.getDeviceFocusedBackgroundColor());
     setBorderRounding(4);
 
     this.title = new UILabel(PADDING, PADDING + 1, this.width - PADDING - CHEVRON_PADDING, TITLE_LABEL_HEIGHT);
@@ -108,9 +110,9 @@ public class UICollapsibleSection extends UI2dContainer implements UIMouseFocus 
     pg.fill(ui.theme.getControlTextColor());
     if (this.expanded) {
       pg.beginShape();
-      pg.vertex(this.width-7, 9);
-      pg.vertex(this.width-13, 9);
-      pg.vertex(this.width-10, 13);
+      pg.vertex(this.width-7, 8.5f);
+      pg.vertex(this.width-13, 8.5f);
+      pg.vertex(this.width-10, 12.5f);
       pg.endShape(PConstants.CLOSE);
     } else {
       pg.ellipseMode(PConstants.CENTER);
@@ -149,6 +151,15 @@ public class UICollapsibleSection extends UI2dContainer implements UIMouseFocus 
       if ((mx >= this.width - CHEVRON_PADDING) || (mx >= this.title.getX() && mouseEvent.getCount() == 2)) {
         toggle();
       }
+    }
+  }
+
+  @Override
+  public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
+    super.onKeyPressed(keyEvent, keyChar, keyCode);
+    if (keyCode == java.awt.event.KeyEvent.VK_SPACE) {
+      consumeKeyEvent();
+      toggle();
     }
   }
 
