@@ -830,36 +830,53 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
     switch (this.interactionMode.getEnum()) {
     case ZOOM:
       if (mouseEvent.isShiftDown()) {
-        this.camera.radius.incrementValue(dy);
+        float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
+        this.camera.radius.incrementValue(this.camera.radius.getValue() * dy * 2.f / getHeight() * tanPerspective);
       } else if (mouseEvent.isMetaDown()) {
-        float dcx = dx * (float) Math.cos(this.thetaDamped.getValuef());
-        float dcz = dx * (float) Math.sin(this.thetaDamped.getValuef());
-        this.camera.x.incrementValue(-dcx);
-        this.camera.y.incrementValue(dy);
-        this.camera.z.incrementValue(-dcz);
+        float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
+        float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
+        float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
+        float sinPhi = (float) Math.sin(this.phiDamped.getValue());
+        float cosPhi = (float) Math.cos(this.phiDamped.getValue());
+
+        float dcx = dx * 2.f / getWidth() * this.radiusDamped.getValuef() * tanPerspective;
+        float dcy = dy * 2.f / getHeight() * this.radiusDamped.getValuef() * tanPerspective;
+
+        this.camera.x.incrementValue(-dcx * cosTheta - dcy * sinTheta * sinPhi);
+        this.camera.y.incrementValue(dcy * cosPhi);
+        this.camera.z.incrementValue(-dcx * sinTheta + dcy * cosTheta * sinPhi);
+
       } else {
-        this.camera.theta.incrementValue(-dx * .003);
-        this.camera.phi.incrementValue(dy * .003);
+        this.camera.theta.incrementValue(-dx / getWidth() * 1.5 * Math.PI);
+        this.camera.phi.incrementValue(dy / getHeight() * 1.5 * Math.PI);
       }
       break;
     case MOVE:
       if (mouseEvent.isMetaDown() || mouseEvent.isShiftDown()) {
-        float costh = (float) Math.cos(this.thetaDamped.getValuef());
-        float sinth = (float) Math.sin(this.thetaDamped.getValuef());;
-        float dex = dx*costh;
-        float dez = -dx*sinth;
-        float dey = -dy;
+
+        float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
+        float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
+        float cosPhi = (float) Math.cos(this.phiDamped.getValue());
+        float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
+
+        float dcx = dx * 2.f / getWidth() * this.radiusDamped.getValuef() * tanPerspective;
+        float dcy = dy * 2.f / getHeight() * this.radiusDamped.getValuef() * tanPerspective;
+
+        float dex = dcx * cosTheta;
+        float dez = -dcx * sinTheta;
+        float dey = -dcy * cosPhi;
+
         if (mouseEvent.isShiftDown()) {
-          dex -= dy*sinth;
-          dez -= dy*costh;
+          dex -= dy * sinTheta;
+          dez -= dy * cosTheta;
           dey = 0;
         }
         this.camera.x.incrementValue(dex);
         this.camera.y.incrementValue(dey);
         this.camera.z.incrementValue(dez);
       } else {
-        this.camera.theta.incrementValue(dx * .003);
-        this.camera.phi.incrementValue(-dy * .003);
+        this.camera.theta.incrementValue(dx / getWidth() * Math.PI);
+        this.camera.phi.incrementValue(-dy / getHeight() * Math.PI);
       }
       break;
     }
@@ -873,8 +890,8 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
       this.camera.radius.incrementValue(delta * this.camera.radius.getValue() / 1000.);
       break;
     case MOVE:
-      float dcx = delta * (float) Math.sin(this.thetaDamped.getValuef());
-      float dcz = delta * (float) Math.cos(this.thetaDamped.getValuef());
+      float dcx = delta * this.camera.radius.getValuef() / 1000.f * (float) Math.sin(this.thetaDamped.getValuef());
+      float dcz = delta * this.camera.radius.getValuef() / 1000.f * (float) Math.cos(this.thetaDamped.getValuef());
       setEye(this.eye.x - dcx, this.eye.y, this.eye.z - dcz);
       break;
     }
