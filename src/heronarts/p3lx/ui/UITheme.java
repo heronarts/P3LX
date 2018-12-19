@@ -33,6 +33,7 @@ public class UITheme {
 
   private PFont labelFont;
   private int labelColor = 0xffcccccc;
+  private int sublabelColor = 0xff777777;
 
   private PFont deviceFont;
 
@@ -58,6 +59,7 @@ public class UITheme {
   private int selectionColor = 0xff333333;
 
   private int darkBackgroundColor = 0xff191919;
+  private int darkFocusBackgroundColor = 0xff292929;
 
   private PFont controlFont;
   private int controlBackgroundColor = 0xff222222;
@@ -495,6 +497,26 @@ public class UITheme {
   }
 
   /**
+   * Gets dark background color
+   *
+   * @return Dark background color
+   */
+  public int getDarkFocusBackgroundColor() {
+    return this.darkFocusBackgroundColor;
+  }
+
+  /**
+   * Sets dark background color
+   *
+   * @param color Color
+   * @return this
+   */
+  public UITheme setDarkFocusBackgroundColor(int color) {
+    this.darkFocusBackgroundColor = color;
+    return this;
+  }
+
+  /**
    * Gets focus color
    *
    * @return focus color
@@ -676,6 +698,26 @@ public class UITheme {
    */
   public UITheme setLabelColor(int labelColor) {
     this.labelColor = labelColor;
+    return this;
+  }
+
+  /**
+   * Default text color
+   *
+   * @return color
+   */
+  public int getSublabelColor() {
+    return this.sublabelColor;
+  }
+
+  /**
+   * Set default text color
+   *
+   * @param labelColor color
+   * @return this
+   */
+  public UITheme setSublabelColor(int sublabelColor) {
+    this.sublabelColor = sublabelColor;
     return this;
   }
 
