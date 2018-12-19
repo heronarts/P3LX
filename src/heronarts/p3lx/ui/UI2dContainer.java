@@ -198,6 +198,9 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
   }
 
   protected UI2dContainer setContentTarget(UI2dContainer contentTarget) {
+    if (this.mutableChildren.contains(contentTarget)) {
+      throw new IllegalStateException("contentTarget already belongs to container: " + contentTarget);
+    }
     this.contentTarget = contentTarget;
     this.mutableChildren.add(contentTarget);
     contentTarget.parent = this;
