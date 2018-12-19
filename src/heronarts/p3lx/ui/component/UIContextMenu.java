@@ -30,6 +30,7 @@ import heronarts.p3lx.ui.UI2dScrollContext;
 import heronarts.p3lx.ui.UIContextActions;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 public class UIContextMenu extends UI2dComponent {
@@ -102,6 +103,26 @@ public class UIContextMenu extends UI2dComponent {
     }
     setPosition(x, y);
     return this;
+  }
+
+  @Override
+  public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
+    if (keyCode == java.awt.event.KeyEvent.VK_UP) {
+      consumeKeyEvent();
+      setHighlight((this.highlight + this.actions.length - 1) % this.actions.length);
+    } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
+      consumeKeyEvent();
+      setHighlight((this.highlight + 1) % this.actions.length);
+    } else if (keyCode == java.awt.event.KeyEvent.VK_SPACE || keyCode == java.awt.event.KeyEvent.VK_ENTER) {
+      consumeKeyEvent();
+      if (this.highlight >= 0) {
+        this.actions[this.highlight].onContextAction();
+      }
+      getUI().hideContextMenu();
+    } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+      consumeKeyEvent();
+      getUI().hideContextMenu();
+    }
   }
 
   @Override

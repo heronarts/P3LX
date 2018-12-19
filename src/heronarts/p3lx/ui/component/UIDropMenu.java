@@ -52,6 +52,10 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
 
   private final UIContextMenu contextMenu;
 
+  public UIDropMenu(float x, float y, float w, float h) {
+    this(x, y, w, h, null);
+  }
+
   public UIDropMenu(float x, float y, float w, float h, DiscreteParameter parameter) {
     super(x, y, w, h);
     this.contextMenu = new UIContextMenu(x, y, w, h);
@@ -87,7 +91,9 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
     }
     setOptions(this.parameter.getOptions());
     this.contextMenu.setActions(this.actions);
+    this.contextMenu.setHighlight(this.parameter.getValuei());
     this.parameter.addListener(this);
+    redraw();
     return this;
   }
 
@@ -181,6 +187,11 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
     } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
       consumeKeyEvent();
       this.parameter.decrement();
+    } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+      if (this.contextMenu.isVisible()) {
+        consumeKeyEvent();
+        setExpanded(false);
+      }
     }
   }
 
