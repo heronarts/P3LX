@@ -34,6 +34,7 @@ import processing.core.PImage;
 /**
  * Example pattern to render a text string using PixelFont.
  */
+@Deprecated
 public class PixelFontPattern extends P3LXPattern {
 
   final private SawLFO hMod = new SawLFO(0, 360, 10000);
