@@ -762,6 +762,12 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     if (!this.keyEventConsumed) {
       onKeyPressed(keyEvent, keyChar, keyCode);
     }
+
+    // Escape key blurs items with key focus
+    if (!this.keyEventConsumed && (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) && this instanceof UIKeyFocus) {
+      consumeKeyEvent();
+      blur();
+    }
   }
 
   void keyReleased(KeyEvent keyEvent, char keyChar, int keyCode) {
