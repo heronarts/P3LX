@@ -20,9 +20,9 @@
 	</condition>
 
 	<property name="project.jar.name" value="${project.name}.jar" />
-	<property name="project.src.lx" location="../LX/src" />
+	<property name="project.src.lx" location="../LX/LX/src/main/java" />
 	<property name="project.lib" location="../LX/lib" />
-	<property name="project.src.p3lx" location="src" />
+	<property name="project.src.p3lx" location="src/main/java" />
 	<property name="project.tmp" location="tmp" />
 	<property name="project.data" location="data" />
 	<property name="project.bin" location="bin" />

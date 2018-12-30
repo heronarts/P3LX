@@ -9,3 +9,8 @@ application.macosx
 /bin
 /distribution
 
+/tmp
+/doc
+target/
+*.iml
+.idea/

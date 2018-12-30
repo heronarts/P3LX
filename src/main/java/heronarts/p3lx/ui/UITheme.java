@@ -218,7 +218,7 @@ public class UITheme {
   /**
    * Sets device selection color
    *
-   * @param color color
+   * @param deviceSelectionColor color
    * @return this UI
    */
   public UITheme setDeviceSelectionColor(int deviceSelectionColor) {
@@ -238,7 +238,7 @@ public class UITheme {
   /**
    * Sets device selection color
    *
-   * @param color color
+   * @param deviceSelectionTextColor color
    * @return this UI
    */
   public UITheme setDeviceSelectionTextColor(int deviceSelectionTextColor) {
@@ -287,7 +287,7 @@ public class UITheme {
   /**
    * Set context background color
    *
-   * @param contextBackgroundColor
+   * @param contextBackgroundColor the color
    * @return this
    */
   public UITheme setContextBackgroundColor(int contextBackgroundColor) {
@@ -307,7 +307,7 @@ public class UITheme {
   /**
    * Set context border color
    *
-   * @param contextBorderColor
+   * @param contextBorderColor the color
    * @return this
    */
   public UITheme setContextBorderColor(int contextBorderColor) {
@@ -713,7 +713,7 @@ public class UITheme {
   /**
    * Set default text color
    *
-   * @param labelColor color
+   * @param sublabelColor color
    * @return this
    */
   public UITheme setSublabelColor(int sublabelColor) {
