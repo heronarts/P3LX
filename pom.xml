@@ -63,6 +63,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint</arg>
+                        <arg>-Xpkginfo:always</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -108,6 +109,7 @@
                 <version>${maven-assembly-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>thin</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -116,6 +118,21 @@
                             <descriptors>
                                 <descriptor>assembly.xml</descriptor>
                             </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>fat</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly-fat.xml</descriptor>
+                            </descriptors>
+                            <finalName>P3LX</finalName>
+                            <attach>false</attach>
                             <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>

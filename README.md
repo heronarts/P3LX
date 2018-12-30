@@ -36,6 +36,28 @@ Select root directory...
 
 Go through this process for both the LX and P3LX projects, selecting `workspace/LX` and `workspace/P3LX` as the root directories.
 
+#### Alternate build process: Maven ####
+First: Install Maven for your platform. Google is your friend.
+
+You'll still want to check out both LX and this repo locally (as of this writing neither is published to a public Maven repo):
+```
+$ git clone https://github.com/heronarts/LX.git
+$ git clone https://github.com/heronarts/P3LX.git
+$ cd LX
+$ mvn install
+$ cd ../P3LX
+$ mvn install
+```
+The above commands result in the following artifacts:
+in `P3LX/target`:
+1. fat jar (with dependencies): `P3LX.jar`.
+1. thin jar for distribution via maven repository publishing
+1. source jar for distribution via maven repository publishing
+1. javadoc jar for distribution via maven repository publishing
+1. javadoc html files for publishing to web: `apidocs`
+
+The Maven build is IDE-agnostic, so any IDE that can import Maven projects (Eclipse, IntelliJ) should have no problem importing and building this repo.
+
 ### Contact and Collaboration ###
 
 Building a big cool project? I'm probably interested in hearing about it! Want to solicit some help, request new framework features, or just ask a random question? Drop me a line: mark@heronarts.com

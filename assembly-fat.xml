@@ -12,6 +12,7 @@
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>LICENSE</include>
+                <include>VERSION</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -25,11 +26,12 @@
             <useProjectArtifact>true</useProjectArtifact>
             <unpack>true</unpack>
             <scope>compile</scope>
-            <!--<excludes>-->
-                <!--&lt;!&ndash;todo: probably not this as is it does not exclude all the transitive deps&ndash;&gt;-->
-                <!--<exclude>org.processing:core</exclude>-->
-                <!--<exclude>org.processing:video</exclude>-->
-            <!--</excludes>-->
+            <includes>
+                <include>heronarts:LX</include>
+                <include>heronarts:P3LX</include>
+                <include>com.google.code.gson:gson</include>
+                <include>uk.co.xfactory-librarians:coremidi4j</include>
+            </includes>
         </dependencySet>
     </dependencySets>
 </assembly>
