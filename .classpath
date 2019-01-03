@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="data"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="lib" path="classpath/core.jar"/>
 	<classpathentry kind="lib" path="classpath/video.jar"/>
 	<classpathentry kind="lib" path="classpath/jogl-all.jar"/>
