@@ -27,8 +27,8 @@ package heronarts.p3lx.ui.component;
 import com.google.gson.JsonObject;
 
 import heronarts.lx.LX;
+import heronarts.lx.LXEngine;
 import heronarts.lx.LXSerializable;
-import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.parameter.BoundedParameter;
 import heronarts.p3lx.P3LX;
@@ -44,8 +44,6 @@ public class UIPointCloud extends UI3dComponent implements LXSerializable {
 
   protected final P3LX lx;
 
-  protected LXModel model;
-
   public final BoundedParameter pointSize = new BoundedParameter("Point Size", 2, 1, 10)
   .setDescription("Size of points in the UI");
 
@@ -57,29 +55,7 @@ public class UIPointCloud extends UI3dComponent implements LXSerializable {
    * @param lx LX instance
    */
   public UIPointCloud(P3LX lx) {
-    this(lx, lx.model);
-  }
-
-  /**
-   * Point cloud for points in the specified model
-   *
-   * @param lx LX instance
-   * @param model Model to draw
-   */
-  public UIPointCloud(P3LX lx, LXModel model) {
     this.lx = lx;
-    this.model = model;
-  }
-
-  /**
-   * Update the model
-   *
-   * @param model Model to draw
-   * @return this
-   */
-  public UIPointCloud setModel(LXModel model) {
-    this.model = model;
-    return this;
   }
 
   /**
@@ -123,11 +99,12 @@ public class UIPointCloud extends UI3dComponent implements LXSerializable {
 
   @Override
   protected void onDraw(UI ui, PGraphics pg) {
-    int[] colors = this.lx.getColors();
+    LXEngine.Frame frame = this.lx.getUIFrame();
+    int[] colors = frame.getColors();
     pg.noFill();
     pg.strokeWeight(this.pointSize.getValuef());
     pg.beginShape(PConstants.POINTS);
-    for (LXPoint p : this.model.points) {
+    for (LXPoint p : frame.getModel().points) {
       pg.stroke(colors[p.index]);
       pg.vertex(p.x, p.y, p.z);
     }

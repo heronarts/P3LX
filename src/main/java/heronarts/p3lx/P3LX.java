@@ -31,8 +31,8 @@ import java.lang.reflect.Modifier;
 import heronarts.lx.LX;
 import heronarts.lx.LXComponent;
 import heronarts.lx.LXEffect;
+import heronarts.lx.LXEngine;
 import heronarts.lx.LXPattern;
-import heronarts.lx.ModelBuffer;
 import heronarts.lx.model.GridModel;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.StripModel;
@@ -46,6 +46,8 @@ import processing.core.PGraphics;
 public class P3LX extends LX {
 
   public final static String VERSION = LX.VERSION;
+
+  private LXEngine.Frame uiFrame;
 
   /**
    * Returns the version of the library.
@@ -66,23 +68,16 @@ public class P3LX extends LX {
    */
   public final UI ui;
 
-  /**
-   * Internal buffer for colors, owned by Processing animation thread.
-   */
-  private final ModelBuffer buffer;
-
-  /**
-   * The current frame's colors, either from the engine or the buffer. Note that
-   * this is a reference to an array.
-   */
-  private int[] colors;
-
-  public class Flags {
+  public static class Flags extends LX.Flags {
     public boolean keyboardTempo = false;
     public boolean showFramerate = false;
+
+    public Flags() {
+      this.isP3LX = true;
+    }
   }
 
-  public final Flags flags = new Flags();
+  public final Flags flags;
 
   public class Timer {
     public long drawNanos = 0;
@@ -104,7 +99,17 @@ public class P3LX extends LX {
   }
 
   public P3LX(PApplet applet, LXModel model) {
-    super(model, true);
+    this(applet, new Flags(), model);
+  }
+
+  public P3LX(PApplet applet, Flags flags) {
+    this(applet, flags, null);
+  }
+
+  public P3LX(PApplet applet, Flags flags, LXModel model) {
+    super(flags, model);
+    this.flags = flags;
+    this.flags.isP3LX = true;
     this.applet = applet;
 
     String sketchPath = applet.sketchPath();
@@ -132,9 +137,8 @@ public class P3LX extends LX {
       }
     }
 
-    this.buffer = new ModelBuffer(this);
-    this.colors = this.engine.getUIBufferNonThreadSafe();
-    LX.initTimer.log("P3LX: ModelBuffer");
+    this.uiFrame = new LXEngine.Frame(this);
+    this.engine.getFrameNonThreadSafe(this.uiFrame);
 
     this.ui = buildUI();
     LX.initTimer.log("P3LX: UI");
@@ -182,12 +186,12 @@ public class P3LX extends LX {
   }
 
   /**
-   * Returns the current color values
+   * Returns the last rendered frame
    *
-   * @return Array of the current color values
+   * @return The frame to be shown on the UI
    */
-  public final int[] getColors() {
-    return this.colors;
+  public final LXEngine.Frame getUIFrame() {
+    return this.uiFrame;
   }
 
   /**
@@ -209,7 +213,7 @@ public class P3LX extends LX {
       // triggered by some action on the engine thread itself. It's okay
       // if this happens, worst side effect is the UI getting the last frame
       // from the copy buffer.
-      this.engine.copyUIBuffer(this.colors = this.buffer.getArray());
+      this.engine.copyFrameThreadSafe(this.uiFrame);
       if (this.flags.showFramerate) {
         frameRateStr =
           "Engine: " + this.engine.frameRate() + " " +
@@ -224,7 +228,7 @@ public class P3LX extends LX {
       // We don't need to worry about lock contention because we are
       // currently on the only thread that *could* start the engine.
       this.engine.run();
-      this.colors = this.engine.getUIBufferNonThreadSafe();
+      this.engine.getFrameNonThreadSafe(this.uiFrame);
       if (this.flags.showFramerate) {
         frameRateStr = "Framerate: " + this.applet.frameRate;
         if (this.engine.isNetworkMultithreaded.isOn()) {
@@ -245,13 +249,22 @@ public class P3LX extends LX {
   @Override
   protected <T extends LXComponent> T instantiateComponent(Class<? extends T> cls, Class<T> type) {
     try {
-      return cls.getConstructor(LX.class).newInstance(this);
-    } catch (Exception x) {
       try {
-        return cls.getConstructor(this.applet.getClass(), LX.class).newInstance(this.applet, this);
-      } catch (Exception x2) {
-        System.err.println("Component instantiation failed: " + x2.getLocalizedMessage());
+        return cls.getConstructor(LX.class).newInstance(this);
+      } catch (NoSuchMethodException nsmx) {
+        try {
+          return cls.getConstructor().newInstance();
+        } catch (NoSuchMethodException nsmx2) {
+          try {
+            return cls.getConstructor(this.applet.getClass(), LX.class).newInstance(this.applet, this);
+          } catch (NoSuchMethodException nsmx3) {
+            return cls.getConstructor(this.applet.getClass()).newInstance(this.applet);
+          }
+        }
       }
+    } catch (Exception x) {
+      System.err.println("Component instantiation failed: " + x.getLocalizedMessage());
+      x.printStackTrace();
     }
     return null;
   }

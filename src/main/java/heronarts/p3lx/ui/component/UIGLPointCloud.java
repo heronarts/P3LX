@@ -34,6 +34,7 @@ import processing.core.PGraphics;
 import processing.opengl.PGL;
 import processing.opengl.PJOGL;
 import processing.opengl.PShader;
+import heronarts.lx.LXEngine;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.p3lx.P3LX;
@@ -43,7 +44,7 @@ import heronarts.p3lx.ui.UI;
  * Same as a UIPointCloud, except this version uses GLSL to draw
  * the points with a vertex shader.
  */
-public class UIGLPointCloud extends UIPointCloud {
+public class UIGLPointCloud extends UIPointCloud implements LXModel.Listener {
 
   private PShader shader;
   private FloatBuffer vertexData;
@@ -60,7 +61,9 @@ public class UIGLPointCloud extends UIPointCloud {
   private static final float[] NO_ATTENUATION = { 1, 0, 0 };
 
   private boolean updateVertexPositions = false;
-  private LXModel updateModel = null;
+
+  private LXModel model = null;
+  private LXModel bufferModel = null;
 
   /**
    * Point cloud for everything in the LX instance
@@ -68,58 +71,55 @@ public class UIGLPointCloud extends UIPointCloud {
    * @param lx LX instance
    */
   public UIGLPointCloud(P3LX lx) {
-    this(lx, lx.model);
-  }
-
-  /**
-   * Point cloud for points in the specified model
-   *
-   * @param lx LX instance
-   * @param model Model to draw
-   */
-  public UIGLPointCloud(P3LX lx, LXModel model) {
-    super(lx, model);
-
-    model.addListener(new LXModel.Listener() {
-      @Override
-      public void onModelUpdated(LXModel model) {
-        // If the model has been updated, then the next rendering pass needs
-        // to update the vertex position data.
-        updateVertexPositions();
-      }
-    });
-
-    // Load shader
+    super(lx);
     loadShader();
-    buildModelBuffers(model);
   }
 
-  private void buildModelBuffers(LXModel model) {
+  private void setModel(LXModel model) {
+    if (model == null) {
+      throw new IllegalArgumentException("May not set null model on point cloud");
+    }
+    if (this.model != model) {
+      if (this.model != null) {
+        this.model.removeListener(this);
+      }
+      this.model = model;
+      model.addListener(this);
+    }
+  }
+
+  public void onModelUpdated(LXModel model) {
+    // If the model has been updated, then the next rendering pass needs
+    // to update the vertex position data.
+    updateVertexPositions();
+  }
+
+  private void buildModelBuffers(PGraphics pg) {
     // Create a buffer for vertex data
     this.vertexData = ByteBuffer
-      .allocateDirect(model.size * 3 * Float.SIZE/8)
+      .allocateDirect(this.model.size * 3 * Float.SIZE/8)
       .order(ByteOrder.nativeOrder())
       .asFloatBuffer();
 
     // Put all the points into the buffer
     this.vertexData.rewind();
-    for (LXPoint point : model.points) {
+    for (LXPoint p : this.model.points) {
       // Each point has 3 floats, XYZ
-      this.vertexData.put(point.x);
-      this.vertexData.put(point.y);
-      this.vertexData.put(point.z);
+      this.vertexData.put(p.x);
+      this.vertexData.put(p.y);
+      this.vertexData.put(p.z);
     }
     this.vertexData.position(0);
 
     // Create a buffer for color data
     this.colorData = ByteBuffer
-      .allocateDirect(model.size * 4 * Float.SIZE/8)
+      .allocateDirect(this.model.size * 4 * Float.SIZE/8)
       .order(ByteOrder.nativeOrder())
       .asFloatBuffer();
 
     // Put all the points into the buffer
     this.colorData.rewind();
-    for (int i = 0; i < model.points.length; ++i) {
+    for (int i = 0; i < this.model.points.length; ++i) {
       // Each point has 4 floats, RGBA
       this.colorData.put(0f);
       this.colorData.put(0f);
@@ -134,28 +134,14 @@ public class UIGLPointCloud extends UIPointCloud {
       .order(ByteOrder.nativeOrder())
       .asIntBuffer();
 
-    PGL pgl = this.lx.applet.beginPGL();
+    PGL pgl = pg.beginPGL();
     pgl.genBuffers(2, resultBuffer); // Generates a buffer, places its id in resultBuffer[0]
     this.vertexBufferObjectName = resultBuffer.get(0); // Grab our buffer name
     this.colorBufferObjectName = resultBuffer.get(1);
     pgl.bindBuffer(PGL.ARRAY_BUFFER, this.vertexBufferObjectName);
     pgl.bufferData(PGL.ARRAY_BUFFER, this.model.size * 3 * Float.SIZE/8, this.vertexData, PGL.STATIC_DRAW);
     pgl.bindBuffer(PGL.ARRAY_BUFFER, 0);
-
-    this.lx.applet.endPGL();
-  }
-
-  /**
-   * Sets the model to be used by this point cloud. It is not actually updated until the next
-   * rendering pass on the GL thread.
-   *
-   * @param model New model
-   * @return this
-   */
-  @Override
-  public UIPointCloud setModel(LXModel model) {
-    this.updateModel = model;
-    return this;
+    pg.endPGL();
   }
 
   /**
@@ -192,13 +178,15 @@ public class UIGLPointCloud extends UIPointCloud {
 
   @Override
   protected void onDraw(UI ui, PGraphics pg) {
-    int[] colors = this.lx.getColors();
+    LXEngine.Frame frame = this.lx.getUIFrame();
+    int[] colors = frame.getColors();
+    LXModel model = frame.getModel();
+    setModel(model);
 
     // New model has been set!
-    if (this.updateModel != null) {
-      this.buildModelBuffers(this.updateModel);
-      super.setModel(this.updateModel);
-      this.updateModel = null;
+    if (this.bufferModel != model) {
+      buildModelBuffers(pg);
+      this.bufferModel = model;
     }
 
     // Put our new colors in the VBO
@@ -276,6 +264,7 @@ public class UIGLPointCloud extends UIPointCloud {
 
     // Done!
     pg.endPGL();
+
   }
 
 }
