@@ -241,6 +241,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   }
 
   @Override
+  @SuppressWarnings("fallthrough")
   protected void saveEditBuffer() {
     if (!isEditable()) {
       throw new IllegalStateException("Cannot save edit buffer on non-editable parameter");

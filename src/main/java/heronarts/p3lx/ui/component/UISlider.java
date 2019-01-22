@@ -88,6 +88,7 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
   }
 
   @Override
+  @SuppressWarnings("fallthrough")
   protected void onDraw(UI ui, PGraphics pg) {
     // value refers to the current, possibly-modulated value of the control's parameter.
     // base is the unmodulated, base value of that parameter.
