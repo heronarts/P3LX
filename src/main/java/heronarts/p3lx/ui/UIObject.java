@@ -742,7 +742,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       this.keyEventConsumed = delegate.keyEventConsumed;
     }
 
-    // Next, check for copy/paste actions
+    // Next, check for copy/paste/duplicate actions
     if (!this.keyEventConsumed) {
       if (keyEvent.isMetaDown() || keyEvent.isControlDown()) {
         if (keyCode == java.awt.event.KeyEvent.VK_C && this instanceof UICopy) {
@@ -750,6 +750,12 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
           this.keyEventConsumed = true;
         } else if (keyCode == java.awt.event.KeyEvent.VK_V && this instanceof UIPaste) {
           LXClipboardItem item = this.ui.lx.clipboard.getItem();
+          if (item != null) {
+            ((UIPaste) this).onPaste(item);
+            this.keyEventConsumed = true;
+          }
+        } else if (keyCode == java.awt.event.KeyEvent.VK_D && this instanceof UICopy && this instanceof UIPaste) {
+          LXClipboardItem item = ((UICopy)this).onCopy();
           if (item != null) {
             ((UIPaste) this).onPaste(item);
             this.keyEventConsumed = true;
