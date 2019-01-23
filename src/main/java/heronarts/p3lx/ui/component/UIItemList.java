@@ -495,8 +495,11 @@ public interface UIItemList {
     }
 
     private void drawFocus(UI ui, PGraphics pg) {
-      float yp = ROW_MARGIN + getScrollY() + ROW_SPACING * getVisibleFocusIndex();
-      UI2dComponent.drawFocus(ui, pg, ui.theme.getFocusColor(), PADDING, yp, getRowWidth() - 2*PADDING, ROW_HEIGHT, 2);
+      int visibleFocusIndex = getVisibleFocusIndex();
+      if (visibleFocusIndex >= 0) {
+        float yp = ROW_MARGIN + getScrollY() + ROW_SPACING * visibleFocusIndex;
+        UI2dComponent.drawFocus(ui, pg, ui.theme.getFocusColor(), PADDING, yp, getRowWidth() - 2*PADDING, ROW_HEIGHT, 2);
+      }
     }
 
     private void onDraw(UI ui, PGraphics pg) {
