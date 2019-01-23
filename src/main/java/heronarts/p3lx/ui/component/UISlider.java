@@ -30,6 +30,7 @@ import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXCompoundModulation;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
+import heronarts.p3lx.ui.undo.Undo;
 import processing.core.PGraphics;
 import processing.event.MouseEvent;
 
@@ -291,6 +292,9 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
       break;
     }
     if ((mouseEvent.getCount() > 1) && Math.abs(mp - this.doubleClickP) < 3) {
+      if (this.parameter != null) {
+        getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
+      }
       setNormalized(this.doubleClickMode);
     }
     this.doubleClickP = mp;
@@ -350,6 +354,10 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
         } else {
           if (mouseEvent.isShiftDown()) {
             delta /= 10;
+          }
+          if (this.mousePressedUndo != null) {
+            getUI().undo.push(this.mousePressedUndo);
+            this.mousePressedUndo = null;
           }
           setNormalized(LXUtils.constrain(getNormalized() + delta, 0, 1));
         }

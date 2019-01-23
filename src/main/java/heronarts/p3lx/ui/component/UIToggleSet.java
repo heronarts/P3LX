@@ -31,6 +31,7 @@ import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIFocus;
+import heronarts.p3lx.ui.undo.Undo;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
@@ -94,7 +95,7 @@ public class UIToggleSet extends UIParameterComponent implements UIFocus, UICont
         if (options != null) {
           setOptions(options);
         }
-        setValue(this.parameter.getValuei());
+        setValue(this.parameter.getValuei(), false);
       }
     }
     return this;
@@ -102,7 +103,7 @@ public class UIToggleSet extends UIParameterComponent implements UIFocus, UICont
 
   public void onParameterChanged(LXParameter parameter) {
     if (parameter == this.parameter) {
-      setValue(this.options[this.parameter.getValuei()]);
+      setValue(this.parameter.getValuei(), false);
     }
   }
 
@@ -162,13 +163,18 @@ public class UIToggleSet extends UIParameterComponent implements UIFocus, UICont
   }
 
   public UIToggleSet setValue(int value) {
+    return setValue(value, true);
+  }
+
+  private UIToggleSet setValue(int value, boolean pushToParameter) {
     if (this.value != value) {
       if (value < 0 || value >= this.options.length) {
         throw new IllegalArgumentException("Invalid index to setValue(): "
             + value);
       }
       this.value = value;
-      if (this.parameter != null) {
+      if (this.parameter != null && pushToParameter) {
+        getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
         this.parameter.setValue(value);
       }
       onToggle(this.value);

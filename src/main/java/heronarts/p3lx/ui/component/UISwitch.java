@@ -30,6 +30,7 @@ import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITriggerSource;
 import heronarts.p3lx.ui.UITriggerTarget;
+import heronarts.p3lx.ui.undo.Undo;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -105,6 +106,7 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
         if (this.isMomentary) {
           getBooleanParameter().setValue(true);
         } else {
+          getUI().undo.push(new Undo.Action.SetNormalized(getBooleanParameter()));
           getBooleanParameter().toggle();
         }
       }
@@ -136,6 +138,7 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
       if (this.isMomentary) {
         getBooleanParameter().setValue(true);
       } else {
+        getUI().undo.push(new Undo.Action.SetNormalized(getBooleanParameter()));
         getBooleanParameter().toggle();
       }
     }

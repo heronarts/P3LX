@@ -48,6 +48,7 @@ import heronarts.p3lx.ui.UICopy;
 import heronarts.p3lx.ui.UIModulationSource;
 import heronarts.p3lx.ui.UIModulationTarget;
 import heronarts.p3lx.ui.UIPaste;
+import heronarts.p3lx.ui.undo.Undo;
 
 public abstract class UIParameterControl extends UIInputBox implements UIControlTarget, UIModulationTarget, UIModulationSource, LXParameterListener, UICopy, UIPaste {
 
@@ -263,6 +264,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
             for (String part : parts) {
               value = value * 60 + Double.parseDouble(part);
             }
+            getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
             this.parameter.setValue(value * multiplier);
             break;
           default:
@@ -270,7 +272,9 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
             break;
           }
         } else {
-          this.parameter.setValue(Double.parseDouble(this.editBuffer));
+          double value = Double.parseDouble(this.editBuffer);
+          getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
+          this.parameter.setValue(value);
         }
       } catch (NumberFormatException nfx) {}
     }
@@ -315,6 +319,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void decrementValue(KeyEvent keyEvent) {
     if (this.parameter != null) {
       consumeKeyEvent();
+      getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
       if (this.parameter instanceof DiscreteParameter) {
         DiscreteParameter dp = (DiscreteParameter) this.parameter;
         dp.decrement(keyEvent.isShiftDown() ? dp.getRange() / 10 : 1);
@@ -336,6 +341,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void incrementValue(KeyEvent keyEvent) {
     if (this.parameter != null) {
       consumeKeyEvent();
+      getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
       if (this.parameter instanceof DiscreteParameter) {
         DiscreteParameter dp = (DiscreteParameter) this.parameter;
         dp.increment(keyEvent.isShiftDown() ? dp.getRange() / 10 : 1);
@@ -374,14 +380,21 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     }
   }
 
+  protected Undo.Action.SetNormalized mousePressedUndo = null;
+
   @Override
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
     setShowValue(true);
+    this.mousePressedUndo = null;
+    if (this.parameter != null) {
+      this.mousePressedUndo = new Undo.Action.SetNormalized(this.parameter);
+    }
   }
 
   @Override
   protected void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
     setShowValue(false);
+    this.mousePressedUndo = null;
   }
 
   @Override
@@ -441,7 +454,8 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
    @Override
    public void onPaste(LXClipboardItem item) {
      if (item instanceof LXNormalizedValue) {
-       if (this.parameter != null && this.enabled) {
+       if (this.parameter != null && isEnabled() && isEditable()) {
+         getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
          setNormalized(((LXNormalizedValue) item).getValue());
        }
      }

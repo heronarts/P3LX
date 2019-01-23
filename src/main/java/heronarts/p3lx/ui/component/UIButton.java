@@ -33,6 +33,7 @@ import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITriggerSource;
 import heronarts.p3lx.ui.UITriggerTarget;
+import heronarts.p3lx.ui.undo.Undo;
 import heronarts.p3lx.ui.UIControlTarget;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -273,9 +274,13 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (pushToParameter) {
         if (this.enumParameter != null) {
           if (active) {
+            getUI().undo.push(new Undo.Action.SetNormalized(this.enumParameter));
             this.enumParameter.increment();
           }
         } else if (this.booleanParameter != null) {
+          if (!this.isMomentary) {
+            getUI().undo.push(new Undo.Action.SetNormalized(this.booleanParameter));
+          }
           this.booleanParameter.setValue(active);
         }
       }

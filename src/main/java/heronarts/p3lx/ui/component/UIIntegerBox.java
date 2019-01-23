@@ -29,6 +29,7 @@ import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UIControlTarget;
+import heronarts.p3lx.ui.undo.Undo;
 import processing.core.PConstants;
 import processing.event.Event;
 import processing.event.KeyEvent;
@@ -119,6 +120,7 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
       }
       this.value = this.minValue + (value - this.minValue) % range;
       if (this.parameter != null && pushToParameter) {
+        getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
         this.parameter.setValue(this.value);
       }
       this.onValueChange(this.value);

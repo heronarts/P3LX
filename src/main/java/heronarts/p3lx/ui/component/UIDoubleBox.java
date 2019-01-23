@@ -33,6 +33,7 @@ import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIModulationSource;
 import heronarts.p3lx.ui.UIModulationTarget;
+import heronarts.p3lx.ui.undo.Undo;
 import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -139,14 +140,21 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
   }
 
   public UIDoubleBox setValue(double value) {
-    return setValue(value, true);
+    return setValue(value, true, true);
   }
 
   protected UIDoubleBox setValue(double value, boolean pushToParameter) {
+    return setValue(value, pushToParameter, true);
+  }
+
+  protected UIDoubleBox setValue(double value, boolean pushToParameter, boolean undo) {
     value = LXUtils.constrain(value, this.minValue, this.maxValue);
     if (this.value != value) {
       this.value = value;
       if (this.parameter != null && pushToParameter) {
+        if (undo) {
+          getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
+        }
         this.parameter.setValue(this.value);
       }
       this.onValueChange(this.value);
@@ -245,7 +253,11 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
 
   @Override
   protected void incrementMouseValue(MouseEvent mouseEvent, int offset) {
-    setValue(this.value + offset * getIncrement(mouseEvent));
+    if (this.mousePressedUndo != null) {
+      getUI().undo.push(this.mousePressedUndo);
+      this.mousePressedUndo = null;
+    }
+    setValue(this.value + offset * getIncrement(mouseEvent), true, false);
   }
 
   @Override
@@ -273,12 +285,33 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
     return null;
   }
 
+  private Undo.Action.SetNormalized mousePressedUndo = null;
+
+  @Override
+  protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
+    super.onMousePressed(mouseEvent, mx, my);
+    this.mousePressedUndo = null;
+    if (this.parameter != null) {
+      this.mousePressedUndo = new Undo.Action.SetNormalized(this.parameter);
+    }
+  }
+
+  @Override
+  protected void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
+    super.onMouseReleased(mouseEvent, mx, my);
+    this.mousePressedUndo = null;
+  }
+
   @Override
   protected void onMouseDragged(MouseEvent mouseEvent, float mx, float my, float dx, float dy) {
     if (this.enabled && this.editable && !this.editing && this.normalizedMouseEditing && this.parameter != null) {
       float delta = dy / 100.f;
       if (mouseEvent.isShiftDown()) {
         delta /= 10;
+      }
+      if (this.mousePressedUndo != null) {
+        getUI().undo.push(this.mousePressedUndo);
+        this.mousePressedUndo = null;
       }
       setNormalized(LXUtils.constrain(getNormalized() - delta, 0, 1));
     } else {

@@ -33,6 +33,7 @@ import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXCompoundModulation;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
+import heronarts.p3lx.ui.undo.Undo;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.event.MouseEvent;
@@ -192,8 +193,10 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     if (isEditable() && (this.parameter != null) && (mouseEvent.getCount() > 1)) {
       LXCompoundModulation modulation = getModulation(mouseEvent.isShiftDown());
       if (modulation != null && (mouseEvent.isControlDown() || mouseEvent.isMetaDown())) {
+        getUI().undo.push(new Undo.Action.SetNormalized(modulation.range));
         modulation.range.reset();
       } else {
+        getUI().undo.push(new Undo.Action.SetNormalized(this.parameter));
         this.parameter.reset();
       }
     }
@@ -227,6 +230,10 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     } else {
       if (mouseEvent.isShiftDown()) {
         delta /= 10;
+      }
+      if (this.mousePressedUndo != null) {
+        getUI().undo.push(this.mousePressedUndo);
+        this.mousePressedUndo = null;
       }
       this.dragValue = LXUtils.constrain(this.dragValue - delta, 0, 1);
       setNormalized(this.dragValue);
