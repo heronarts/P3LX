@@ -81,7 +81,12 @@ public interface UIContextActions {
 
       @Override
       public void onContextAction() {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(oscAddress), null);
+        try {
+          Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(oscAddress), null);
+        } catch (Exception x) {
+          System.err.println("Exception setting system clipboard");
+          x.printStackTrace();
+        }
       }
 
     }
