@@ -36,6 +36,7 @@ import processing.event.MouseEvent;
 public class UIContextMenu extends UI2dComponent {
 
   private static final float ROW_HEIGHT = 18;
+  public static final float DEFAULT_WIDTH = 120;
 
   private UIContextActions.Action[] actions;
 

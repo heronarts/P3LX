@@ -43,7 +43,7 @@ public class UIContextButton extends UI2dComponent implements UIFocus {
     setBorderColor(UI.get().theme.getControlBorderColor());
     setFontColor(UI.get().theme.getControlTextColor());
     setBackgroundColor(UI.get().theme.getControlBackgroundColor());
-    this.contextMenu = new UIContextMenu(0, 0, 120, 0);
+    this.contextMenu = new UIContextMenu(0, 0, UIContextMenu.DEFAULT_WIDTH, 0);
   }
 
   public UIContextButton setContextActions(UIContextActions.Action[] contextActions) {
@@ -102,6 +102,7 @@ public class UIContextButton extends UI2dComponent implements UIFocus {
   }
 
   private void showMenu() {
+    this.contextMenu.setWidth(Math.max(UIContextMenu.DEFAULT_WIDTH, this.width));
     this.contextMenu.setPosition(this, 0, this.height);
     this.contextMenu.setHighlight(0);
     getUI().showContextMenu(this.contextMenu);
