@@ -39,14 +39,17 @@ import heronarts.lx.parameter.LXListenableParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
-
+import heronarts.lx.clipboard.LXClipboardItem;
+import heronarts.lx.clipboard.LXNormalizedValue;
 import heronarts.lx.color.LXColor;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIControlTarget;
+import heronarts.p3lx.ui.UICopy;
 import heronarts.p3lx.ui.UIModulationSource;
 import heronarts.p3lx.ui.UIModulationTarget;
+import heronarts.p3lx.ui.UIPaste;
 
-public abstract class UIParameterControl extends UIInputBox implements UIControlTarget, UIModulationTarget, UIModulationSource, LXParameterListener {
+public abstract class UIParameterControl extends UIInputBox implements UIControlTarget, UIModulationTarget, UIModulationSource, LXParameterListener, UICopy, UIPaste {
 
   protected final static int LABEL_MARGIN = 2;
 
@@ -426,5 +429,22 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     float dimmedB = Math.max(0, b - DIM_AMOUNT);
     return LXColor.hsb(h, s, dimmedB);
   }
+
+   @Override
+   public LXClipboardItem onCopy() {
+     if (this.parameter != null) {
+       return new LXNormalizedValue(this.parameter);
+     }
+     return null;
+   }
+
+   @Override
+   public void onPaste(LXClipboardItem item) {
+     if (item instanceof LXNormalizedValue) {
+       if (this.parameter != null && this.enabled) {
+         setNormalized(((LXNormalizedValue) item).getValue());
+       }
+     }
+   }
 
 }
