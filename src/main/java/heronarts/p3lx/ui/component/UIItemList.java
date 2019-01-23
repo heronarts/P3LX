@@ -305,7 +305,6 @@ public interface UIItemList {
         }
       }
       setContentHeight(ROW_SPACING * itemCount + ROW_MARGIN);
-
     }
 
     private void addSection(Section section) {
@@ -805,10 +804,29 @@ public interface UIItemList {
 
     private final Impl impl;
 
+    private boolean dynamicSize = false;
+
+    private float maxHeight = -1;
+
     public ScrollList(UI ui, float x, float y, float w, float h) {
       super(ui, x, y, w, h);
       setScrollHeight(Impl.ROW_MARGIN);
       this.impl = new Impl(ui, this);
+    }
+
+    public ScrollList setMaxHeight(float maxHeight) {
+      this.dynamicSize = true;
+      this.maxHeight = maxHeight;
+      return this;
+    }
+
+    @Override
+    public UI2dContainer setContentSize(float width, float height) {
+      super.setContentSize(width, height);
+      if (this.dynamicSize) {
+        setSize(width, Math.min(this.maxHeight, height));
+      }
+      return this;
     }
 
     public UIItemList setFocusIndex(int focusIndex) {
