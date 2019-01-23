@@ -599,7 +599,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       List<UIContextActions.Action> contextActions = contextParent.getContextActions();
       if (contextActions != null && contextActions.size() > 0) {
         getUI().showContextMenu(
-          new UIContextMenu(mx, my, Math.max(UIContextMenu.DEFAULT_WIDTH, getWidth()), 0)
+          new UIContextMenu(mx, my, UIContextMenu.DEFAULT_WIDTH, 0)
           .setPosition((UI2dComponent) this, mx, my)
           .setActions(contextActions.toArray(new UIContextActions.Action[0]))
         );
