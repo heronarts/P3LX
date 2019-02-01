@@ -106,7 +106,7 @@ public class UITextBox extends UIInputBox {
   }
 
   private static final String VALID_CHARACTERS =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.<>?;':\"[]{}-=_+`~!@#$%^&*()|1234567890";
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.<>?;':\"[]{}-=_+`~!@#$%^&*()|1234567890/\\";
 
   public static boolean isValidTextCharacter(char keyChar) {
     return VALID_CHARACTERS.indexOf(keyChar) >= 0;

@@ -72,7 +72,7 @@ public class UIComponentLabel extends UILabel implements LXParameterListener {
     if (this.component == null) {
       setLabel("");
     } else {
-      setLabel((this.prefix != null ? this.prefix : "") + this.component.getCanonicalPath());
+      setLabel((this.prefix != null ? this.prefix : "") + this.component.getCanonicalLabel());
     }
   }
 }

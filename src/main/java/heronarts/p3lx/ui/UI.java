@@ -993,7 +993,7 @@ public class UI implements LXEngine.Dispatch {
         break;
       case java.awt.event.KeyEvent.VK_SPACE:
         if (this.lx.flags.keyboardTempo) {
-          this.lx.tempo.tap();
+          this.lx.engine.tempo.tap();
         }
         break;
       }
@@ -1008,12 +1008,12 @@ public class UI implements LXEngine.Dispatch {
       switch (keyCode) {
       case java.awt.event.KeyEvent.VK_LEFT:
         if (this.lx.flags.keyboardTempo) {
-          this.lx.tempo.setBpm(this.lx.tempo.bpm() - .1);
+          this.lx.engine.tempo.setBpm(this.lx.engine.tempo.bpm() - .1);
         }
         break;
       case java.awt.event.KeyEvent.VK_RIGHT:
         if (this.lx.flags.keyboardTempo) {
-          this.lx.tempo.setBpm(this.lx.tempo.bpm() + .1);
+          this.lx.engine.tempo.setBpm(this.lx.engine.tempo.bpm() + .1);
         }
         break;
       }

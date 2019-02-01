@@ -22,7 +22,7 @@ public class UITempoControl extends UIWindow implements LXParameterListener {
   private final DiscreteParameter tempoMinor;
 
   public UITempoControl(UI ui, LX lx, float x, float y) {
-    this(ui, lx.tempo, x, y);
+    this(ui, lx.engine.tempo, x, y);
   }
 
   public UITempoControl(UI ui, final Tempo tempo, float x, float y) {
