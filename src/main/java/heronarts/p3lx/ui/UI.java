@@ -85,14 +85,17 @@ public class UI implements LXEngine.Dispatch {
 
     @Override
     void mousePressed(MouseEvent mouseEvent, float mx, float my) {
-      // If a context menu is open
+      // If a context menu is open, we'll want to close it on mouse-press
+      // unless the mouse-press is within the context menu itself
       boolean hideContext = false;
       if (contextMenuOverlay.contextMenu != null) {
         hideContext = true;
         contextMenuOverlay.mousePressed = false;
       }
       super.mousePressed(mouseEvent, mx, my);
-      if (hideContext && !contextMenuOverlay.mousePressed) {
+
+      // Note: check
+      if (!this.mousePressContextMenu && hideContext && !contextMenuOverlay.mousePressed) {
         hideContextMenu();
       }
     }
@@ -338,7 +341,7 @@ public class UI implements LXEngine.Dispatch {
     @Override
     public void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
       super.onMousePressed(mouseEvent, mx, my);
-      this.mousePressed = false;
+      this.mousePressed = true;
     }
   }
 

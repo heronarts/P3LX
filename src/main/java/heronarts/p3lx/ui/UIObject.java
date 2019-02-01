@@ -537,9 +537,18 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     return this;
   }
 
+  // Whether the key event dispatched to this UI object has been consumed already
   private boolean keyEventConsumed = false;
+
+  // Whether the mouse wheel event dispatched to this UI object has been consumed
   private boolean mouseWheelEventConsumed = false;
+
+  // Flag that subclasses may check in event handlers to know whether focus is due to mouse press
   protected boolean mousePressFocused = false;
+
+  // Flag set when a mouse press event on this UI object has triggered the opening of a context-menu,
+  // either from this object itself or any of its children
+  protected boolean mousePressContextMenu = false;
 
   void mousePressed(MouseEvent mouseEvent, float mx, float my) {
     if (isMidiMapping()) {
@@ -593,33 +602,44 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
       return;
     }
 
-    // Show a context menu!
-    if (this instanceof UIContextActions && (mouseEvent.getButton() == PConstants.RIGHT)) {
-      UIContextActions contextParent = (UIContextActions) this;
-      List<UIContextActions.Action> contextActions = contextParent.getContextActions();
-      if (contextActions != null && contextActions.size() > 0) {
-        getUI().showContextMenu(
-          new UIContextMenu(mx, my, UIContextMenu.DEFAULT_WIDTH, 0)
-          .setPosition((UI2dComponent) this, mx, my)
-          .setActions(contextActions.toArray(new UIContextActions.Action[0]))
-        );
-      }
-      return;
-    }
+    // Set context menu flag
+    this.mousePressContextMenu = false;
 
     for (int i = this.mutableChildren.size() - 1; i >= 0; --i) {
       UIObject child = this.mutableChildren.get(i);
       if (child.isVisible() && child.contains(mx, my)) {
         child.mousePressed(mouseEvent, mx - child.getX(), my - child.getY());
         this.pressedChild = child;
+
+        // If any child has shown a context menu, we shouldn't
+        this.mousePressContextMenu = this.pressedChild.mousePressContextMenu;
         break;
       }
     }
+
+    // Show a right-click context menu, if no child has, and if we're eligible
+    if (!this.mousePressContextMenu && this instanceof UIContextActions && (mouseEvent.getButton() == PConstants.RIGHT)) {
+      UIContextActions contextParent = (UIContextActions) this;
+      List<UIContextActions.Action> contextActions = contextParent.getContextActions();
+      if (contextActions != null && contextActions.size() > 0) {
+        this.mousePressContextMenu = true;
+        getUI().showContextMenu(
+          new UIContextMenu(mx, my, UIContextMenu.DEFAULT_WIDTH, 0)
+          .setPosition((UI2dComponent) this, mx, my)
+          .setActions(contextActions.toArray(new UIContextActions.Action[0]))
+        );
+      }
+    }
+
     if (!hasFocus() && (this instanceof UIMouseFocus)) {
       this.mousePressFocused = true;
       focus();
     }
-    onMousePressed(mouseEvent, mx, my);
+
+    if (!this.mousePressContextMenu) {
+      onMousePressed(mouseEvent, mx, my);
+    }
+
     this.mousePressFocused = false;
   }
 
