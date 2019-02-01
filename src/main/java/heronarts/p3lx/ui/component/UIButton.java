@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.EnumParameter;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
@@ -33,7 +34,6 @@ import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITriggerSource;
 import heronarts.p3lx.ui.UITriggerTarget;
-import heronarts.p3lx.ui.undo.Undo;
 import heronarts.p3lx.ui.UIControlTarget;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -274,12 +274,12 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (pushToParameter) {
         if (this.enumParameter != null) {
           if (active) {
-            getUI().undo.push(new Undo.Action.SetNormalized(this.enumParameter));
+            getLX().command.push(new LXCommand.Parameter.SetNormalized(this.enumParameter));
             this.enumParameter.increment();
           }
         } else if (this.booleanParameter != null) {
           if (!this.isMomentary) {
-            getUI().undo.push(new Undo.Action.SetNormalized(this.booleanParameter));
+            getLX().command.push(new LXCommand.Parameter.SetNormalized(this.booleanParameter));
           }
           this.booleanParameter.setValue(active);
         }

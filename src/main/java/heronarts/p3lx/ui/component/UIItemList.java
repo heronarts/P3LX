@@ -317,6 +317,22 @@ public interface UIItemList {
      * @param item Item to remove
      * @return this
      */
+    private void addItem(int index, Item item) {
+      Section section = item.getSection();
+      if (section != null) {
+        throw new IllegalArgumentException("Cannot specify index when adding item to section");
+      }
+      this.items.add(index, item);
+      recomputeContentHeight();
+      this.list.redraw();
+    }
+
+    /**
+     * Adds an item to the list
+     *
+     * @param item Item to remove
+     * @return this
+     */
     private void addItem(Item item) {
       Section section = item.getSection();
       if (section != null) {
@@ -357,6 +373,15 @@ public interface UIItemList {
         }
       }
       recomputeContentHeight();
+      this.list.redraw();
+    }
+
+    private void moveItem(Item item, int index) {
+      if (!this.isReorderable) {
+        throw new IllegalStateException("Cannot move items in non-reorderable list");
+      }
+      this.items.remove(item);
+      this.items.add(index, item);
       this.list.redraw();
     }
 
@@ -850,8 +875,18 @@ public interface UIItemList {
       return this;
     }
 
+    public UIItemList addItem(int index, Item item) {
+      this.impl.addItem(index, item);
+      return this;
+    }
+
     public UIItemList addItem(Item item) {
       this.impl.addItem(item);
+      return this;
+    }
+
+    public UIItemList moveItem(Item item, int index) {
+      this.impl.moveItem(item, index);
       return this;
     }
 

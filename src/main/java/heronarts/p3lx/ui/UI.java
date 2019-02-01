@@ -41,8 +41,6 @@ import heronarts.lx.parameter.LXParameterModulation;
 import heronarts.lx.parameter.StringParameter;
 import heronarts.p3lx.P3LX;
 import heronarts.p3lx.ui.component.UIContextMenu;
-import heronarts.p3lx.ui.undo.Undo;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,7 +105,7 @@ public class UI implements LXEngine.Dispatch {
       }
       if (!keyEventConsumed()) {
         if (keyCode == java.awt.event.KeyEvent.VK_Z && (keyEvent.isMetaDown() || keyEvent.isControlDown())) {
-          this.ui.undo.undo();
+          lx.command.undo();
         } else if (keyCode == java.awt.event.KeyEvent.VK_TAB) {
           if (keyEvent.isShiftDown()) {
             focusPrev();
@@ -266,18 +264,13 @@ public class UI implements LXEngine.Dispatch {
    */
   private final List<Event> engineThreadInputEvents = new ArrayList<Event>();
 
-  /**
-   * Undo operation stack
-   */
-  public final Undo undo = new Undo();
-
   public class Timer {
     public long drawNanos = 0;
   }
 
   public final Timer timer = new Timer();
 
-  final P3LX lx;
+  public final P3LX lx;
 
   public final PApplet applet;
 

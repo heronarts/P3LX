@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.StringParameter;
@@ -37,7 +38,7 @@ public class UITextBox extends UIInputBox {
 
   private final LXParameterListener parameterListener = new LXParameterListener() {
     public void onParameterChanged(LXParameter p) {
-      setValue(parameter.getString());
+      setValue(parameter.getString(), false);
     }
   };
 
@@ -56,7 +57,7 @@ public class UITextBox extends UIInputBox {
     this.parameter = parameter;
     if (parameter != null) {
       this.parameter.addListener(this.parameterListener);
-      setValue(parameter.getString());
+      setValue(parameter.getString(), false);
     } else {
       setValue(NO_VALUE);
     }
@@ -78,9 +79,13 @@ public class UITextBox extends UIInputBox {
   }
 
   public UITextBox setValue(String value) {
+    return setValue(value, true);
+  }
+
+  public UITextBox setValue(String value, boolean pushToParameter) {
     if (!this.value.equals(value)) {
       this.value = value;
-      if (this.parameter != null) {
+      if (pushToParameter && (this.parameter != null)) {
         this.parameter.setValue(this.value);
       }
       this.onValueChange(this.value);
@@ -101,6 +106,9 @@ public class UITextBox extends UIInputBox {
   protected void saveEditBuffer() {
     String value = this.editBuffer.trim();
     if (value.length() > 0) {
+      if (this.parameter != null) {
+        getUI().lx.command.push(new LXCommand.Parameter.SetString(this.parameter, value));
+      }
       setValue(value);
     }
   }

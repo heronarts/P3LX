@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui;
 
+import heronarts.lx.LX;
 import heronarts.lx.LXLoopTask;
 import heronarts.lx.clipboard.LXClipboardItem;
 import heronarts.lx.parameter.BooleanParameter;
@@ -78,6 +79,10 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
 
   protected UI getUI() {
     return this.ui;
+  }
+
+  protected LX getLX() {
+    return this.ui.lx;
   }
 
   /**

@@ -27,6 +27,7 @@ package heronarts.p3lx.ui.component;
 import java.util.ArrayList;
 import java.util.List;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
@@ -34,7 +35,6 @@ import heronarts.lx.parameter.LXParameterListener;
 import heronarts.p3lx.ui.UI2dContainer;
 import heronarts.p3lx.ui.UIContextActions;
 import heronarts.p3lx.ui.UIControlTarget;
-import heronarts.p3lx.ui.undo.Undo;
 
 public class UIButtonGroup extends UI2dContainer implements UIControlTarget, UIContextActions {
 
@@ -69,10 +69,10 @@ public class UIButtonGroup extends UI2dContainer implements UIControlTarget, UIC
         public void onToggle(boolean enabled) {
           if (!inParameterUpdate) {
             if (enabled) {
-              getUI().undo.push(new Undo.Action.SetNormalized(parameter));
+              getLX().command.push(new LXCommand.Parameter.SetNormalized(parameter));
               parameter.setValue(iv);
             } else if (hideFirst) {
-              getUI().undo.push(new Undo.Action.SetNormalized(parameter));
+              getLX().command.push(new LXCommand.Parameter.SetNormalized(parameter));
               parameter.setValue(0);
             }
           }

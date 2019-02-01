@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
@@ -31,7 +32,6 @@ import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIContextActions;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIFocus;
-import heronarts.p3lx.ui.undo.Undo;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
@@ -86,7 +86,7 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
       this.actions[i] = new UIContextActions.Action(String.valueOf(i)) {
         @Override
         public void onContextAction() {
-          getUI().undo.push(new Undo.Action.SetNormalized(parameter));
+          getLX().command.push(new LXCommand.Parameter.SetNormalized(parameter));
           parameter.setValue(ii);
         }
       };
@@ -185,11 +185,11 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
       toggleExpanded();
     } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
       consumeKeyEvent();
-      getUI().undo.push(new Undo.Action.SetNormalized(parameter));
+      getLX().command.push(new LXCommand.Parameter.SetNormalized(parameter));
       this.parameter.increment();
     } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
       consumeKeyEvent();
-      getUI().undo.push(new Undo.Action.SetNormalized(parameter));
+      getLX().command.push(new LXCommand.Parameter.SetNormalized(parameter));
       this.parameter.decrement();
     } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
       if (this.contextMenu.isVisible()) {
