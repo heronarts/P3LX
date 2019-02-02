@@ -25,7 +25,6 @@
 package heronarts.p3lx.ui.component;
 
 import heronarts.lx.LXUtils;
-import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
@@ -120,7 +119,7 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
       }
       this.value = this.minValue + (value - this.minValue) % range;
       if (this.parameter != null && pushToParameter) {
-        getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+        pushUndoCommand(this.parameter);
         this.parameter.setValue(this.value);
       }
       this.onValueChange(this.value);

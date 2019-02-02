@@ -264,7 +264,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
             for (String part : parts) {
               value = value * 60 + Double.parseDouble(part);
             }
-            getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+            pushUndoCommand(this.parameter);
             this.parameter.setValue(value * multiplier);
             break;
           default:
@@ -273,7 +273,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
           }
         } else {
           double value = Double.parseDouble(this.editBuffer);
-          getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+          pushUndoCommand(this.parameter);
           this.parameter.setValue(value);
         }
       } catch (NumberFormatException nfx) {}
@@ -319,7 +319,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void decrementValue(KeyEvent keyEvent) {
     if (this.parameter != null) {
       consumeKeyEvent();
-      getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+      pushUndoCommand(this.parameter);
       if (this.parameter instanceof DiscreteParameter) {
         DiscreteParameter dp = (DiscreteParameter) this.parameter;
         dp.decrement(keyEvent.isShiftDown() ? dp.getRange() / 10 : 1);
@@ -341,7 +341,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void incrementValue(KeyEvent keyEvent) {
     if (this.parameter != null) {
       consumeKeyEvent();
-      getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+      pushUndoCommand(this.parameter);
       if (this.parameter instanceof DiscreteParameter) {
         DiscreteParameter dp = (DiscreteParameter) this.parameter;
         dp.increment(keyEvent.isShiftDown() ? dp.getRange() / 10 : 1);
@@ -386,7 +386,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
     setShowValue(true);
     this.mousePressedUndo = null;
-    if (this.parameter != null) {
+    if (this.parameter != null && this.parameter.getComponent() != null) {
       this.mousePressedUndo = new LXCommand.Parameter.SetNormalized(this.parameter);
     }
   }
@@ -455,7 +455,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
    public void onPaste(LXClipboardItem item) {
      if (item instanceof LXNormalizedValue) {
        if (this.parameter != null && isEnabled() && isEditable()) {
-         getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+         pushUndoCommand(this.parameter);
          setNormalized(((LXNormalizedValue) item).getValue());
        }
      }

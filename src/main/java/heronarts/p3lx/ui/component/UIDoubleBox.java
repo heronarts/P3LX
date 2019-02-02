@@ -153,7 +153,7 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
       this.value = value;
       if (this.parameter != null && pushToParameter) {
         if (undo) {
-          getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+          pushUndoCommand(this.parameter);
         }
         this.parameter.setValue(this.value);
       }

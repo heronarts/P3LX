@@ -26,7 +26,6 @@ package heronarts.p3lx.ui.component;
 
 import heronarts.lx.LXUtils;
 import heronarts.lx.color.LXColor;
-import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXCompoundModulation;
 import heronarts.p3lx.ui.UI;
@@ -292,9 +291,7 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
       break;
     }
     if ((mouseEvent.getCount() > 1) && Math.abs(mp - this.doubleClickP) < 3) {
-      if (this.parameter != null) {
-        getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
-      }
+      pushUndoCommand(this.parameter);
       setNormalized(this.doubleClickMode);
     }
     this.doubleClickP = mp;

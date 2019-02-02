@@ -27,7 +27,6 @@ package heronarts.p3lx.ui.component;
 import heronarts.lx.LXUtils;
 import heronarts.lx.color.ColorParameter;
 import heronarts.lx.color.LXColor;
-import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
@@ -193,10 +192,10 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     if (isEditable() && (this.parameter != null) && (mouseEvent.getCount() > 1)) {
       LXCompoundModulation modulation = getModulation(mouseEvent.isShiftDown());
       if (modulation != null && (mouseEvent.isControlDown() || mouseEvent.isMetaDown())) {
-        getLX().command.push(new LXCommand.Parameter.SetNormalized(modulation.range));
+        pushUndoCommand(modulation.range);
         modulation.range.reset();
       } else {
-        getLX().command.push(new LXCommand.Parameter.SetNormalized(this.parameter));
+        pushUndoCommand(this.parameter);
         this.parameter.reset();
       }
     }
