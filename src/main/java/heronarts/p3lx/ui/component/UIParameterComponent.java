@@ -20,10 +20,8 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
   }
 
   protected void pushUndoCommand(LXParameter parameter) {
-    if (parameter != null && parameter.getComponent() != null) {
-      if (parameter instanceof LXNormalizedParameter) {
-        getLX().command.push(new LXCommand.Parameter.SetNormalized((LXNormalizedParameter) parameter));
-      }
+    if (parameter != null && parameter instanceof LXNormalizedParameter) {
+      getLX().command.push(new LXCommand.Parameter.SetNormalized((LXNormalizedParameter) parameter));
     }
   }
 
