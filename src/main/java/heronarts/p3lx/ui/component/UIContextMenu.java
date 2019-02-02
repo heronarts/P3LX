@@ -26,7 +26,6 @@ package heronarts.p3lx.ui.component;
 
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UI2dComponent;
-import heronarts.p3lx.ui.UI2dScrollContext;
 import heronarts.p3lx.ui.UIContextActions;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -90,22 +89,6 @@ public class UIContextMenu extends UI2dComponent {
     }
   }
 
-  public UIContextMenu setPosition(UI2dComponent parent, float mx, float my) {
-    float x = mx, y = my;
-    while (parent != null) {
-      x += parent.getX();
-      y += parent.getY();
-      if (parent instanceof UI2dScrollContext) {
-        UI2dScrollContext scrollContext = (UI2dScrollContext) parent;
-        x += scrollContext.getScrollX();
-        y += scrollContext.getScrollY();
-      }
-      parent = parent.getContainer();
-    }
-    setPosition(x, y);
-    return this;
-  }
-
   @Override
   public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
     if (keyCode == java.awt.event.KeyEvent.VK_UP) {
@@ -119,10 +102,10 @@ public class UIContextMenu extends UI2dComponent {
       if (this.highlight >= 0) {
         this.actions[this.highlight].onContextAction();
       }
-      getUI().hideContextMenu();
+      getUI().hideContextOverlay();
     } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
       consumeKeyEvent();
-      getUI().hideContextMenu();
+      getUI().hideContextOverlay();
     }
   }
 
@@ -142,7 +125,7 @@ public class UIContextMenu extends UI2dComponent {
     if (index >= 0 && index < this.actions.length) {
       this.actions[index].onContextAction();
     }
-    getUI().hideContextMenu();
+    getUI().hideContextOverlay();
   }
 
 }

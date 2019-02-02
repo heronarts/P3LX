@@ -228,6 +228,31 @@ public abstract class UI2dComponent extends UIObject {
   }
 
   /**
+   * Sets the position of this object in the global space, relative to a parent object
+   * with a defined offset
+   *
+   * @param parent Parent object
+   * @param offsetX X offset
+   * @param offsetY Y offset
+   * @return this
+   */
+  public UI2dComponent setPosition(UI2dComponent parent, float offsetX, float offsetY) {
+    float x = offsetX, y = offsetY;
+    while (parent != null) {
+      x += parent.getX();
+      y += parent.getY();
+      if (parent instanceof UI2dScrollContext) {
+        UI2dScrollContext scrollContext = (UI2dScrollContext) parent;
+        x += scrollContext.getScrollX();
+        y += scrollContext.getScrollY();
+      }
+      parent = parent.getContainer();
+    }
+    setPosition(x, y);
+    return this;
+  }
+
+  /**
    * Sets the height of this component
    *
    * @param height Height

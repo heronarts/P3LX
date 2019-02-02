@@ -105,6 +105,6 @@ public class UIContextButton extends UI2dComponent implements UIFocus {
     this.contextMenu.setWidth(Math.max(UIContextMenu.DEFAULT_WIDTH, this.width));
     this.contextMenu.setPosition(this, 0, this.height);
     this.contextMenu.setHighlight(0);
-    getUI().showContextMenu(this.contextMenu);
+    getUI().showContextOverlay(this.contextMenu);
   }
 }

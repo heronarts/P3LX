@@ -40,7 +40,6 @@ import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.LXParameterModulation;
 import heronarts.lx.parameter.StringParameter;
 import heronarts.p3lx.P3LX;
-import heronarts.p3lx.ui.component.UIContextMenu;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,7 +85,7 @@ public class UI implements LXEngine.Dispatch {
       // If a context menu is open, we'll want to close it on mouse-press
       // unless the mouse-press is within the context menu itself
       boolean hideContext = false;
-      if (contextMenuOverlay.contextMenu != null) {
+      if (contextMenuOverlay.overlayContent != null) {
         hideContext = true;
         contextMenuOverlay.mousePressed = false;
       }
@@ -94,7 +93,7 @@ public class UI implements LXEngine.Dispatch {
 
       // Note: check
       if (!this.mousePressContextMenu && hideContext && !contextMenuOverlay.mousePressed) {
-        hideContextMenu();
+        hideContextOverlay();
       }
     }
 
@@ -113,7 +112,7 @@ public class UI implements LXEngine.Dispatch {
             focusNext();
           }
         } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
-          hideContextMenu();
+          hideContextOverlay();
         }
       }
     }
@@ -289,30 +288,30 @@ public class UI implements LXEngine.Dispatch {
 
   private UIEventHandler topLevelKeyEventHandler = null;
 
-  private class UIContextMenuOverlay extends UI2dContext {
+  private class UIContextOverlay extends UI2dContext {
 
     private boolean mousePressed = false;
 
-    private UIContextMenu contextMenu = null;
+    private UI2dComponent overlayContent = null;
 
-    public UIContextMenuOverlay() {
+    public UIContextOverlay() {
       super(UI.this, 0, 0, 0, 0);
       this.parent = root;
       setUI(UI.this);
     }
 
-    private void setContextMenu(UIContextMenu contextMenu) {
-      if (this.contextMenu != null) {
-        this.contextMenu.setVisible(false);
-        this.contextMenu.removeFromContainer();
+    private void setContent(UI2dComponent overlayContent) {
+      if (this.overlayContent != null) {
+        this.overlayContent.setVisible(false);
+        this.overlayContent.removeFromContainer();
         root.mutableChildren.remove(this);
       }
-      this.contextMenu = contextMenu;
-      if (contextMenu != null) {
-        setSize(contextMenu.getWidth(), contextMenu.getHeight());
+      this.overlayContent = overlayContent;
+      if (overlayContent != null) {
+        setSize(overlayContent.getWidth(), overlayContent.getHeight());
         float x = 0;
         float y = 0;
-        UIObject component = contextMenu;
+        UIObject component = overlayContent;
         while (component != root && component != null) {
           x += component.getX();
           y += component.getY();
@@ -324,9 +323,9 @@ public class UI implements LXEngine.Dispatch {
           component = component.getParent();
         }
         setPosition(x, y);
-        contextMenu.setVisible(true);
-        contextMenu.setPosition(0, 0);
-        contextMenu.addToContainer(this);
+        overlayContent.setVisible(true);
+        overlayContent.setPosition(0, 0);
+        overlayContent.addToContainer(this);
         root.mutableChildren.add(this);
       }
     }
@@ -341,7 +340,7 @@ public class UI implements LXEngine.Dispatch {
   /**
    * Drop menu overlay object
    */
-  private UIContextMenuOverlay contextMenuOverlay;
+  private UIContextOverlay contextMenuOverlay;
 
   /**
    * UI look and feel
@@ -406,7 +405,7 @@ public class UI implements LXEngine.Dispatch {
     this.theme = new UITheme(applet);
     LX.initTimer.log("P3LX: UI: Theme");
     this.root = new UIRoot();
-    this.contextMenuOverlay = new UIContextMenuOverlay();
+    this.contextMenuOverlay = new UIContextOverlay();
     LX.initTimer.log("P3LX: UI: Root");
     applet.registerMethod("pre", this);
     applet.registerMethod("draw", this);
@@ -713,13 +712,13 @@ public class UI implements LXEngine.Dispatch {
     return this;
   }
 
-  public UI hideContextMenu() {
-    showContextMenu(null);
+  public UI hideContextOverlay() {
+    showContextOverlay(null);
     return this;
   }
 
-  public UI showContextMenu(UIContextMenu contextMenu) {
-    this.contextMenuOverlay.setContextMenu(contextMenu);
+  public UI showContextOverlay(UI2dComponent contextOverlay) {
+    this.contextMenuOverlay.setContent(contextOverlay);
     return this;
   }
 

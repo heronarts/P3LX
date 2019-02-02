@@ -152,11 +152,26 @@ public interface UIItemList {
   /**
    * A section is an item in the list that indents the items beneath it.
    */
-  public static abstract class Section extends Item {
+  public static class Section extends Item {
 
     private final List<Item> items = new ArrayList<Item>();
 
     private boolean expanded = true;
+
+    private final String label;
+
+    protected Section() {
+      this(null);
+    }
+
+    public Section(String label) {
+      this.label = label;
+    }
+
+    @Override
+    public String getLabel() {
+      return this.label;
+    }
 
     private void addItem(Item item) {
       this.items.add(item);
@@ -1205,6 +1220,14 @@ public interface UIItemList {
    * @return list of items
    */
   public List<? extends Item> getItems();
+
+  /**
+   * Add a section to the list
+   *
+   * @param section Section
+   * @return this
+   */
+  public UIItemList addSection(Section section);
 
   /**
    * Sets whether single-clicks on an item should activate them. Default behavior

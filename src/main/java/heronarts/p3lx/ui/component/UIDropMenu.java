@@ -165,9 +165,9 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
           this.contextMenu.setPosition(this, 0, this.height);
         }
         this.contextMenu.setWidth(this.width);
-        getUI().showContextMenu(this.contextMenu);
+        getUI().showContextOverlay(this.contextMenu);
       } else {
-        getUI().hideContextMenu();
+        getUI().hideContextOverlay();
       }
     }
   }
