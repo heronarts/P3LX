@@ -29,7 +29,6 @@ import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 import heronarts.lx.command.LXCommand;
-import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 
 public interface UIContextActions {
