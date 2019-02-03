@@ -100,7 +100,7 @@ public class UIContextMenu extends UI2dComponent {
     } else if (keyCode == java.awt.event.KeyEvent.VK_SPACE || keyCode == java.awt.event.KeyEvent.VK_ENTER) {
       consumeKeyEvent();
       if (this.highlight >= 0) {
-        this.actions[this.highlight].onContextAction();
+        this.actions[this.highlight].onContextAction(getUI());
       }
       getUI().hideContextOverlay();
     } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
@@ -123,7 +123,7 @@ public class UIContextMenu extends UI2dComponent {
   public void onMousePressed(MouseEvent mouseEvent, float x, float y) {
     int index = (int) (y / ROW_HEIGHT);
     if (index >= 0 && index < this.actions.length) {
-      this.actions[index].onContextAction();
+      this.actions[index].onContextAction(getUI());
     }
     getUI().hideContextOverlay();
   }

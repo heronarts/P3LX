@@ -28,7 +28,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
-import heronarts.lx.parameter.LXParameter;
+import heronarts.lx.command.LXCommand;
+import heronarts.lx.parameter.LXNormalizedParameter;
 
 public interface UIContextActions {
 
@@ -54,20 +55,20 @@ public interface UIContextActions {
       return this.label;
     }
 
-    public abstract void onContextAction();
+    public abstract void onContextAction(UI ui);
 
     public static class ResetParameter extends Action {
 
-      private final LXParameter parameter;
+      private final LXNormalizedParameter parameter;
 
-      public ResetParameter(LXParameter parameter) {
+      public ResetParameter(LXNormalizedParameter parameter) {
         super("Reset value");
         this.parameter = parameter;
       }
 
       @Override
-      public void onContextAction() {
-        this.parameter.reset();
+      public void onContextAction(UI ui) {
+        ui.lx.command.perform(new LXCommand.Parameter.Reset(this.parameter));
       }
     }
 
@@ -80,7 +81,7 @@ public interface UIContextActions {
       }
 
       @Override
-      public void onContextAction() {
+      public void onContextAction(UI ui) {
         try {
           Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(oscAddress), null);
         } catch (Exception x) {

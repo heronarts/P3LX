@@ -85,7 +85,7 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
       final int ii = i;
       this.actions[i] = new UIContextActions.Action(String.valueOf(i)) {
         @Override
-        public void onContextAction() {
+        public void onContextAction(UI ui) {
           getLX().command.perform(new LXCommand.Parameter.SetValue(parameter, ii));
         }
       };

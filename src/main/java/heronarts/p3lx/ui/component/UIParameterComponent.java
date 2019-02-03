@@ -16,7 +16,7 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
     super(x, y, w, h);
   }
 
-  public LXParameter getParameter() {
+  public LXNormalizedParameter getParameter() {
     return null;
   }
 
@@ -31,7 +31,7 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
   @Override
   public List<Action> getContextActions() {
     List<Action> actions = new ArrayList<Action>();
-    LXParameter parameter = getParameter();
+    LXNormalizedParameter parameter = getParameter();
     if (parameter != null) {
       actions.add(new UIContextActions.Action.ResetParameter(parameter));
     }
