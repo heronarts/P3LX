@@ -27,6 +27,7 @@ package heronarts.p3lx.ui.component;
 import heronarts.lx.LXUtils;
 import heronarts.lx.color.ColorParameter;
 import heronarts.lx.color.LXColor;
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
@@ -192,11 +193,9 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     if (isEditable() && (this.parameter != null) && (mouseEvent.getCount() > 1)) {
       LXCompoundModulation modulation = getModulation(mouseEvent.isShiftDown());
       if (modulation != null && (mouseEvent.isControlDown() || mouseEvent.isMetaDown())) {
-        pushUndoCommand(modulation.range);
-        modulation.range.reset();
+        getLX().command.perform(new LXCommand.Parameter.Reset(modulation.range));
       } else {
-        pushUndoCommand(this.parameter);
-        this.parameter.reset();
+        getLX().command.perform(new LXCommand.Parameter.Reset(this.parameter));
       }
     }
   }
@@ -229,10 +228,6 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     } else {
       if (mouseEvent.isShiftDown()) {
         delta /= 10;
-      }
-      if (this.mousePressedUndo != null) {
-        getLX().command.push(this.mousePressedUndo);
-        this.mousePressedUndo = null;
       }
       this.dragValue = LXUtils.constrain(this.dragValue - delta, 0, 1);
       setNormalized(this.dragValue);

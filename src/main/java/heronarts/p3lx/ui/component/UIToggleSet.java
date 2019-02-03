@@ -25,6 +25,7 @@
 package heronarts.p3lx.ui.component;
 
 import heronarts.lx.LXUtils;
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
@@ -173,8 +174,7 @@ public class UIToggleSet extends UIParameterComponent implements UIFocus, UICont
       }
       this.value = value;
       if (this.parameter != null && pushToParameter) {
-        pushUndoCommand(this.parameter);
-        this.parameter.setValue(value);
+        getLX().command.perform(new LXCommand.Parameter.SetValue(this.parameter, value));
       }
       onToggle(this.value);
       redraw();

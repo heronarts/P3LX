@@ -86,7 +86,7 @@ public class UITextBox extends UIInputBox {
     if (!this.value.equals(value)) {
       this.value = value;
       if (pushToParameter && (this.parameter != null)) {
-        this.parameter.setValue(this.value);
+        getUI().lx.command.perform(new LXCommand.Parameter.SetString(this.parameter, value));
       }
       this.onValueChange(this.value);
       redraw();
@@ -106,9 +106,6 @@ public class UITextBox extends UIInputBox {
   protected void saveEditBuffer() {
     String value = this.editBuffer.trim();
     if (value.length() > 0) {
-      if (this.parameter != null) {
-        getUI().lx.command.push(new LXCommand.Parameter.SetString(this.parameter, value));
-      }
       setValue(value);
     }
   }

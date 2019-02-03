@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.p3lx.ui.UI;
@@ -105,8 +106,7 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
         if (this.isMomentary) {
           getBooleanParameter().setValue(true);
         } else {
-          pushUndoCommand(getBooleanParameter());
-          getBooleanParameter().toggle();
+          getLX().command.perform(new LXCommand.Parameter.Toggle(getBooleanParameter()));
         }
       }
     }
@@ -137,8 +137,7 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
       if (this.isMomentary) {
         getBooleanParameter().setValue(true);
       } else {
-        pushUndoCommand(getBooleanParameter());
-        getBooleanParameter().toggle();
+        getLX().command.perform(new LXCommand.Parameter.Toggle(getBooleanParameter()));
       }
     }
   }

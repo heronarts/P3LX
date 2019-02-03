@@ -169,7 +169,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
       throw new IllegalStateException("May not setNormalized on a non-editable UIParameterControl");
     }
     if (this.parameter != null) {
-      this.parameter.setNormalized(normalized);
+      setNormalizedCommand(normalized);
     }
     return this;
   }
@@ -264,8 +264,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
             for (String part : parts) {
               value = value * 60 + Double.parseDouble(part);
             }
-            pushUndoCommand(this.parameter);
-            this.parameter.setValue(value * multiplier);
+            getLX().command.perform(new LXCommand.Parameter.SetValue(this.parameter, value * multiplier));
             break;
           default:
             // No colon character allowed for other types
@@ -273,8 +272,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
           }
         } else {
           double value = Double.parseDouble(this.editBuffer);
-          pushUndoCommand(this.parameter);
-          this.parameter.setValue(value);
+          getLX().command.perform(new LXCommand.Parameter.SetValue(this.parameter, value));
         }
       } catch (NumberFormatException nfx) {}
     }
@@ -319,12 +317,11 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void decrementValue(KeyEvent keyEvent) {
     if (this.parameter != null) {
       consumeKeyEvent();
-      pushUndoCommand(this.parameter);
       if (this.parameter instanceof DiscreteParameter) {
         DiscreteParameter dp = (DiscreteParameter) this.parameter;
-        dp.decrement(keyEvent.isShiftDown() ? dp.getRange() / 10 : 1);
+        getLX().command.perform(new LXCommand.Parameter.Decrement(dp, keyEvent.isShiftDown() ? dp.getRange() / 10 : 1));
       } else if (this.parameter instanceof BooleanParameter) {
-        ((BooleanParameter)this.parameter).setValue(false);
+        getLX().command.perform(new LXCommand.Parameter.SetNormalized((BooleanParameter) this.parameter, false));
       } else {
         setNormalized(getNormalized() - getIncrement(keyEvent));
       }
@@ -341,12 +338,11 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   protected void incrementValue(KeyEvent keyEvent) {
     if (this.parameter != null) {
       consumeKeyEvent();
-      pushUndoCommand(this.parameter);
       if (this.parameter instanceof DiscreteParameter) {
         DiscreteParameter dp = (DiscreteParameter) this.parameter;
-        dp.increment(keyEvent.isShiftDown() ? dp.getRange() / 10 : 1);
+        getLX().command.perform(new LXCommand.Parameter.Increment(dp, keyEvent.isShiftDown() ? dp.getRange() / 10 : 1));
       } else if (this.parameter instanceof BooleanParameter) {
-        ((BooleanParameter)this.parameter).setValue(true);
+        getLX().command.perform(new LXCommand.Parameter.SetNormalized((BooleanParameter) this.parameter, true));
       } else {
         setNormalized(getNormalized() + getIncrement(keyEvent));
       }
@@ -380,21 +376,16 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
     }
   }
 
-  protected LXCommand.Parameter.SetNormalized mousePressedUndo = null;
-
   @Override
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
+    super.onMousePressed(mouseEvent, mx, my);
     setShowValue(true);
-    this.mousePressedUndo = null;
-    if (this.parameter != null && this.parameter.getComponent() != null) {
-      this.mousePressedUndo = new LXCommand.Parameter.SetNormalized(this.parameter);
-    }
   }
 
   @Override
   protected void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
+    super.onMouseReleased(mouseEvent, mx, my);
     setShowValue(false);
-    this.mousePressedUndo = null;
   }
 
   @Override
@@ -455,7 +446,6 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
    public void onPaste(LXClipboardItem item) {
      if (item instanceof LXNormalizedValue) {
        if (this.parameter != null && isEnabled() && isEditable()) {
-         pushUndoCommand(this.parameter);
          setNormalized(((LXNormalizedValue) item).getValue());
        }
      }

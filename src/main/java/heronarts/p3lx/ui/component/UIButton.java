@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.EnumParameter;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
@@ -273,14 +274,15 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (pushToParameter) {
         if (this.enumParameter != null) {
           if (active) {
-            pushUndoCommand(this.enumParameter);
-            this.enumParameter.increment();
+            getLX().command.perform(new LXCommand.Parameter.Increment(this.enumParameter));
           }
         } else if (this.booleanParameter != null) {
-          if (!this.isMomentary) {
-            pushUndoCommand(this.booleanParameter);
+          if (this.isMomentary) {
+            this.booleanParameter.setValue(active);
+          } else {
+            getLX().command.perform(new LXCommand.Parameter.SetNormalized(this.booleanParameter, active));
           }
-          this.booleanParameter.setValue(active);
+
         }
       }
       onToggle(active);

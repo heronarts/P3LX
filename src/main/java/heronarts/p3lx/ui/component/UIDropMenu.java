@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
@@ -85,8 +86,7 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
       this.actions[i] = new UIContextActions.Action(String.valueOf(i)) {
         @Override
         public void onContextAction() {
-          pushUndoCommand(parameter);
-          parameter.setValue(ii);
+          getLX().command.perform(new LXCommand.Parameter.SetValue(parameter, ii));
         }
       };
     }
@@ -184,12 +184,10 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
       toggleExpanded();
     } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
       consumeKeyEvent();
-      pushUndoCommand(this.parameter);
-      this.parameter.increment();
+      getLX().command.perform(new LXCommand.Parameter.Increment(this.parameter));
     } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
       consumeKeyEvent();
-      pushUndoCommand(this.parameter);
-      this.parameter.decrement();
+      getLX().command.perform(new LXCommand.Parameter.Decrement(this.parameter));
     } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
       if (this.contextMenu.isVisible()) {
         consumeKeyEvent();

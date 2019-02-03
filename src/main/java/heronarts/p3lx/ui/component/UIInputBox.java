@@ -288,6 +288,7 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
 
   @Override
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
+    super.onMousePressed(mouseEvent, mx, my);
     this.dAccum = 0;
   }
 

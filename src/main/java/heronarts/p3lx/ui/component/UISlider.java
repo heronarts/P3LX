@@ -291,7 +291,6 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
       break;
     }
     if ((mouseEvent.getCount() > 1) && Math.abs(mp - this.doubleClickP) < 3) {
-      pushUndoCommand(this.parameter);
       setNormalized(this.doubleClickMode);
     }
     this.doubleClickP = mp;
@@ -351,10 +350,6 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
         } else {
           if (mouseEvent.isShiftDown()) {
             delta /= 10;
-          }
-          if (this.mousePressedUndo != null) {
-            getLX().command.push(this.mousePressedUndo);
-            this.mousePressedUndo = null;
           }
           setNormalized(LXUtils.constrain(getNormalized() + delta, 0, 1));
         }

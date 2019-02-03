@@ -104,7 +104,11 @@ public class UI implements LXEngine.Dispatch {
       }
       if (!keyEventConsumed()) {
         if (keyCode == java.awt.event.KeyEvent.VK_Z && (keyEvent.isMetaDown() || keyEvent.isControlDown())) {
-          lx.command.undo();
+          if (keyEvent.isShiftDown()) {
+            lx.command.redo();
+          } else {
+            lx.command.undo();
+          }
         } else if (keyCode == java.awt.event.KeyEvent.VK_TAB) {
           if (keyEvent.isShiftDown()) {
             focusPrev();
@@ -298,6 +302,7 @@ public class UI implements LXEngine.Dispatch {
       super(UI.this, 0, 0, 0, 0);
       this.parent = root;
       setUI(UI.this);
+      setBackgroundColor(UI.BLACK);
     }
 
     private void setContent(UI2dComponent overlayContent) {

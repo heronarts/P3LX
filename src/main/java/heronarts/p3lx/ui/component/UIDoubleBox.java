@@ -25,7 +25,6 @@
 package heronarts.p3lx.ui.component;
 
 import heronarts.lx.LXUtils;
-import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.BoundedParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
@@ -115,7 +114,7 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
 
   public UIDoubleBox setNormalized(double normalized) {
     if (this.parameter != null) {
-      this.parameter.setNormalized(normalized);
+      setNormalizedCommand(normalized);
     } else {
       setValue(this.minValue + normalized * (this.maxValue - this.minValue));
     }
@@ -140,22 +139,15 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
   }
 
   public UIDoubleBox setValue(double value) {
-    return setValue(value, true, true);
+    return setValue(value, true);
   }
 
   protected UIDoubleBox setValue(double value, boolean pushToParameter) {
-    return setValue(value, pushToParameter, true);
-  }
-
-  protected UIDoubleBox setValue(double value, boolean pushToParameter, boolean undo) {
     value = LXUtils.constrain(value, this.minValue, this.maxValue);
     if (this.value != value) {
       this.value = value;
       if (this.parameter != null && pushToParameter) {
-        if (undo) {
-          pushUndoCommand(this.parameter);
-        }
-        this.parameter.setValue(this.value);
+        setNormalizedCommand((value - this.minValue) / (this.maxValue - this.minValue));
       }
       this.onValueChange(this.value);
       redraw();
@@ -253,11 +245,7 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
 
   @Override
   protected void incrementMouseValue(MouseEvent mouseEvent, int offset) {
-    if (this.mousePressedUndo != null) {
-      getLX().command.push(this.mousePressedUndo);
-      this.mousePressedUndo = null;
-    }
-    setValue(this.value + offset * getIncrement(mouseEvent), true, false);
+    setValue(this.value + offset * getIncrement(mouseEvent));
   }
 
   @Override
@@ -285,33 +273,12 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
     return null;
   }
 
-  private LXCommand.Parameter.SetNormalized mousePressedUndo = null;
-
-  @Override
-  protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
-    super.onMousePressed(mouseEvent, mx, my);
-    this.mousePressedUndo = null;
-    if (this.parameter != null) {
-      this.mousePressedUndo = new LXCommand.Parameter.SetNormalized(this.parameter);
-    }
-  }
-
-  @Override
-  protected void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
-    super.onMouseReleased(mouseEvent, mx, my);
-    this.mousePressedUndo = null;
-  }
-
   @Override
   protected void onMouseDragged(MouseEvent mouseEvent, float mx, float my, float dx, float dy) {
     if (this.enabled && this.editable && !this.editing && this.normalizedMouseEditing && this.parameter != null) {
       float delta = dy / 100.f;
       if (mouseEvent.isShiftDown()) {
         delta /= 10;
-      }
-      if (this.mousePressedUndo != null) {
-        getLX().command.push(this.mousePressedUndo);
-        this.mousePressedUndo = null;
       }
       setNormalized(LXUtils.constrain(getNormalized() - delta, 0, 1));
     } else {
