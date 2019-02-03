@@ -30,6 +30,7 @@ import java.util.List;
 
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.LXNormalizedParameter;
+import heronarts.lx.parameter.LXParameter;
 
 public interface UIContextActions {
 
@@ -59,9 +60,9 @@ public interface UIContextActions {
 
     public static class ResetParameter extends Action {
 
-      private final LXNormalizedParameter parameter;
+      private final LXParameter parameter;
 
-      public ResetParameter(LXNormalizedParameter parameter) {
+      public ResetParameter(LXParameter parameter) {
         super("Reset value");
         this.parameter = parameter;
       }
