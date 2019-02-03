@@ -24,6 +24,8 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.command.LXCommand;
+import heronarts.lx.parameter.LXParameter;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.UITimerTask;
@@ -286,10 +288,30 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
 
   private float dAccum = 0;
 
+  private LXCommand.Parameter.SetValue mouseDragSetValue = null;
+
+  protected void setValueCommand(double value) {
+    if (this.mouseDragSetValue != null) {
+      getLX().command.perform(this.mouseDragSetValue.update(value));
+    } else if (getParameter() != null){
+      getLX().command.perform(new LXCommand.Parameter.SetValue(getParameter(), value));
+    }
+  }
+
   @Override
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
     super.onMousePressed(mouseEvent, mx, my);
     this.dAccum = 0;
+    LXParameter parameter = getParameter();
+    if (parameter != null) {
+      this.mouseDragSetValue = new LXCommand.Parameter.SetValue(parameter, 0);
+    }
+  }
+
+  @Override
+  protected void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
+    super.onMouseReleased(mouseEvent, mx, my);
+    this.mouseDragSetValue = null;
   }
 
   @Override

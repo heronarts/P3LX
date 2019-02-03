@@ -147,7 +147,7 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
     if (this.value != value) {
       this.value = value;
       if (this.parameter != null && pushToParameter) {
-        setNormalizedCommand((value - this.minValue) / (this.maxValue - this.minValue));
+        setValueCommand(value);
       }
       this.onValueChange(this.value);
       redraw();
