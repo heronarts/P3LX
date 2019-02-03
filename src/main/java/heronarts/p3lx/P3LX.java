@@ -247,7 +247,7 @@ public class P3LX extends LX {
   }
 
   @Override
-  protected <T extends LXComponent> T instantiateComponent(Class<? extends T> cls, Class<T> type) {
+  public <T extends LXComponent> T instantiateComponent(Class<? extends T> cls, Class<T> type) {
     try {
       try {
         return cls.getConstructor(LX.class).newInstance(this);
