@@ -832,7 +832,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
       if (mouseEvent.isShiftDown()) {
         float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
         this.camera.radius.incrementValue(this.camera.radius.getValue() * dy * 2.f / getHeight() * tanPerspective);
-      } else if (mouseEvent.isMetaDown()) {
+      } else if (mouseEvent.isMetaDown() || mouseEvent.isControlDown()) {
         float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
         float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
         float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
@@ -852,7 +852,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
       }
       break;
     case MOVE:
-      if (mouseEvent.isMetaDown() || mouseEvent.isShiftDown()) {
+      if (mouseEvent.isMetaDown() || mouseEvent.isControlDown() || mouseEvent.isShiftDown()) {
 
         float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
         float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
