@@ -564,6 +564,9 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   // Whether the key event dispatched to this UI object has been consumed already
   private boolean keyEventConsumed = false;
 
+  // Whether a blur event caused by keypress has been consumed already
+  private boolean keyBlurConsumed = false;
+
   // Whether the mouse press event dispatched to this UI object has been consumed already
   private boolean mousePressConsumed = false;
 
@@ -768,12 +771,14 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
 
   void keyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
     this.keyEventConsumed = false;
+    this.keyBlurConsumed = false;
 
     // First delegate to focused child elements which may handle this event
     if (this.focusedChild != null) {
       UIObject delegate = this.focusedChild;
       delegate.keyPressed(keyEvent, keyChar, keyCode);
       this.keyEventConsumed = delegate.keyEventConsumed;
+      this.keyBlurConsumed = delegate.keyBlurConsumed;
     }
 
     // Next, check for copy/paste/duplicate actions
@@ -804,8 +809,8 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     }
 
     // Escape key blurs items with key focus
-    if (!this.keyEventConsumed && (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) && this instanceof UIKeyFocus) {
-      consumeKeyEvent();
+    if (!this.keyBlurConsumed && (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) && this instanceof UIKeyFocus) {
+      this.keyBlurConsumed = true;
       blur();
     }
   }
