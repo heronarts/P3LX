@@ -379,7 +379,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
   public LXParameter getControlTarget() {
     if (isMappable()) {
       if (this.enumParameter != null) {
-        if (this.enumParameter.getComponent() != null) {
+        if (this.enumParameter.getParent() != null) {
           return this.enumParameter;
         }
       } else {
@@ -400,7 +400,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
   }
 
   private BooleanParameter getTriggerParameter() {
-    if (this.booleanParameter != null && this.booleanParameter.getComponent() != null) {
+    if (this.booleanParameter != null && this.booleanParameter.getParent() != null) {
       return this.booleanParameter;
     }
     return null;

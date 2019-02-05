@@ -198,7 +198,7 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
 
   @Override
   public LXParameter getControlTarget() {
-    if (isMappable() && this.parameter != null && this.parameter.getComponent() != null) {
+    if (isMappable() && this.parameter != null && this.parameter.getParent() != null) {
       return this.parameter;
     }
     return null;

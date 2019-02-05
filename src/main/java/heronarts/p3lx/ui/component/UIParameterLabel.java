@@ -48,7 +48,7 @@ public class UIParameterLabel extends UILabel implements LXParameterListener {
   public UIParameterLabel setParameter(LXParameter parameter) {
     if (this.parameter != parameter) {
       if (this.parameter != null) {
-        LXComponent component = this.parameter.getComponent();
+        LXComponent component = this.parameter.getParent();
         if (this.parameter instanceof LXComponent) {
           component = (LXComponent) this.parameter;
         }
@@ -59,7 +59,7 @@ public class UIParameterLabel extends UILabel implements LXParameterListener {
       }
       this.parameter = parameter;
       if (this.parameter != null) {
-        LXComponent component = this.parameter.getComponent();
+        LXComponent component = this.parameter.getParent();
         if (this.parameter instanceof LXComponent) {
           component = (LXComponent) this.parameter;
         }

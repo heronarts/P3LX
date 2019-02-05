@@ -27,16 +27,13 @@ package heronarts.p3lx.ui;
 import heronarts.lx.LX;
 import heronarts.lx.LXLoopTask;
 import heronarts.lx.clipboard.LXClipboardItem;
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
-import heronarts.lx.parameter.LXParameterModulation;
-import heronarts.lx.parameter.LXTriggerModulation;
 import heronarts.p3lx.ui.component.UIContextMenu;
-import heronarts.lx.parameter.LXCompoundModulation;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -598,19 +595,10 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     } else if (isModulationTargetMapping() && !isModulationSource()) {
       LXNormalizedParameter source = this.ui.getModulationSource().getModulationSource();
       CompoundParameter target = ((UIModulationTarget)this).getModulationTarget();
-      String error = null;
       if (source != null && target != null) {
-        try {
-          this.ui.modulationEngine.addModulation(new LXCompoundModulation(source, target));
-        } catch (LXParameterModulation.CircularDependencyException cdx) {
-          error = cdx.getMessage();
-          System.err.println(cdx.getMessage());
-        }
+        getLX().command.perform(new LXCommand.Modulation.AddModulation(this.ui.modulationEngine, source, target));
       }
       this.ui.mapModulationSource(null);
-      if (error != null) {
-        this.ui.contextualHelpText.setValue(error);
-      }
       return;
     } else if (isTriggerSourceMapping()) {
       this.ui.mapTriggerSource((UITriggerSource) this);
@@ -618,19 +606,10 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     } else if (isTriggerTargetMapping() && !isTriggerSource()) {
       BooleanParameter source = this.ui.getTriggerSource().getTriggerSource();
       BooleanParameter target = ((UITriggerTarget)this).getTriggerTarget();
-      String error = null;
       if (source != null && target != null) {
-        try {
-          this.ui.modulationEngine.addTrigger(new LXTriggerModulation(source, target));
-        } catch (LXParameterModulation.CircularDependencyException cdx) {
-          error = cdx.getMessage();
-          System.err.println(cdx.getMessage());
-        }
+        getLX().command.perform(new LXCommand.Modulation.AddTrigger(this.ui.modulationEngine, source, target));
       }
       this.ui.mapTriggerSource(null);
-      if (error != null) {
-        this.ui.contextualHelpText.setValue(error);
-      }
       return;
     }
 

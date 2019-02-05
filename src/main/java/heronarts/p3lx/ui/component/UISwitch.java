@@ -77,7 +77,7 @@ public class UISwitch extends UIParameterControl implements UIFocus, UITriggerTa
   }
 
   private BooleanParameter getTriggerParameter() {
-    if (this.parameter != null && this.parameter.getComponent() != null) {
+    if (this.parameter != null && this.parameter.getParent() != null) {
       return getBooleanParameter();
     }
     return null;
