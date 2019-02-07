@@ -140,6 +140,8 @@ public class P3LX extends LX {
     this.uiFrame = new LXEngine.Frame(this);
     this.engine.getFrameNonThreadSafe(this.uiFrame);
 
+    beforeBuildUI();
+
     this.ui = buildUI();
     LX.initTimer.log("P3LX: UI");
 
@@ -149,6 +151,13 @@ public class P3LX extends LX {
     applet.registerMethod("draw", this);
     applet.registerMethod("dispose", this);
     LX.initTimer.log("P3LX: registerMethod");
+  }
+
+  /**
+   * Subclasses may override for final initialization steps before UI construction
+   */
+  protected void beforeBuildUI() {
+
   }
 
   /**
