@@ -83,6 +83,13 @@ public class UIParameterLabel extends UILabel implements LXParameterListener {
     } else {
       setLabel((this.prefix != null ? this.prefix : "") + LXComponent.getCanonicalLabel(this.parameter));
     }
+    onLabelChanged();
+  }
+
+  /**
+   * Subclasses may override this method to handle other updates needed when the label changes
+   */
+  protected void onLabelChanged() {
   }
 }
 
