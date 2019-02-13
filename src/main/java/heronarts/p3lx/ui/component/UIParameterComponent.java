@@ -5,6 +5,7 @@ import java.util.List;
 
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.osc.LXOscEngine;
+import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.p3lx.ui.UI2dComponent;
@@ -32,7 +33,7 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
   public List<Action> getContextActions() {
     List<Action> actions = new ArrayList<Action>();
     LXParameter parameter = getParameter();
-    if (parameter != null) {
+    if (parameter != null && !(parameter instanceof BooleanParameter)) {
       actions.add(new UIContextActions.Action.ResetParameter(parameter));
     }
     String oscAddress = getOscAddress();
