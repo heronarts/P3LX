@@ -48,7 +48,7 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
 
   private final static int HANDLE_COLOR = 0xff5f5f5f;
 
-  private final float handleHeight;
+  private float handleHeight;
 
   private boolean hasFillColor = false;
 
@@ -68,6 +68,11 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
     enableImmediateEdit(true);
     this.direction = direction;
     this.handleHeight = h;
+  }
+
+  @Override
+  protected void onResize() {
+    this.handleHeight = this.height;
   }
 
   public UISlider resetFillColor() {
