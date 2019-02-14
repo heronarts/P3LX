@@ -228,6 +228,55 @@ public abstract class UI2dComponent extends UIObject {
   }
 
   /**
+   * Sets position based upon an array of either 2 coordinates or 4
+   *
+   * @param position length 2 array or x/y, or length 4 of x/y/width/height
+   * @return this
+   */
+  public UI2dComponent setPosition(float[] position) {
+    if (position.length == 2) {
+      return setPosition(position[0], position[1]);
+    } else if (position.length == 4) {
+      return setPosition(position[0], position[1], position[2], position[3]);
+    }
+    throw new IllegalArgumentException("Wrong length array to setPosition: " + position);
+  }
+
+  /**
+   * Set the position of this component in its parent coordinate space
+   *
+   * @param x X-position in parents coordinate space
+   * @param y Y-position in parents coordinate space
+   * @param width Width of object
+   * @param height Height of object
+   * @return this
+   */
+  public UI2dComponent setPosition(float x, float y, float width, float height) {
+    boolean move = false;
+    boolean resize = false;
+    if ((this.x != x) || (this.y != y)) {
+      this.x = x;
+      this.y = y;
+      move = true;
+    }
+    if ((this.width != width) || (this.height != height)) {
+      this.width = width;
+      this.height = height;
+      resize = true;
+    }
+    if (move || resize) {
+      if (this.parent instanceof UI2dContainer) {
+        ((UI2dContainer) this.parent).reflow();
+      }
+      if (resize) {
+        onResize();
+      }
+      redrawContainer();
+    }
+    return this;
+  }
+
+  /**
    * Sets the position of this object in the global space, relative to a parent object
    * with a defined offset
    *
