@@ -73,6 +73,7 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
       this.value = parameter.getValuei();
       this.parameter.addListener(this.parameterListener);
     }
+    redraw();
     return this;
   }
 

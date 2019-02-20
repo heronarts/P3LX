@@ -65,7 +65,8 @@ public class UITheme {
   private int controlBackgroundColor = 0xff222222;
   private int controlBorderColor = 0xff292929;
   private int controlTextColor = 0xffcccccc;
-  private int controlDisabledColor = 0xff666666;
+  private int controlDisabledTextColor = 0xff707070;
+  private int controlDisabledColor = 0xff303030;
 
   private int contextBackgroundColor = controlBackgroundColor;
   private int contextBorderColor = 0xff000000;
@@ -646,6 +647,15 @@ public class UITheme {
    */
   public int getControlTextColor() {
     return this.controlTextColor;
+  }
+
+  /**
+   * Control text color
+   *
+   * @return the controlDisabledTextColor
+   */
+  public int getControlDisabledTextColor() {
+    return this.controlDisabledTextColor;
   }
 
   /**

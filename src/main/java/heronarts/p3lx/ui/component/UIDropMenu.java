@@ -51,6 +51,8 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
   private String[] options;
   private UIContextActions.Action[] actions;
 
+  private boolean enabled = true;
+
   private final UIContextMenu contextMenu;
 
   public UIDropMenu(float x, float y, float w, float h) {
@@ -73,6 +75,17 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
   @Override
   public DiscreteParameter getParameter() {
     return this.parameter;
+  }
+
+  public UIDropMenu setEnabled(boolean enabled) {
+    if (this.enabled != enabled) {
+      this.enabled = enabled;
+      if (!enabled) {
+        setExpanded(false);
+      }
+      redraw();
+    }
+    return this;
   }
 
   public UIDropMenu setParameter(DiscreteParameter parameter) {
@@ -135,6 +148,12 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
 
   @Override
   public void onDraw(UI ui, PGraphics pg) {
+    if (!this.enabled) {
+      pg.fill(ui.theme.getControlDisabledColor());
+      pg.noStroke();
+      pg.rect(1, 1, this.width-2, this.height-2);
+    }
+
     String text;
     if (this.options != null) {
       text = this.options[this.parameter.getValuei()];
@@ -143,11 +162,11 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
     }
 
     pg.textFont(hasFont() ? getFont() : ui.theme.getControlFont());
-    pg.fill(ui.theme.getControlTextColor());
+    pg.fill(this.enabled ? ui.theme.getControlTextColor() : ui.theme.getControlDisabledTextColor());
     pg.textAlign(PConstants.LEFT, PConstants.TOP);
     pg.text(clipTextToWidth(pg, text, this.width - 12), 4 + this.textOffsetX, 4 + this.textOffsetY);
     pg.textAlign(PConstants.RIGHT, PConstants.TOP);
-    pg.text("▼", this.width-4, 4 + this.textOffsetY);
+    pg.text("\u25BC", this.width-4, 4 + this.textOffsetY);
 
   }
 
@@ -174,24 +193,28 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
 
   @Override
   public void onMousePressed(MouseEvent mouseEvent, float x, float y) {
-    toggleExpanded();
+    if (this.enabled) {
+      toggleExpanded();
+    }
   }
 
   @Override
   public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
-    if (keyCode == java.awt.event.KeyEvent.VK_ENTER || keyCode == java.awt.event.KeyEvent.VK_SPACE) {
-      consumeKeyEvent();
-      toggleExpanded();
-    } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
-      consumeKeyEvent();
-      getLX().command.perform(new LXCommand.Parameter.Increment(this.parameter));
-    } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
-      consumeKeyEvent();
-      getLX().command.perform(new LXCommand.Parameter.Decrement(this.parameter));
-    } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
-      if (this.contextMenu.isVisible()) {
+    if (this.enabled) {
+      if (keyCode == java.awt.event.KeyEvent.VK_ENTER || keyCode == java.awt.event.KeyEvent.VK_SPACE) {
         consumeKeyEvent();
-        setExpanded(false);
+        toggleExpanded();
+      } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
+        consumeKeyEvent();
+        getLX().command.perform(new LXCommand.Parameter.Increment(this.parameter));
+      } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
+        consumeKeyEvent();
+        getLX().command.perform(new LXCommand.Parameter.Decrement(this.parameter));
+      } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+        if (this.contextMenu.isVisible()) {
+          consumeKeyEvent();
+          setExpanded(false);
+        }
       }
     }
   }

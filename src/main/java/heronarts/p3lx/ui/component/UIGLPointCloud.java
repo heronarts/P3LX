@@ -88,6 +88,7 @@ public class UIGLPointCloud extends UIPointCloud implements LXModel.Listener {
     }
   }
 
+  @Override
   public void onModelUpdated(LXModel model) {
     // If the model has been updated, then the next rendering pass needs
     // to update the vertex position data.
