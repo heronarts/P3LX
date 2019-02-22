@@ -573,6 +573,9 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   // Whether the mouse wheel event dispatched to this UI object has been consumed
   private boolean mouseWheelEventConsumed = false;
 
+  // Flag that subclasses may check in event handlers to know whether focus is due to key press
+  protected KeyEvent keyPressFocused = null;
+
   // Flag that subclasses may check in event handlers to know whether focus is due to mouse press
   protected boolean mousePressFocused = false;
 
