@@ -39,7 +39,7 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
     HORIZONTAL_GRID
   }
 
-  public enum ArrowKeyFocus{
+  public enum ArrowKeyFocus {
     NONE,
     VERTICAL,
     HORIZONTAL
@@ -47,7 +47,7 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
 
   private Layout layout = Layout.NONE;
 
-  private ArrowKeyFocus arrowKeyFocus = ArrowKeyFocus.NONE;
+  ArrowKeyFocus arrowKeyFocus = ArrowKeyFocus.NONE;
 
   private int topPadding = 0, rightPadding = 0, bottomPadding = 0, leftPadding = 0;
 
@@ -263,13 +263,15 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
     return this.contentTarget.mutableChildren;
   }
 
-  private void keyFocus(int delta) {
+  private void keyFocus(KeyEvent keyEvent, int delta) {
     if (this.children.size() > 0) {
       UIObject focusedChild = getFocusedChild();
       if (focusedChild == null) {
         for (UIObject object : this.children) {
           if (object.isVisible() && (object instanceof UIKeyFocus)) {
+            ((UI2dComponent) object).keyPressFocused = keyEvent;
             object.focus();
+            ((UI2dComponent) object).keyPressFocused = null;
             break;
           }
         }
@@ -282,7 +284,9 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
           }
           UIObject object = this.children.get(index);
           if (object.isVisible() && (object instanceof UIKeyFocus)) {
+            ((UI2dComponent) object).keyPressFocused = keyEvent;
             object.focus();
+            ((UI2dComponent) object).keyPressFocused = null;
             break;
           }
         }
@@ -296,18 +300,18 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
     if (this.arrowKeyFocus == ArrowKeyFocus.VERTICAL) {
       if (keyCode == java.awt.event.KeyEvent.VK_UP) {
         consumeKeyEvent();
-        keyFocus(-1);
+        keyFocus(keyEvent, -1);
       } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
         consumeKeyEvent();
-        keyFocus(1);
+        keyFocus(keyEvent, 1);
       }
     } else if (this.arrowKeyFocus == ArrowKeyFocus.HORIZONTAL) {
       if (keyCode == java.awt.event.KeyEvent.VK_LEFT) {
         consumeKeyEvent();
-        keyFocus(-1);
+        keyFocus(keyEvent, -1);
       } else if (keyCode == java.awt.event.KeyEvent.VK_RIGHT) {
         consumeKeyEvent();
-        keyFocus(1);
+        keyFocus(keyEvent, 1);
       }
     }
   }
