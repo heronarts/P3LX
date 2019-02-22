@@ -38,6 +38,16 @@ public abstract class UINumberBox extends UIInputBox {
     enableImmediateEdit(true);
   }
 
+  public UINumberBox setFillStyle(FillStyle fillStyle) {
+    if (this.fillStyle != fillStyle) {
+      this.fillStyle = fillStyle;
+      if (this.hasFill) {
+        redraw();
+      }
+    }
+    return this;
+  }
+
   public UINumberBox setFill(boolean hasFill) {
     if (this.hasFill != hasFill) {
       this.hasFill = hasFill;

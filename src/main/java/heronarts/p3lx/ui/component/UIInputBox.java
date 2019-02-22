@@ -59,6 +59,13 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
   private boolean hasProgressColor = false;
   private int progressColor = 0;
 
+  protected FillStyle fillStyle = FillStyle.UNDERLINE;
+
+  public enum FillStyle {
+    UNDERLINE,
+    FULL
+  };
+
   protected UIInputBox() {
     this(0, 0, 0, 0);
   }
@@ -192,10 +199,17 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
         pg.rect(1, 1, this.width-2, this.height-2);
       }
       if (this.hasFill) {
-        int fillWidth = (int) (getFillWidthNormalized() * (this.width-5));
-        if (fillWidth > 0) {
-          pg.stroke(this.fillColor);
-          pg.line(2, this.height-2, 2 + fillWidth, this.height-2);
+        if (this.fillStyle == FillStyle.UNDERLINE) {
+          int fillWidth = (int) (getFillWidthNormalized() * (this.width-5));
+          if (fillWidth > 0) {
+            pg.stroke(this.fillColor);
+            pg.line(2, this.height-2, 2 + fillWidth, this.height-2);
+          }
+        } else if (this.fillStyle == FillStyle.FULL) {
+          int fillWidth = (int) (getFillWidthNormalized() * (this.width-2));
+          pg.fill(this.fillColor);
+          pg.noStroke();
+          pg.rect(1, 1, fillWidth, this.height - 2);
         }
       }
     }
@@ -208,16 +222,18 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
       pg.fill(hasFontColor() ? getFontColor() : ui.theme.getControlTextColor());
     }
 
-    String displayString = clipTextToWidth(pg, this.editing ? this.editBuffer : getValueString(), this.width - TEXT_MARGIN);
+    String displayString = this.editing ? this.editBuffer : getValueString();
+    if (displayString != null) {
+      displayString = clipTextToWidth(pg, displayString, this.width - TEXT_MARGIN);
+      if (this.textAlignHorizontal == PConstants.LEFT) {
+        pg.textAlign(PConstants.LEFT, PConstants.CENTER);
+        pg.text(displayString, 2, this.height / 2);
+      } else {
+        pg.textAlign(PConstants.CENTER, PConstants.CENTER);
+        pg.text(displayString, this.width / 2, this.height / 2);
+      }
 
-    if (this.textAlignHorizontal == PConstants.LEFT) {
-      pg.textAlign(PConstants.LEFT, PConstants.CENTER);
-      pg.text(displayString, 2, this.height / 2);
-    } else {
-      pg.textAlign(PConstants.CENTER, PConstants.CENTER);
-      pg.text(displayString, this.width / 2, this.height / 2);
     }
-
   }
 
   protected abstract boolean isValidCharacter(char keyChar);
