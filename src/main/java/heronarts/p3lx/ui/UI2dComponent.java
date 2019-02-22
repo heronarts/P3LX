@@ -71,6 +71,8 @@ public abstract class UI2dComponent extends UIObject {
 
   private int borderRounding = 0;
 
+  private boolean hasFocusCorners = true;
+
   private boolean hasFocusColor = false;
 
   private int focusColor = 0;
@@ -507,6 +509,11 @@ public abstract class UI2dComponent extends UIObject {
     return this;
   }
 
+  public UI2dComponent setFocusCorners(boolean focusCorners) {
+    this.hasFocusCorners = focusCorners;
+    return this;
+  }
+
   public UI2dComponent setFocusColor(int focusColor) {
     this.hasFocusColor = true;
     this.focusColor = focusColor;
@@ -682,12 +689,30 @@ public abstract class UI2dComponent extends UIObject {
     if (this.parent == null) {
       throw new IllegalStateException("Cannot remove parentless UIObject from container");
     }
-    if (hasFocus()) {
+    boolean hadFocus = hasFocus();
+    if (hadFocus) {
       blur();
     }
-    this.parent.mutableChildren.remove(this);
+    int index = this.parent.mutableChildren.indexOf(this);
+    this.parent.mutableChildren.remove(index);
     if (this.parent instanceof UI2dContainer) {
-      ((UI2dContainer) this.parent).reflow();
+      UI2dContainer container = (UI2dContainer) this.parent;
+      container.reflow();
+
+      // If container does auto-keyfocus, focus the neighbor
+      if (hadFocus && (container.arrowKeyFocus != UI2dContainer.ArrowKeyFocus.NONE)) {
+        int maxIndex = container.mutableChildren.size() - 1;
+        if (index > maxIndex) {
+          index = maxIndex;
+        }
+        while (index >= 0) {
+          UIObject neighbor = container.children.get(index);
+          if (neighbor instanceof UIKeyFocus) {
+            neighbor.focus();
+            break;
+          }
+        }
+      }
     }
     redrawContainer();
     this.parent = null;
@@ -923,7 +948,7 @@ public abstract class UI2dComponent extends UIObject {
       pg.fill(ui.theme.getMidiMappingColor());
       pg.rect(x, y, w, h);
       if (isControlTarget()) {
-        drawFocus(ui, pg, 0xccff0000);
+        drawFocusCorners(ui, pg, 0xccff0000);
       }
     } else if (isModulationSourceMapping() || isTriggerSourceMapping()) {
       pg.noStroke();
@@ -1004,20 +1029,23 @@ public abstract class UI2dComponent extends UIObject {
   }
 
   /**
-   * Draws focus on this object. May be overridden by subclasses.
+   * Draws focus on this object. May be overridden by subclasses to provide
+   * custom focus-drawing behavior.
    *
    * @param ui UI
    * @param pg PGraphics
    */
   protected void drawFocus(UI ui, PGraphics pg) {
-    drawFocus(ui, pg, getFocusColor(ui));
+    if (this.hasFocusCorners) {
+      drawFocusCorners(ui, pg, getFocusColor(ui));
+    }
   }
 
-  protected void drawFocus(UI ui, PGraphics pg, int color) {
-    drawFocus(ui, pg, color, 0, 0, this.width, this.height, getFocusSize());
+  protected void drawFocusCorners(UI ui, PGraphics pg, int color) {
+    drawFocusCorners(ui, pg, color, 0, 0, this.width, this.height, getFocusSize());
   }
 
-  public static void drawFocus(UI ui, PGraphics pg, int color, float x, float y, float width, float height, int focusSize) {
+  public static void drawFocusCorners(UI ui, PGraphics pg, int color, float x, float y, float width, float height, int focusSize) {
     pg.stroke(color);
     pg.noFill();
     // Top left
