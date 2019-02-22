@@ -29,6 +29,9 @@ import heronarts.lx.LXUtils;
 
 public class UI2dScrollContext extends UI2dContext {
 
+  private boolean dynamicHeight = false;
+  private float maxHeight = -1;
+
   private float scrollWidth;
   private float scrollHeight;
 
@@ -41,8 +44,27 @@ public class UI2dScrollContext extends UI2dContext {
     this.scrollHeight = h;
   }
 
+  /**
+   * Sets a maximum height on the scroll container. Resize or dynamic layout operations
+   * up to this size will actually resize the container and texture itself. But past that point,
+   * scroll operation occurs.
+   *
+   * @param maxHeight Maximum height before scrolling kicks in
+   * @return this
+   */
+  public UI2dScrollContext setMaxHeight(float maxHeight) {
+    this.dynamicHeight = true;
+    this.maxHeight = maxHeight;
+    return this;
+  }
+
+
   @Override
   public UI2dContainer setContentSize(float w, float h) {
+    // Explicitly do not invoke super here!
+    if (this.dynamicHeight) {
+      setSize(this.width, Math.min(this.maxHeight, h));
+    }
     return setScrollSize(w, h);
   }
 

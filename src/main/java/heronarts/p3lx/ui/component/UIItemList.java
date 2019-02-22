@@ -538,7 +538,7 @@ public interface UIItemList {
       int visibleFocusIndex = getVisibleFocusIndex();
       if (visibleFocusIndex >= 0) {
         float yp = ROW_MARGIN + getScrollY() + ROW_SPACING * visibleFocusIndex;
-        UI2dComponent.drawFocus(ui, pg, ui.theme.getFocusColor(), PADDING, yp, getRowWidth() - 2*PADDING, ROW_HEIGHT, 2);
+        UI2dComponent.drawFocusCorners(ui, pg, ui.theme.getFocusColor(), PADDING, yp, getRowWidth() - 2*PADDING, ROW_HEIGHT, 2);
       }
     }
 
@@ -578,7 +578,7 @@ public interface UIItemList {
           backgroundColor = item.getActiveColor(ui);
           textColor = UI.WHITE;
         } else {
-          backgroundColor = (i == this.focusIndex) ? 0xff333333 : ui.theme.getControlBackgroundColor();
+          backgroundColor = (i == this.focusIndex) ? ui.theme.getSelectionColor() : ui.theme.getControlBackgroundColor();
           textColor = isSection ? 0xffaaaaaa : ((i == this.focusIndex) ? UI.WHITE : ui.theme.getControlTextColor());
         }
         pg.noStroke();
@@ -847,29 +847,10 @@ public interface UIItemList {
 
     private final Impl impl;
 
-    private boolean dynamicSize = false;
-
-    private float maxHeight = -1;
-
     public ScrollList(UI ui, float x, float y, float w, float h) {
       super(ui, x, y, w, h);
       setScrollHeight(Impl.ROW_MARGIN);
       this.impl = new Impl(ui, this);
-    }
-
-    public ScrollList setMaxHeight(float maxHeight) {
-      this.dynamicSize = true;
-      this.maxHeight = maxHeight;
-      return this;
-    }
-
-    @Override
-    public UI2dContainer setContentSize(float width, float height) {
-      super.setContentSize(width, height);
-      if (this.dynamicSize) {
-        setSize(width, Math.min(this.maxHeight, height));
-      }
-      return this;
     }
 
     public UIItemList setFocusIndex(int focusIndex) {
