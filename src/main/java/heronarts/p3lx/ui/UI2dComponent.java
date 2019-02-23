@@ -87,9 +87,9 @@ public abstract class UI2dComponent extends UIObject {
 
   protected int textAlignVertical = PConstants.BASELINE;
 
-  protected int textOffsetX = 0;
+  protected float textOffsetX = 0;
 
-  protected int textOffsetY = 0;
+  protected float textOffsetY = 0;
 
   private boolean mappable = true;
 
@@ -619,7 +619,7 @@ public abstract class UI2dComponent extends UIObject {
    * @param textOffsetY Text position y offset
    * @return this
    */
-  public UI2dComponent setTextOffset(int textOffsetX, int textOffsetY) {
+  public UI2dComponent setTextOffset(float textOffsetX, float textOffsetY) {
     if (this.textOffsetX != textOffsetX || this.textOffsetY != textOffsetY) {
       this.textOffsetX = textOffsetX;
       this.textOffsetY = textOffsetY;
