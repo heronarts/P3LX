@@ -127,6 +127,7 @@ public class P3LX extends LX {
     registerEffect(heronarts.lx.effect.FlashEffect.class);
     registerEffect(heronarts.lx.effect.InvertEffect.class);
 
+    // Find patterns + effects declared in the Processing sketch
     for (Class<?> cls : applet.getClass().getDeclaredClasses()) {
       if (!Modifier.isAbstract(cls.getModifiers())) {
         if (LXPattern.class.isAssignableFrom(cls)) {
@@ -137,6 +138,11 @@ public class P3LX extends LX {
       }
     }
 
+    // Load fixture definitions
+    this.structure.setFixturePath(sketchPath);
+    this.structure.registerFixtures();
+
+    // Initialize frame
     this.uiFrame = new LXEngine.Frame(this);
     this.engine.getFrameNonThreadSafe(this.uiFrame);
 
