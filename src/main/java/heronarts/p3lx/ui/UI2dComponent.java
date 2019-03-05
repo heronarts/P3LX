@@ -706,7 +706,7 @@ public abstract class UI2dComponent extends UIObject {
           index = maxIndex;
         }
         while (index >= 0) {
-          UIObject neighbor = container.children.get(index);
+          UIObject neighbor = container.children.get(index--);
           if (neighbor instanceof UIKeyFocus) {
             neighbor.focus();
             break;
