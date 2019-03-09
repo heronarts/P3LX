@@ -26,6 +26,9 @@ package heronarts.p3lx;
 
 import heronarts.p3lx.ui.UI;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.io.File;
 import java.lang.reflect.Modifier;
 
 import heronarts.lx.LX;
@@ -33,9 +36,7 @@ import heronarts.lx.LXComponent;
 import heronarts.lx.LXEffect;
 import heronarts.lx.LXEngine;
 import heronarts.lx.LXPattern;
-import heronarts.lx.model.GridModel;
 import heronarts.lx.model.LXModel;
-import heronarts.lx.model.StripModel;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -47,7 +48,7 @@ public class P3LX extends LX {
 
   public final static String VERSION = LX.VERSION;
 
-  private LXEngine.Frame uiFrame;
+  private final LXEngine.Frame uiFrame;
 
   /**
    * Returns the version of the library.
@@ -90,14 +91,6 @@ public class P3LX extends LX {
     this(applet, new LXModel());
   }
 
-  public P3LX(PApplet applet, int length) {
-    this(applet, new StripModel(length));
-  }
-
-  public P3LX(PApplet applet, int width, int height) {
-    this(applet, new GridModel(width, height));
-  }
-
   public P3LX(PApplet applet, LXModel model) {
     this(applet, new Flags(), model);
   }
@@ -110,11 +103,8 @@ public class P3LX extends LX {
     super(flags, model);
     this.flags = flags;
     this.flags.isP3LX = true;
+    this.flags.mediaPath = applet.sketchPath();
     this.applet = applet;
-
-    String sketchPath = applet.sketchPath();
-    this.engine.script.setScriptPath(sketchPath);
-    this.engine.audio.output.setMediaPath(sketchPath);
 
     registerPattern(heronarts.p3lx.pattern.SolidPattern.class);
     registerPattern(heronarts.p3lx.pattern.JavascriptPattern.class);
@@ -139,8 +129,7 @@ public class P3LX extends LX {
     }
 
     // Load fixture definitions
-    this.structure.setFixturePath(sketchPath);
-    this.structure.registerFixtures();
+    this.structure.registerFixtures(new File(getMediaPath(), "fixtures"));
 
     // Initialize frame
     this.uiFrame = new LXEngine.Frame(this);
@@ -282,5 +271,15 @@ public class P3LX extends LX {
       x.printStackTrace();
     }
     return null;
+  }
+
+  @Override
+  public void setSystemClipboardString(String str) {
+    try {
+      Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), null);
+    } catch (Exception x) {
+      System.err.println("Exception setting system clipboard");
+      x.printStackTrace();
+    }
   }
 }
