@@ -24,6 +24,8 @@
 
 package heronarts.p3lx.ui.component;
 
+import java.awt.Toolkit;
+
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.p3lx.ui.UI;
@@ -261,6 +263,9 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
         // Editing!
         if (isValidCharacter(keyChar)) {
           consumeKeyEvent();
+          if (Toolkit.getDefaultToolkit().getLockingKeyState(java.awt.event.KeyEvent.VK_CAPS_LOCK)) {
+            keyChar = Character.toUpperCase(keyChar);
+          }
           this.editBuffer += keyChar;
           redraw();
         } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
@@ -284,6 +289,9 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
         if (this.immediateEdit && isValidCharacter(keyChar)) {
           consumeKeyEvent();
           this.editing = true;
+          if (Toolkit.getDefaultToolkit().getLockingKeyState(java.awt.event.KeyEvent.VK_CAPS_LOCK)) {
+            keyChar = Character.toUpperCase(keyChar);
+          }
           this.editBuffer = Character.toString(keyChar);
           redraw();
         } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
