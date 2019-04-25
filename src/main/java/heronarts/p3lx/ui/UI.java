@@ -422,6 +422,9 @@ public class UI implements LXEngine.Dispatch {
         @Override
         public void projectChanged(File file, Change change) {
           switch (change) {
+          case TRY:
+            contextualHelpText.setValue("Loading project: " + file.getName());
+            break;
           case NEW:
             contextualHelpText.setValue("Created new project");
             break;
