@@ -27,7 +27,7 @@
             <unpack>true</unpack>
             <scope>compile</scope>
             <includes>
-                <include>heronarts:LX</include>
+                <include>com.github.heronarts:LX</include>
                 <include>heronarts:P3LX</include>
                 <include>com.google.code.gson:gson</include>
                 <include>uk.co.xfactory-librarians:coremidi4j</include>
