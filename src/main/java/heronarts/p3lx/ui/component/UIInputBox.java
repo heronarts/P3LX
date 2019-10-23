@@ -60,6 +60,7 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
   private int progressColor = 0;
 
   protected FillStyle fillStyle = FillStyle.UNDERLINE;
+  protected FillStyle progressFillStyle = FillStyle.UNDERLINE;
 
   public enum FillStyle {
     UNDERLINE,
@@ -86,6 +87,12 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
   public UIInputBox setProgressColor(int progressColor) {
     this.hasProgressColor = true;
     this.progressColor = progressColor;
+    redraw();
+    return this;
+  }
+
+  public UIInputBox setProgressFillStyle(FillStyle progressFillStyle) {
+    this.progressFillStyle = progressFillStyle;
     redraw();
     return this;
   }
@@ -182,9 +189,15 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
   @Override
   protected void onDraw(UI ui, PGraphics pg) {
     if (this.progressPixels > 0) {
-      pg.noFill();
-      pg.stroke(this.hasProgressColor ? this.progressColor : ui.theme.getPrimaryColor());
-      pg.line(2, this.height-2, 2 + this.progressPixels, this.height-2);
+      if (this.progressFillStyle == FillStyle.UNDERLINE) {
+        pg.noFill();
+        pg.stroke(this.hasProgressColor ? this.progressColor : ui.theme.getPrimaryColor());
+        pg.line(2, this.height-2, 2 + this.progressPixels, this.height-2);
+      } else {
+        pg.noStroke();
+        pg.fill(this.hasProgressColor ? this.progressColor : ui.theme.getPrimaryColor());
+        pg.rect(0, 0, this.progressPixels + 4, this.height);
+      }
     }
 
     pg.textFont(hasFont() ? getFont() : ui.theme.getControlFont());

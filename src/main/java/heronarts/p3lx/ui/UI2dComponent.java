@@ -832,7 +832,11 @@ public abstract class UI2dComponent extends UIObject {
       throw new UnsupportedOperationException("Cannot setContainerIndex() on an object not in a container");
     }
     this.parent.mutableChildren.remove(this);
-    this.parent.mutableChildren.add(index, this);
+    if (index < 0) {
+      this.parent.mutableChildren.add(this);
+    } else {
+      this.parent.mutableChildren.add(index, this);
+    }
     if (this.parent instanceof UI2dContainer) {
       ((UI2dContainer) this.parent).reflow();
     }
