@@ -974,7 +974,7 @@ public abstract class UI2dComponent extends UIObject {
     }
   }
 
-  private void drawBackground(UI ui, PGraphics pg) {
+  protected void drawBackground(UI ui, PGraphics pg) {
 
     boolean ownBackground = this.hasBackground || (this.hasFocus && this.hasFocusBackground);
 

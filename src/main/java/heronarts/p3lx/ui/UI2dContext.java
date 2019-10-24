@@ -73,6 +73,12 @@ public class UI2dContext extends UI2dContainer {
     pg.image(this.pg, 0, 0);
   }
 
+  @Override
+  protected void drawBackground(UI ui, PGraphics pg) {
+    pg.clear();
+    super.drawBackground(ui, pg);
+  }
+
   protected PGraphics getGraphics() {
     return this.pg;
   }
