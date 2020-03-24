@@ -50,7 +50,7 @@ $ mvn install
 ```
 The above commands result in the following artifacts:
 in `P3LX/target`:
-1. fat jar (with dependencies): `P3LX.jar`.
+1. fat jar with dependencies
 1. thin jar for distribution via maven repository publishing
 1. source jar for distribution via maven repository publishing
 1. javadoc jar for distribution via maven repository publishing
