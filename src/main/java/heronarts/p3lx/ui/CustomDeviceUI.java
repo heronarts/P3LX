@@ -18,8 +18,6 @@
 
 package heronarts.p3lx.ui;
 
-import heronarts.p3lx.ui.UI;
-
 public interface CustomDeviceUI {
   public abstract void buildDeviceUI(UI ui, UI2dContainer device);
 }

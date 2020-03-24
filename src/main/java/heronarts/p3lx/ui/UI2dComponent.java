@@ -24,7 +24,7 @@
 
 package heronarts.p3lx.ui;
 
-import heronarts.lx.parameter.LXParameterModulation;
+import heronarts.lx.modulation.LXParameterModulation;
 import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PGraphics;
