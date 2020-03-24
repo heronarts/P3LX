@@ -3,8 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>heronarts</groupId>
-    <artifactId>P3LX</artifactId>
+    <artifactId>p3lx</artifactId>
     <version>0.1.3-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -12,46 +13,40 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <gson.version>2.8.0</gson.version>
-        <coremidi4j.version>0.9</coremidi4j.version>
-        <LX.version>29ac8d7364</LX.version>
-
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
-        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.heronarts</groupId>
-            <artifactId>LX</artifactId>
-            <version>${LX.version}</version>
+            <groupId>heronarts</groupId>
+            <artifactId>lx</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jogamp.jogl</groupId>
             <artifactId>jogl-all</artifactId>
             <version>2.3.2</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.processing</groupId>
             <artifactId>core</artifactId>
             <version>3.3.7</version>
+            <scope>provided</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>org.processing</groupId>
             <artifactId>video</artifactId>
-            <version>3.2.3</version>
+            <version>3.3.7</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -82,7 +77,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <bottom>P3LX library by Mark C. Slee. (C) 2012-</bottom>
+                    <bottom>P3LX library by Mark C. Slee. (C) 2012-2020</bottom>
                     <verbose>false</verbose>
                     <stylesheetfile>build/stylesheet.css</stylesheetfile>
                     <doctitle>P3LX API Specification</doctitle>
@@ -104,49 +99,30 @@
                     </execution>
                 </executions>
             </plugin>
+            
+        	<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-assembly-plugin</artifactId>
+	            <version>${maven-assembly-plugin.version}</version>
+	
+	            <configuration>
+	                <descriptorRefs>
+	                    <descriptorRef>jar-with-dependencies</descriptorRef>
+	                </descriptorRefs>
+	            </configuration>
+	            
+	            <executions>
+	                <execution>
+	                    <id>make-assembly</id>
+	                    <phase>package</phase>
+	                    <goals>
+	                        <goal>single</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+        	</plugin>            
 
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven-assembly-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>thin</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>assembly.xml</descriptor>
-                            </descriptors>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>fat</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>assembly-fat.xml</descriptor>
-                            </descriptors>
-                            <finalName>P3LX</finalName>
-                            <attach>false</attach>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
 </project>

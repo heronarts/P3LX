@@ -42,7 +42,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
- * Harness to run LX inside a Processing 2 sketch
+ * Harness to run LX inside a Processing 3 sketch
  */
 public class P3LX extends LX {
 
