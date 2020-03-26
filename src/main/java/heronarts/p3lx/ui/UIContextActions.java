@@ -30,6 +30,7 @@ import java.util.List;
 
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.LXParameter;
+import heronarts.p3lx.P3LX;
 
 public interface UIContextActions {
 
@@ -85,8 +86,7 @@ public interface UIContextActions {
         try {
           Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(oscAddress), null);
         } catch (Exception x) {
-          System.err.println("Exception setting system clipboard");
-          x.printStackTrace();
+          P3LX.error(x, "Exception setting system clipboard: " + x.getLocalizedMessage());
         }
       }
 

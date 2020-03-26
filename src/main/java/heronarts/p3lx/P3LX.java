@@ -267,8 +267,7 @@ public class P3LX extends LX {
         }
       }
     } catch (Exception x) {
-      System.err.println("Component instantiation failed: " + x.getLocalizedMessage());
-      x.printStackTrace();
+      error(x, "Component instantiation failed: " + x.getLocalizedMessage());
     }
     return null;
   }
@@ -278,8 +277,21 @@ public class P3LX extends LX {
     try {
       Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), null);
     } catch (Exception x) {
-      System.err.println("Exception setting system clipboard");
-      x.printStackTrace();
+      error(x, "Exception setting system clipboard");
     }
+  }
+
+  private static final String P3LX_PREFIX = "P3LX";
+
+  public static void log(String message) {
+    LX._log(P3LX_PREFIX, message);
+  }
+
+  public static void error(Exception x, String message) {
+    LX._error(P3LX_PREFIX, x, message);
+  }
+
+  public static void error(String message) {
+    LX._error(P3LX_PREFIX, message);
   }
 }
