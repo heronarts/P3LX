@@ -82,6 +82,11 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
     return this.value;
   }
 
+  @Override
+  protected String getEditBufferValue() {
+    return this.value;
+  }
+
   public UITextBox setValue(String value) {
     return setValue(value, true);
   }

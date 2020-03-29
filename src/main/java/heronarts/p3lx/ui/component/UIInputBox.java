@@ -167,9 +167,13 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
     }
     if (this.enabled && !this.editing) {
       this.editing = true;
-      this.editBuffer = "";
+      this.editBuffer = getEditBufferValue();
     }
     redraw();
+  }
+
+  protected String getEditBufferValue() {
+    return "";
   }
 
   @Override
@@ -284,7 +288,11 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
         } else if (keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
           consumeKeyEvent();
           if (this.editBuffer.length() > 0) {
-            this.editBuffer = this.editBuffer.substring(0, this.editBuffer.length() - 1);
+            if (keyEvent.isShiftDown() || keyEvent.isControlDown() || keyEvent.isMetaDown()) {
+              this.editBuffer = "";
+            } else {
+              this.editBuffer = this.editBuffer.substring(0, this.editBuffer.length() - 1);
+            }
             redraw();
           }
         } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
@@ -301,8 +309,7 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
           redraw();
         } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
           consumeKeyEvent();
-          this.editing = true;
-          this.editBuffer = "";
+          edit();
           redraw();
         } else if ((keyCode == java.awt.event.KeyEvent.VK_LEFT) || (keyCode == java.awt.event.KeyEvent.VK_DOWN)) {
           decrementValue(keyEvent);
