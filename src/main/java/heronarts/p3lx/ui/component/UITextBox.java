@@ -24,12 +24,16 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.clipboard.LXClipboardItem;
+import heronarts.lx.clipboard.LXTextValue;
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.StringParameter;
+import heronarts.p3lx.ui.UICopy;
+import heronarts.p3lx.ui.UIPaste;
 
-public class UITextBox extends UIInputBox {
+public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   private final static String NO_VALUE = "-";
 
@@ -120,6 +124,24 @@ public class UITextBox extends UIInputBox {
   @Override
   protected boolean isValidCharacter(char keyChar) {
     return isValidTextCharacter(keyChar);
+  }
+
+  @Override
+  public LXClipboardItem onCopy() {
+    if (this.parameter != null) {
+      return new LXTextValue(this.parameter);
+    }
+    return null;
+
+  }
+
+  @Override
+  public void onPaste(LXClipboardItem item) {
+    if (item instanceof LXTextValue) {
+      if (isEnabled() && isEditable()) {
+        setValue(((LXTextValue) item).getValue());
+      }
+    }
   }
 
 }
