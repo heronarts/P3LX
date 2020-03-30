@@ -25,14 +25,14 @@
 package heronarts.p3lx.ui;
 
 import heronarts.lx.LX;
-import heronarts.lx.LXBus;
-import heronarts.lx.LXChannel;
 import heronarts.lx.LXComponent;
 import heronarts.lx.LXEngine;
 import heronarts.lx.LXLoopTask;
 import heronarts.lx.LXMappingEngine;
 import heronarts.lx.midi.LXMidiEngine;
 import heronarts.lx.midi.LXMidiMapping;
+import heronarts.lx.mixer.LXBus;
+import heronarts.lx.mixer.LXChannel;
 import heronarts.lx.modulation.LXModulationEngine;
 import heronarts.lx.modulation.LXParameterModulation;
 import heronarts.lx.parameter.LXNormalizedParameter;
@@ -985,7 +985,7 @@ public class UI implements LXEngine.Dispatch {
         break;
       case java.awt.event.KeyEvent.VK_BRACELEFT:
       case java.awt.event.KeyEvent.VK_BRACERIGHT:
-        LXBus bus = this.lx.engine.getFocusedChannel();
+        LXBus bus = this.lx.engine.mixer.getFocusedChannel();
         if (bus instanceof LXChannel) {
           if (keyCode == java.awt.event.KeyEvent.VK_BRACELEFT) {
             ((LXChannel) bus).goPrev();

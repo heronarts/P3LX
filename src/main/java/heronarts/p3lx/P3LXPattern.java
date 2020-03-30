@@ -25,7 +25,7 @@
 package heronarts.p3lx;
 
 import heronarts.lx.LX;
-import heronarts.lx.LXPattern;
+import heronarts.lx.pattern.LXPattern;
 import processing.core.PApplet;
 
 public abstract class P3LXPattern extends LXPattern {

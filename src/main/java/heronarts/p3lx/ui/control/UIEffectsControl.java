@@ -19,8 +19,8 @@
 package heronarts.p3lx.ui.control;
 
 import heronarts.lx.LX;
-import heronarts.lx.LXChannel;
-import heronarts.lx.LXEffect;
+import heronarts.lx.effect.LXEffect;
+import heronarts.lx.mixer.LXChannel;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.p3lx.ui.UI;
@@ -61,7 +61,7 @@ public class UIEffectsControl extends UIWindow {
   }
 
   public UIEffectsControl(UI ui, LX lx, String label, int numKnobs, float x, float y) {
-    this(ui, lx.engine.masterChannel.getEffects(), label, numKnobs, x, y);
+    this(ui, lx.engine.mixer.masterBus.getEffects(), label, numKnobs, x, y);
   }
 
   public UIEffectsControl(UI ui, LXChannel channel, float x, float y) {

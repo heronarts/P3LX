@@ -33,10 +33,10 @@ import java.lang.reflect.Modifier;
 
 import heronarts.lx.LX;
 import heronarts.lx.LXComponent;
-import heronarts.lx.LXEffect;
 import heronarts.lx.LXEngine;
-import heronarts.lx.LXPattern;
+import heronarts.lx.effect.LXEffect;
 import heronarts.lx.model.LXModel;
+import heronarts.lx.pattern.LXPattern;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;

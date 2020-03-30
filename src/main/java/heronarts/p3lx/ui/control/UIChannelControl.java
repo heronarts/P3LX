@@ -25,10 +25,10 @@
 package heronarts.p3lx.ui.control;
 
 import heronarts.lx.LX;
-import heronarts.lx.LXChannel;
-import heronarts.lx.LXPattern;
+import heronarts.lx.mixer.LXChannel;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
+import heronarts.lx.pattern.LXPattern;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIWindow;
 import heronarts.p3lx.ui.component.UIButton;
@@ -54,15 +54,15 @@ public class UIChannelControl extends UIWindow {
   }
 
   public UIChannelControl(UI ui, LX lx, int numKnobs, float x, float y) {
-    this(ui, lx.engine.getDefaultChannel(), numKnobs, x, y);
+    this(ui, lx.engine.mixer.getDefaultChannel(), numKnobs, x, y);
   }
 
   public UIChannelControl(UI ui, LX lx, String label, float x, float y) {
-    this(ui, lx.engine.getDefaultChannel(), label, x, y);
+    this(ui, lx.engine.mixer.getDefaultChannel(), label, x, y);
   }
 
   public UIChannelControl(UI ui, LX lx, String label, int numKnobs, float x, float y) {
-    this(ui, lx.engine.getDefaultChannel(), label, numKnobs, x, y);
+    this(ui, lx.engine.mixer.getDefaultChannel(), label, numKnobs, x, y);
   }
 
   public UIChannelControl(UI ui, LXChannel channel, int numKnobs, float x, float y) {
