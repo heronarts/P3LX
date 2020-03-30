@@ -22,7 +22,25 @@
  * @version     ##library.prettyVersion## (##library.version##)
  */
 
-/**
- * Integration of Processing 2 video capture.
- */
-package heronarts.p3lx.video;
+package heronarts.p3lx.pattern;
+
+import heronarts.lx.LX;
+import heronarts.lx.pattern.LXPattern;
+import heronarts.p3lx.P3LX;
+import processing.core.PApplet;
+
+public abstract class P3LXPattern extends LXPattern {
+
+  protected final P3LX lx;
+
+  protected final PApplet applet;
+
+  protected P3LXPattern(LX lx) {
+    super(lx);
+    if (!(lx instanceof P3LX)) {
+      throw new IllegalArgumentException("P3LXPattern must be given a P3LX instance");
+    }
+    this.lx = (P3LX) lx;
+    this.applet = this.lx.applet;
+  }
+}
