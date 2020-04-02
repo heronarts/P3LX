@@ -26,6 +26,7 @@ package heronarts.p3lx.ui.component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import heronarts.lx.LXUtils;
@@ -248,10 +249,17 @@ public interface UIItemList {
     }
 
     private void addListener(Listener listener) {
+      Objects.requireNonNull(listener, "May not add null UIItemList.Listener");
+      if (this.listeners.contains(listener)) {
+        throw new IllegalStateException("May not add duplicate UIItemList.Listener: " + listener);
+      }
       this.listeners.add(listener);
     }
 
     private void removeListener(Listener listener) {
+      if (!this.listeners.contains(listener)) {
+        throw new IllegalStateException("May not remove non-registered UIItemList.Listener: " + listener);
+      }
       this.listeners.remove(listener);
     }
 
