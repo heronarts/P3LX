@@ -106,30 +106,19 @@ public class P3LX extends LX {
     this.flags.mediaPath = applet.sketchPath();
     this.applet = applet;
 
-    registerPattern(heronarts.p3lx.pattern.SolidPattern.class);
-    registerPattern(heronarts.p3lx.pattern.JavascriptPattern.class);
-    registerPattern(heronarts.lx.pattern.GraphicEqualizerPattern.class);
-    registerPattern(heronarts.lx.pattern.GradientPattern.class);
-    registerPattern(heronarts.lx.pattern.IteratorPattern.class);
-
-    registerEffect(heronarts.lx.effect.BlurEffect.class);
-    registerEffect(heronarts.lx.effect.DesaturationEffect.class);
-    registerEffect(heronarts.lx.effect.FlashEffect.class);
-    registerEffect(heronarts.lx.effect.InvertEffect.class);
-
     // Find patterns + effects declared in the Processing sketch
     for (Class<?> cls : applet.getClass().getDeclaredClasses()) {
       if (!Modifier.isAbstract(cls.getModifiers())) {
         if (LXPattern.class.isAssignableFrom(cls)) {
-          registerPattern(cls.asSubclass(LXPattern.class));
+          this.registry.addPattern(cls.asSubclass(LXPattern.class));
         } else if (LXEffect.class.isAssignableFrom(cls)) {
-          registerEffect(cls.asSubclass(LXEffect.class));
+          this.registry.addEffect(cls.asSubclass(LXEffect.class));
         }
       }
     }
 
-    // Load fixture definitions
-    this.structure.registerFixtures(new File(getMediaPath(), "fixtures"));
+    // Load additional fixture definitions local to Processing sketch
+    this.registry.addFixtures(new File(getMediaPath(), "fixtures"));
 
     // Initialize frame
     this.uiFrame = new LXEngine.Frame(this);
