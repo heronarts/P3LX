@@ -55,11 +55,6 @@ public class UIContextButton extends UI2dComponent implements UIFocus {
     UP
   };
 
-  /**
-   * Accessor for the underlying context menu object
-   *
-   * @return Context menu object opened by this button
-   */
   public UIContextButton(float x, float y, float w, float h) {
     super(x, y, w, h);
     setBorderColor(UI.get().theme.getControlBorderColor());
