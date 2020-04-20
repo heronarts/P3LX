@@ -57,6 +57,8 @@ public class UITheme {
   private int recordingColor = 0xffa00044;
   private int cursorColor = 0xff555555;
   private int selectionColor = 0xff333333;
+  private int focusSelectionColor = 0xff393939;
+  private int errorColor = 0xffff0000;
 
   private int darkBackgroundColor = 0xff191919;
   private int darkFocusBackgroundColor = 0xff292929;
@@ -399,6 +401,15 @@ public class UITheme {
   }
 
   /**
+   * Gets error color
+   *
+   * @return Error color
+   */
+  public int getErrorColor() {
+    return this.errorColor;
+  }
+
+  /**
    * Gets highlight color
    *
    * @return Highlight color
@@ -466,6 +477,15 @@ public class UITheme {
    */
   public int getSelectionColor() {
     return this.selectionColor;
+  }
+
+  /**
+   * Gets focus selection color
+   *
+   * @return Focus Selection color
+   */
+  public int getFocusSelectionColor() {
+    return this.focusSelectionColor;
   }
 
   /**
