@@ -28,7 +28,6 @@ import heronarts.p3lx.ui.UI;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.io.File;
 import java.lang.reflect.Modifier;
 
 import heronarts.lx.LX;
@@ -116,9 +115,6 @@ public class P3LX extends LX {
         }
       }
     }
-
-    // Load additional fixture definitions local to Processing sketch
-    this.registry.addFixtures(new File(getMediaPath(), "fixtures"));
 
     // Initialize frame
     this.uiFrame = new LXEngine.Frame(this);
