@@ -52,7 +52,7 @@ public class UITheme {
   private int focusColor = 0xff669966;
   private int primaryColor = 0xff669966;
   private int secondaryColor = 0xff666699;
-  private int attentionColor = 0xff996666;
+  private int attentionColor = 0xffff3333;
   private int surfaceColor = 0xff669999;
   private int recordingColor = 0xffa00044;
   private int cursorColor = 0xff555555;
