@@ -980,7 +980,7 @@ public class UI implements LXEngine.Dispatch {
         break;
       case java.awt.event.KeyEvent.VK_O:
         if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
-          this.applet.selectInput("Select a file to load:", "onLoad", this.lx.getMediaFile(LX.Media.PROJECTS, "default.lxp"), this);
+          this.applet.selectInput("Select a file to load:", "onLoad", this.lx.getMediaFile(LX.Media.PROJECTS, "default.lxp", false), this);
         }
         break;
       case java.awt.event.KeyEvent.VK_BRACELEFT:
