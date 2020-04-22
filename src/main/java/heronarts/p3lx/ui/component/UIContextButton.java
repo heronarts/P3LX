@@ -64,6 +64,15 @@ public class UIContextButton extends UI2dComponent implements UIFocus {
   }
 
   /**
+   * Accessor for the underlying context menu object
+   *
+   * @return Context menu object opened by this button
+   */
+  public UIContextMenu getContextMenu() {
+    return this.contextMenu;
+  }
+
+  /**
    * Sets the width of the context menu opened by this button
    *
    * @param contextMenuWidth Width of context menu

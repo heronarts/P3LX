@@ -63,17 +63,19 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
   }
 
   public UIIntegerBox setParameter(final DiscreteParameter parameter) {
-    if (this.parameter != null) {
-      this.parameter.removeListener(this.parameterListener);
+    if (this.parameter != parameter) {
+      if (this.parameter != null) {
+        this.parameter.removeListener(this.parameterListener);
+      }
+      this.parameter = parameter;
+      if (parameter != null) {
+        this.minValue = parameter.getMinValue();
+        this.maxValue = parameter.getMaxValue();
+        this.value = parameter.getValuei();
+        this.parameter.addListener(this.parameterListener);
+      }
+      redraw();
     }
-    this.parameter = parameter;
-    if (parameter != null) {
-      this.minValue = parameter.getMinValue();
-      this.maxValue = parameter.getMaxValue();
-      this.value = parameter.getValuei();
-      this.parameter.addListener(this.parameterListener);
-    }
-    redraw();
     return this;
   }
 

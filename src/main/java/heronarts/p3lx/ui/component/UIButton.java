@@ -117,7 +117,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
     return (this.booleanParameter != null) ? this.booleanParameter : this.enumParameter;
   }
 
-  private void removeParameter() {
+  public UIButton removeParameter() {
     if (this.booleanParameter != null) {
       this.booleanParameter.removeListener(this.booleanParameterListener);
       this.booleanParameter = null;
@@ -126,27 +126,32 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       this.enumParameter.removeListener(this.enumParameterListener);
       this.enumParameter = null;
     }
+    return this;
   }
 
-  public UIButton setParameter(EnumParameter<? extends Object> parameter) {
-    removeParameter();
-    if (parameter != null) {
-      this.enumParameter = parameter;
-      this.enumParameter.addListener(this.enumParameterListener);
-      setActive(false);
-      setMomentary(true);
-      setLabel(this.enumParameter.getEnum().toString());
+  public UIButton setParameter(EnumParameter<?> parameter) {
+    if (parameter != this.enumParameter) {
+      removeParameter();
+      if (parameter != null) {
+        this.enumParameter = parameter;
+        this.enumParameter.addListener(this.enumParameterListener);
+        setActive(false);
+        setMomentary(true);
+        setLabel(this.enumParameter.getEnum().toString());
+      }
     }
     return this;
   }
 
   public UIButton setParameter(BooleanParameter parameter) {
-    removeParameter();
-    if (parameter != null) {
-      this.booleanParameter = parameter;
-      this.booleanParameter.addListener(this.booleanParameterListener);
-      setMomentary(this.booleanParameter.getMode() == BooleanParameter.Mode.MOMENTARY);
-      setActive(this.booleanParameter.isOn(), false);
+    if (parameter != this.booleanParameter) {
+      removeParameter();
+      if (parameter != null) {
+        this.booleanParameter = parameter;
+        this.booleanParameter.addListener(this.booleanParameterListener);
+        setMomentary(this.booleanParameter.getMode() == BooleanParameter.Mode.MOMENTARY);
+        setActive(this.booleanParameter.isOn(), false);
+      }
     }
     return this;
   }

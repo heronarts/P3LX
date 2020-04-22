@@ -175,7 +175,7 @@ public abstract class UI2dComponent extends UIObject {
    * @return this
    */
   @Override
-  public UIObject setVisible(boolean visible) {
+  public UI2dComponent setVisible(boolean visible) {
     if (isVisible() != visible) {
       super.setVisible(visible);
       if (this.parent instanceof UI2dContainer) {
@@ -507,6 +507,10 @@ public abstract class UI2dComponent extends UIObject {
       redraw();
     }
     return this;
+  }
+
+  public int getBorderRounding() {
+    return this.borderRounding;
   }
 
   public UI2dComponent setFocusCorners(boolean focusCorners) {

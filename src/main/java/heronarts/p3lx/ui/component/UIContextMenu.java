@@ -34,12 +34,14 @@ import processing.event.MouseEvent;
 
 public class UIContextMenu extends UI2dComponent {
 
-  private static final float ROW_HEIGHT = 18;
+  private static final float DEFAULT_ROW_HEIGHT = 18;
   public static final float DEFAULT_WIDTH = 120;
 
   private UIContextActions.Action[] actions;
 
   private int highlight = -1;
+  private float rowHeight = DEFAULT_ROW_HEIGHT;
+  private float padding = 0;
 
   public UIContextMenu(float x, float y, float w, float h) {
     super(x, y, w, h);
@@ -48,10 +50,30 @@ public class UIContextMenu extends UI2dComponent {
     setBorderColor(UI.get().theme.getContextBorderColor());
   }
 
+  public UIContextMenu setPadding(float padding) {
+    if (this.padding != padding) {
+      this.padding = padding;
+      updateHeight();
+    }
+    return this;
+  }
+
+  public UIContextMenu setRowHeight(float rowHeight) {
+    if (this.rowHeight != rowHeight) {
+      this.rowHeight = rowHeight;
+      updateHeight();
+    }
+    return this;
+  }
+
   public UIContextMenu setActions(UIContextActions.Action[] actions) {
     this.actions = actions;
-    setHeight(this.actions.length * ROW_HEIGHT);
+    updateHeight();
     return this;
+  }
+
+  private void updateHeight() {
+    setHeight(this.actions.length * this.rowHeight + 2 * this.padding + 2);
   }
 
   public UIContextMenu setHighlight(int highlight) {
@@ -74,9 +96,18 @@ public class UIContextMenu extends UI2dComponent {
    */
   @Override
   public void onDraw(UI ui, PGraphics pg) {
+    if (this.padding > 0) {
+      pg.noStroke();
+      pg.fill(ui.theme.getDeviceFocusedBackgroundColor());
+      pg.rect(0, 0, this.width, this.height, getBorderRounding());
+      pg.fill(getBackgroundColor());
+      pg.rect(this.padding, this.padding, this.width - 2 * this.padding, this.height - 2*this.padding, 2);
+    }
+
     if (this.highlight >= 0) {
+      pg.noStroke();
       pg.fill(ui.theme.getContextHighlightColor());
-      pg.rect(0, this.highlight * ROW_HEIGHT, this.width, ROW_HEIGHT);
+      pg.rect(this.padding + 2, this.padding + 2 + this.highlight * this.rowHeight, this.width - 2 * this.padding - 4, this.rowHeight - 2, 2);
     }
 
     float yp = 0;
@@ -84,8 +115,8 @@ public class UIContextMenu extends UI2dComponent {
       pg.textFont(hasFont() ? getFont() : ui.theme.getControlFont());
       pg.fill(ui.theme.getControlTextColor());
       pg.textAlign(PConstants.LEFT, PConstants.CENTER);
-      pg.text(clipTextToWidth(pg, action.getLabel(), this.width - 6), 4, yp + ROW_HEIGHT / 2);
-      yp += ROW_HEIGHT;
+      pg.text(clipTextToWidth(pg, action.getLabel(), this.width - 6 - 2 * this.padding), this.padding + 4, this.padding + yp + this.rowHeight / 2);
+      yp += this.rowHeight;
     }
   }
 
@@ -116,12 +147,12 @@ public class UIContextMenu extends UI2dComponent {
 
   @Override
   public void onMouseMoved(MouseEvent mouseEvent, float x, float y) {
-    setHighlight((int) (y / ROW_HEIGHT));
+    setHighlight((int) ((y - this.padding - 1) / this.rowHeight));
   }
 
   @Override
   public void onMousePressed(MouseEvent mouseEvent, float x, float y) {
-    int index = (int) (y / ROW_HEIGHT);
+    int index = (int) ((y - this.padding - 1) / this.rowHeight);
     if (index >= 0 && index < this.actions.length) {
       this.actions[index].onContextAction(getUI());
     }
