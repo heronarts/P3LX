@@ -24,6 +24,8 @@
 
 package heronarts.p3lx.ui.component;
 
+import java.util.Objects;
+
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.EnumParameter;
@@ -130,6 +132,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
   }
 
   public UIButton setParameter(EnumParameter<?> parameter) {
+    Objects.requireNonNull(parameter, "Cannot set null UIButton.setParameter() - use removeParameter() instead");
     if (parameter != this.enumParameter) {
       removeParameter();
       if (parameter != null) {
@@ -144,6 +147,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
   }
 
   public UIButton setParameter(BooleanParameter parameter) {
+    Objects.requireNonNull(parameter, "Cannot set null UIButton.setParameter() - use removeParameter() instead");
     if (parameter != this.booleanParameter) {
       removeParameter();
       if (parameter != null) {
