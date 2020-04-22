@@ -972,7 +972,7 @@ public class UI implements LXEngine.Dispatch {
       case java.awt.event.KeyEvent.VK_S:
         if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
           if (keyEvent.isShiftDown() || lx.getProject() == null) {
-            this.applet.selectOutput("Select a file to save:", "onSaveAs", this.applet.saveFile("Project.lxp"), this);
+            this.applet.selectOutput("Select a file to save:", "onSaveAs", this.lx.getMediaFile(LX.Media.PROJECTS, "Project.lxp"), this);
           } else {
             lx.saveProject();
           }
@@ -980,7 +980,7 @@ public class UI implements LXEngine.Dispatch {
         break;
       case java.awt.event.KeyEvent.VK_O:
         if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
-          this.applet.selectInput("Select a file to load:", "onLoad", this.applet.saveFile("default.lxp"), this);
+          this.applet.selectInput("Select a file to load:", "onLoad", this.lx.getMediaFile(LX.Media.PROJECTS, "default.lxp"), this);
         }
         break;
       case java.awt.event.KeyEvent.VK_BRACELEFT:
