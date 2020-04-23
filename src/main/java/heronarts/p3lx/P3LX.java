@@ -72,8 +72,9 @@ public class P3LX extends LX {
     public boolean keyboardTempo = false;
     public boolean showFramerate = false;
 
-    public Flags() {
+    public Flags(PApplet applet) {
       this.isP3LX = true;
+      this.mediaPath = applet.sketchPath();
     }
   }
 
@@ -91,7 +92,7 @@ public class P3LX extends LX {
   }
 
   public P3LX(PApplet applet, LXModel model) {
-    this(applet, new Flags(), model);
+    this(applet, new Flags(applet), model);
   }
 
   public P3LX(PApplet applet, Flags flags) {
@@ -101,8 +102,6 @@ public class P3LX extends LX {
   public P3LX(PApplet applet, Flags flags, LXModel model) {
     super(flags, model);
     this.flags = flags;
-    this.flags.isP3LX = true;
-    this.flags.mediaPath = applet.sketchPath();
     this.applet = applet;
 
     // Find patterns + effects declared in the Processing sketch
