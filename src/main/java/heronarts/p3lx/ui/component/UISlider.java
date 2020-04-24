@@ -331,7 +331,7 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
 
   @Override
   protected void onMouseDragged(MouseEvent mouseEvent, float mx, float my, float dx, float dy) {
-    if (isEnabled()) {
+    if (isEnabled() && isEditable()) {
       float dv, dim;
       boolean valid;
       switch (this.direction) {

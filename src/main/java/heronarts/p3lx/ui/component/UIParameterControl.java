@@ -165,10 +165,10 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   }
 
   protected UIParameterControl setNormalized(double normalized) {
-    if (!isEditable()) {
-      throw new IllegalStateException("May not setNormalized on a non-editable UIParameterControl");
-    }
     if (this.parameter != null) {
+      if (!isEditable()) {
+        throw new IllegalStateException("May not setNormalized on a non-editable UIParameterControl: " + getClass().getName());
+      }
       setNormalizedCommand(normalized);
     }
     return this;
@@ -200,8 +200,6 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
       } else if (this.parameter instanceof LXListenableParameter) {
         ((LXListenableParameter) this.parameter).addListener(this);
       }
-    } else {
-      setEditable(false);
     }
     redraw();
     return this;

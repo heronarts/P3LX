@@ -531,7 +531,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   /**
    * Called in a mouse event handler to stop this event from bubbling up the
    * parent container chain. For example, a button which responds to a mouse press and
-   * sets some focus elsewhere should call consumeMouseEvent() to stop the press from
+   * sets some focus elsewhere should call consumeMousePress() to stop the press from
    * being handled by its container.
    *
    * @return this
