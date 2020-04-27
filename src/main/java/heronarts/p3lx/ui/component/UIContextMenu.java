@@ -37,7 +37,7 @@ public class UIContextMenu extends UI2dComponent {
   private static final float DEFAULT_ROW_HEIGHT = 18;
   public static final float DEFAULT_WIDTH = 120;
 
-  private UIContextActions.Action[] actions;
+  private UIContextActions.Action[] actions = new UIContextActions.Action[0];;
 
   private int highlight = -1;
   private float rowHeight = DEFAULT_ROW_HEIGHT;

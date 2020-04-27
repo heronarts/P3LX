@@ -61,7 +61,7 @@ public class UIGLPointCloud extends UIPointCloud {
   private static final float[] NO_ATTENUATION = { 1, 0, 0 };
 
   private LXModel model = null;
-  private int modelGeometryRevision = -1;
+  private int modelGeneration = -1;
 
   /**
    * Point cloud for everything in the LX instance
@@ -150,7 +150,7 @@ public class UIGLPointCloud extends UIPointCloud {
     LXEngine.Frame frame = this.lx.getUIFrame();
     int[] colors = frame.getColors();
     LXModel frameModel = frame.getModel();
-    int frameModelGeometryRevision = frameModel.getGeometryRevision();
+    int frameModelGeneration = frameModel.getGeneration();
 
     if (frameModel.size == 0) {
       // Nothing to see here! Don't render empty buffers...
@@ -163,14 +163,14 @@ public class UIGLPointCloud extends UIPointCloud {
     if (this.model != frameModel) {
       LXModel oldModel = this.model;
       this.model = frameModel;
-      this.modelGeometryRevision = frameModelGeometryRevision;
+      this.modelGeneration = frameModelGeneration;
       if ((oldModel == null) || (oldModel.size != frameModel.size)) {
         buildModelBuffers(pg);
       }
       updateVertexPositions = true;
-    } else if (this.modelGeometryRevision != frameModelGeometryRevision) {
+    } else if (this.modelGeneration != frameModelGeneration) {
       updateVertexPositions = true;
-      this.modelGeometryRevision = frameModelGeometryRevision;
+      this.modelGeneration = frameModelGeneration;
     }
 
     // Put our new colors in the VBO
