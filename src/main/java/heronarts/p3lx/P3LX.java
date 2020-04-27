@@ -36,6 +36,7 @@ import heronarts.lx.LXEngine;
 import heronarts.lx.effect.LXEffect;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.pattern.LXPattern;
+import heronarts.lx.structure.LXFixture;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -111,6 +112,8 @@ public class P3LX extends LX {
           this.registry.addPattern(cls.asSubclass(LXPattern.class));
         } else if (LXEffect.class.isAssignableFrom(cls)) {
           this.registry.addEffect(cls.asSubclass(LXEffect.class));
+        } else if (LXFixture.class.isAssignableFrom(cls)) {
+          this.registry.addFixture(cls.asSubclass(LXFixture.class));
         }
       }
     }
