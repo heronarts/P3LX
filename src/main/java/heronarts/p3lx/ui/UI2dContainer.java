@@ -269,9 +269,7 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
       if (focusedChild == null) {
         for (UIObject object : this.children) {
           if (object.isVisible() && (object instanceof UIKeyFocus)) {
-            ((UI2dComponent) object).keyPressFocused = keyEvent;
-            object.focus();
-            ((UI2dComponent) object).keyPressFocused = null;
+            object.focus(keyEvent);
             break;
           }
         }
@@ -284,9 +282,7 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
           }
           UIObject object = this.children.get(index);
           if (object.isVisible() && (object instanceof UIKeyFocus)) {
-            ((UI2dComponent) object).keyPressFocused = keyEvent;
-            object.focus();
-            ((UI2dComponent) object).keyPressFocused = null;
+            object.focus(keyEvent);
             break;
           }
         }

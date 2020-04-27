@@ -37,6 +37,7 @@ import heronarts.p3lx.ui.UI2dScrollContext;
 import heronarts.p3lx.ui.UIFocus;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -850,7 +851,7 @@ public interface UIItemList {
       return consume;
     }
 
-    private void onFocus() {
+    private void onFocus(Event event) {
       if (this.focusIndex < 0 && this.items.size() > 0) {
         setFocusIndex(0, false);
       }
@@ -1014,8 +1015,8 @@ public interface UIItemList {
     }
 
     @Override
-    public void onFocus() {
-      this.impl.onFocus();
+    public void onFocus(Event event) {
+      this.impl.onFocus(event);
     }
 
   }
@@ -1166,8 +1167,8 @@ public interface UIItemList {
     }
 
     @Override
-    public void onFocus() {
-      this.impl.onFocus();
+    public void onFocus(Event event) {
+      this.impl.onFocus(event);
     }
 
   }

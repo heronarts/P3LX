@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui;
 
+import processing.event.Event;
 import processing.event.MouseEvent;
 import heronarts.lx.LXUtils;
 import heronarts.p3lx.ui.component.UILabel;
@@ -69,7 +70,7 @@ public class UIWindow extends UI2dContext {
   private boolean movingWindow = false;
 
   @Override
-  protected void onFocus() {
+  protected void onFocus(Event event) {
     this.label.setFontColor(ui.theme.getFocusColor());
   }
 
@@ -83,7 +84,7 @@ public class UIWindow extends UI2dContext {
     this.movingWindow = (my < TITLE_LABEL_HEIGHT);
     bringToFront();
     if (!hasFocus()) {
-      focus();
+      focus(mouseEvent);
     }
   }
 

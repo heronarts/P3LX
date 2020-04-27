@@ -816,7 +816,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   @Override
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
     if (mouseEvent.getCount() > 1) {
-      focus();
+      focus(mouseEvent);
     }
   }
 

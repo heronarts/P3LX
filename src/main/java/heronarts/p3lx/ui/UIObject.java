@@ -41,6 +41,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -243,17 +244,18 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
    * Focuses on this object, giving focus to everything above
    * and whatever was previously focused below.
    *
+   * @param event Event that triggers focus
    * @return this
    */
-  public UIObject focus() {
+  public UIObject focus(Event event) {
     if (this.focusedChild != null) {
       this.focusedChild.blur();
     }
-    _focusParents();
+    _focusParents(event);
     return this;
   }
 
-  private void _focusParents() {
+  private void _focusParents(Event event) {
     if (this.parent != null) {
       if (this.parent.focusedChild != this) {
         if (this.parent.focusedChild != null) {
@@ -261,16 +263,16 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
         }
         this.parent.focusedChild = this;
       }
-      this.parent._focusParents();
+      this.parent._focusParents(event);
     }
     if (!this.hasFocus) {
       this.hasFocus = true;
-      _onFocus();
+      _onFocus(event);
     }
   }
 
-  private void _onFocus() {
-    onFocus();
+  private void _onFocus(Event event) {
+    onFocus(event);
     if (this instanceof UI2dComponent) {
       ((UI2dComponent) this).redraw();
     }
@@ -573,12 +575,6 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   // Whether the mouse wheel event dispatched to this UI object has been consumed
   private boolean mouseWheelEventConsumed = false;
 
-  // Flag that subclasses may check in event handlers to know whether focus is due to key press
-  protected KeyEvent keyPressFocused = null;
-
-  // Flag that subclasses may check in event handlers to know whether focus is due to mouse press
-  protected boolean mousePressFocused = false;
-
   // Flag set when a mouse press event on this UI object has triggered the opening of a context-menu,
   // either from this object itself or any of its children
   protected boolean mousePressContextMenu = false;
@@ -652,15 +648,12 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
     // If mouse press was consumed by a child, don't handle it ourselves
     if (!this.mousePressConsumed) {
       if (!hasFocus() && (this instanceof UIMouseFocus)) {
-        this.mousePressFocused = true;
-        focus();
+        focus(mouseEvent);
       }
       if (!this.mousePressContextMenu) {
         onMousePressed(mouseEvent, mx, my);
       }
     }
-
-    this.mousePressFocused = false;
   }
 
   void mouseReleased(MouseEvent mouseEvent, float mx, float my) {
@@ -845,7 +838,7 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
   /**
    * Subclasses override when element is focused
    */
-  protected void onFocus() {
+  protected void onFocus(Event event) {
   }
 
   /**

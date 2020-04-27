@@ -111,9 +111,9 @@ public class UI implements LXEngine.Dispatch {
           }
         } else if (keyCode == java.awt.event.KeyEvent.VK_TAB) {
           if (keyEvent.isShiftDown()) {
-            focusPrev();
+            focusPrev(keyEvent);
           } else {
-            focusNext();
+            focusNext(keyEvent);
           }
         } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
           hideContextOverlay();
@@ -522,17 +522,17 @@ public class UI implements LXEngine.Dispatch {
     return this;
   }
 
-  public void focusPrev() {
+  public void focusPrev(Event event) {
     UIObject focusTarget = this.root.findPrevFocusable();
     if (focusTarget != null) {
-      focusTarget.focus();
+      focusTarget.focus(event);
     }
   }
 
-  public void focusNext() {
+  public void focusNext(Event event) {
     UIObject focusTarget = this.root.findNextFocusable();
     if (focusTarget != null) {
-      focusTarget.focus();
+      focusTarget.focus(event);
     }
   }
 
