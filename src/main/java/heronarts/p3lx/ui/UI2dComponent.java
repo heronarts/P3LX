@@ -665,6 +665,44 @@ public abstract class UI2dComponent extends UIObject {
   }
 
   /**
+   * Break a text into multiple lines to fit in the given width
+   *
+   * @param pg PGraphics
+   * @param str String
+   * @param width Width to fit it in
+   * @return Version of the string with linebreaks to fit in the bounds
+   */
+  public static String breakTextToWidth(PGraphics pg, String str, float width) {
+    String[] words = str.split(" ");
+    String brokenLines = "";
+    String lineInProgress = "";
+    String testLength = "";
+    boolean firstLine = true;
+    int i = 0;
+    while (i < words.length) {
+      testLength = lineInProgress + (lineInProgress.isEmpty() ? "" : " ") + words[i];
+      if (pg.textWidth(testLength) > width) {
+        if (lineInProgress.isEmpty()) {
+          // A single-word is wider than the whole thing, clip it and give it its own line
+          brokenLines += (firstLine ? "" : "\n") + clipTextToWidth(pg, testLength, width);
+          ++i;
+        } else {
+          brokenLines += (firstLine ? "" : "\n") + lineInProgress;
+        }
+        lineInProgress = "";
+        firstLine = false;
+      } else {
+        lineInProgress = testLength;
+        ++i;
+      }
+    }
+    if (!lineInProgress.isEmpty()) {
+      brokenLines += (firstLine ? "" : "\n") + lineInProgress;
+    }
+    return brokenLines;
+  }
+
+  /**
    * Sets whether this component can ever be used for mapping control
    *
    * @param mappable Whether this component is a mappable control

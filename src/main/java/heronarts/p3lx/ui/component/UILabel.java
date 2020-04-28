@@ -39,6 +39,7 @@ public class UILabel extends UI2dComponent {
   private int rightPadding = 0;
   private int leftPadding = 0;
   private int bottomPadding = 0;
+  private boolean breakLines = false;
 
   /**
    * Label text
@@ -51,6 +52,20 @@ public class UILabel extends UI2dComponent {
 
   public UILabel(float x, float y, float w, float h) {
     super(x, y, w, h);
+  }
+
+  /**
+   * Sets the label to render text multi-line
+   *
+   * @param breakLines Whether to break lines
+   * @return this
+   */
+  public UILabel setBreakLines(boolean breakLines) {
+    if (this.breakLines != breakLines) {
+      this.breakLines = breakLines;
+      redraw();
+    }
+    return this;
   }
 
   /**
@@ -131,7 +146,9 @@ public class UILabel extends UI2dComponent {
       ty = this.height / 2;
       break;
     }
-    String str = clipTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding);
+    String str = this.breakLines ?
+      breakTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding) :
+      clipTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding);
     pg.textAlign(this.textAlignHorizontal, this.textAlignVertical);
     pg.text(str, tx + this.textOffsetX, ty + this.textOffsetY);
   }

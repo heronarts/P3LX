@@ -61,6 +61,7 @@ public class UIDialogBox extends UI2dContainer implements UIMouseFocus {
 
     new UILabel(PADDING, PADDING, this.width - 2*PADDING, this.height - 2*PADDING - BUTTON_ROW)
     .setLabel(message)
+    .setBreakLines(true)
     .setPadding(4)
     .setTextAlignment(PConstants.LEFT, PConstants.TOP)
     .setBackgroundColor(ui.theme.getDarkBackgroundColor())
