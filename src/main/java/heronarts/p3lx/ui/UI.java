@@ -25,7 +25,6 @@
 package heronarts.p3lx.ui;
 
 import heronarts.lx.LX;
-import heronarts.lx.LXComponent;
 import heronarts.lx.LXEngine;
 import heronarts.lx.LXLoopTask;
 import heronarts.lx.LXMappingEngine;
@@ -459,12 +458,12 @@ public class UI implements LXEngine.Dispatch {
             if (sourceParameter == null) {
               contextualHelpText.setValue("You are somehow mapping a non-existent source parameter, choose a destination");
             } else {
-              contextualHelpText.setValue("Select a modulation destination for " + LXComponent.getCanonicalLabel(sourceParameter) + ", eligible targets are highlighted");
+              contextualHelpText.setValue("Select a modulation destination for " + sourceParameter.getCanonicalLabel() + ", eligible targets are highlighted");
             }
           } else if (triggerSourceMapping) {
             contextualHelpText.setValue("Click on a trigger source, eligible sources are highlighted ");
           } else if (triggerTargetMapping) {
-            contextualHelpText.setValue("Select a trigger destination for " + LXComponent.getCanonicalLabel(triggerSource.getTriggerSource()) + ", eligible targets are highlighted");
+            contextualHelpText.setValue("Select a trigger destination for " + triggerSource.getTriggerSource().getCanonicalLabel() + ", eligible targets are highlighted");
           } else {
             contextualHelpText.setValue("");
           }
@@ -481,7 +480,7 @@ public class UI implements LXEngine.Dispatch {
         @Override
         public void mappingAdded(LXMidiEngine engine, LXMidiMapping mapping) {
           if (midiMapping) {
-            contextualHelpText.setValue("Successfully mapped MIDI Ch." + (mapping.channel+1) + " " + mapping.getDescription() + " to " + LXComponent.getCanonicalLabel(mapping.parameter));
+            contextualHelpText.setValue("Successfully mapped MIDI Ch." + (mapping.channel+1) + " " + mapping.getDescription() + " to " + mapping.parameter.getCanonicalLabel());
           }
         }
       });
@@ -569,7 +568,7 @@ public class UI implements LXEngine.Dispatch {
     if (midiParameter == null) {
       this.contextualHelpText.setValue("Press a MIDI key or controller to map a non-existent parameter?");
     } else {
-      this.contextualHelpText.setValue("Press a MIDI key or controller to map " + LXComponent.getCanonicalLabel(midiParameter));
+      this.contextualHelpText.setValue("Press a MIDI key or controller to map " + midiParameter.getCanonicalLabel());
     }
     if (this.controlTarget != controlTarget) {
       if (this.controlTarget != null) {
