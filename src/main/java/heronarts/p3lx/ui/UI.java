@@ -729,6 +729,14 @@ public class UI implements LXEngine.Dispatch {
     return this;
   }
 
+  public void showConfirmDialog(String message, Runnable confirm) {
+    showContextOverlay(new UIDialogBox(this,
+      message,
+      new String[] { "No", "Yes" },
+      new Runnable[] { null, confirm }
+    ));
+  }
+
   /**
    * Load a font file
    *

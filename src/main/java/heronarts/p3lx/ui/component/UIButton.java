@@ -45,6 +45,19 @@ import processing.event.MouseEvent;
 
 public class UIButton extends UIParameterComponent implements UIControlTarget, UITriggerSource, UITriggerTarget, UIFocus {
 
+  public static class Action extends UIButton {
+    public Action(float w, float h) {
+      this(0, 0, w, h);
+    }
+
+    public Action(float x, float y, float w, float h) {
+      super(x, y, w, h);
+      setBorderRounding(8);
+      setMomentary(true);
+    }
+
+  }
+
   protected boolean active = false;
   protected boolean isMomentary = false;
 
@@ -242,6 +255,9 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (this.isMomentary) {
         this.exactToggleTime = mouseEvent.getMillis();
         setActive(false);
+        if (contains(mx + this.x, my + this.y)) {
+          onClick();
+        }
       }
     }
   }
@@ -302,6 +318,13 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
 
   public UIButton toggle() {
     return setActive(!this.active);
+  }
+
+  /**
+   * Subclasses may override when a momentary button is clicked, and the click release
+   * happened within the bounds of the box
+   */
+  protected void onClick() {
   }
 
   /**

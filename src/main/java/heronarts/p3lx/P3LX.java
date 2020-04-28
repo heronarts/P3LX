@@ -25,7 +25,6 @@
 package heronarts.p3lx;
 
 import heronarts.p3lx.ui.UI;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.lang.reflect.Modifier;
