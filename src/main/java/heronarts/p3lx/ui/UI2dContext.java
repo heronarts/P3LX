@@ -39,6 +39,8 @@ public class UI2dContext extends UI2dContainer {
    */
   private final PGraphics pg;
 
+  private boolean needsResize = false;
+
   /**
    * Constructs a new UI2dContext
    *
@@ -56,7 +58,8 @@ public class UI2dContext extends UI2dContainer {
 
   @Override
   protected void onResize() {
-    this.pg.setSize((int) this.width, (int) this.height);
+    // Set a flag to resize, must be done on the drawing thread
+    this.needsResize = true;
     redraw();
   }
 
@@ -66,9 +69,19 @@ public class UI2dContext extends UI2dContainer {
       return;
     }
     if (this.needsRedraw || this.childNeedsRedraw) {
-      this.pg.beginDraw();
-      super.draw(ui, this.pg);
-      this.pg.endDraw();
+      if (this.needsResize) {
+        this.pg.setSize((int) this.width, (int) this.height);
+        this.needsResize = false;
+      }
+      try {
+        this.pg.beginDraw();
+        super.draw(ui, this.pg);
+        this.pg.endDraw();
+      } catch (Exception x) {
+        System.out.println(getClass());
+        x.printStackTrace();
+        System.exit(1);
+      }
     }
     pg.image(this.pg, 0, 0);
   }
