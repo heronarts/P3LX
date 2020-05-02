@@ -25,6 +25,7 @@
 package heronarts.p3lx.ui;
 
 import heronarts.lx.modulation.LXParameterModulation;
+import heronarts.p3lx.P3LX;
 import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PGraphics;
@@ -843,6 +844,7 @@ public abstract class UI2dComponent extends UIObject {
    */
   public UI2dComponent addToContainer(UIContainer container, int index) {
     if (this.parent != null) {
+      P3LX.warning("Adding component to container when it's already in another, this is discouraged: " + this.getClass());
       removeFromContainer();
     }
     UIObject containerObject = container.getContentTarget();

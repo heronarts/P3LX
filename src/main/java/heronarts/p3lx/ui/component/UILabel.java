@@ -40,6 +40,7 @@ public class UILabel extends UI2dComponent {
   private int leftPadding = 0;
   private int bottomPadding = 0;
   private boolean breakLines = false;
+  private boolean autoHeight = false;
 
   /**
    * Label text
@@ -61,8 +62,21 @@ public class UILabel extends UI2dComponent {
    * @return this
    */
   public UILabel setBreakLines(boolean breakLines) {
-    if (this.breakLines != breakLines) {
+    return setBreakLines(breakLines, false);
+  }
+
+
+  /**
+   * Sets the label to render text multi-line
+   *
+   * @param breakLines Whether to break lines
+   * @param autoHeight Whether to resize automatically based upon line height
+   * @return this
+   */
+  public UILabel setBreakLines(boolean breakLines, boolean autoHeight) {
+    if (this.breakLines != breakLines || this.autoHeight != autoHeight) {
       this.breakLines = breakLines;
+      this.autoHeight = autoHeight;
       redraw();
     }
     return this;
@@ -146,9 +160,16 @@ public class UILabel extends UI2dComponent {
       ty = this.height / 2;
       break;
     }
-    String str = this.breakLines ?
-      breakTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding) :
-      clipTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding);
+    String str;
+    if (this.breakLines) {
+      str = breakTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding);
+      if (this.autoHeight) {
+        int numLines = (int) str.chars().filter(ch -> ch == '\n').count();
+        setHeight(this.bottomPadding + this.topPadding + pg.textLeading * (numLines + 1) - pg.textDescent());
+      }
+    } else {
+      str = clipTextToWidth(pg, this.label, this.width - this.leftPadding - this.rightPadding);
+    }
     pg.textAlign(this.textAlignHorizontal, this.textAlignVertical);
     pg.text(str, tx + this.textOffsetX, ty + this.textOffsetY);
   }

@@ -55,7 +55,6 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       setBorderRounding(8);
       setMomentary(true);
     }
-
   }
 
   protected boolean active = false;
