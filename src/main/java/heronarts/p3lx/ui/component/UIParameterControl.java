@@ -410,7 +410,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
   }
 
   private LXNormalizedParameter getMappableParameter() {
-    if (isMappable() && this.parameter != null && this.parameter.getParent() != null) {
+    if (isMappable() && this.parameter != null && this.parameter.isMappable() && this.parameter.getParent() != null) {
       return this.parameter;
     }
     return null;

@@ -103,7 +103,7 @@ public class UIButtonGroup extends UI2dContainer implements UIControlTarget, UIC
 
   @Override
   public LXParameter getControlTarget() {
-    if (isMappable() && this.parameter != null && this.parameter.getParent() != null) {
+    if (isMappable() && this.parameter != null && this.parameter.isMappable() && this.parameter.getParent() != null) {
       return this.parameter;
     }
     return null;
