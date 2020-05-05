@@ -26,7 +26,7 @@ public class UIDialogBox extends UI2dContainer implements UIMouseFocus {
 
   private static final int PADDING = 4;
   private static final int WIDTH = 280;
-  private static final int HEIGHT = 80;
+  private static final int HEIGHT = 100;
 
   public static final int OPTION_WIDTH = 60;
   private static final int OPTION_PADDING = 4;
