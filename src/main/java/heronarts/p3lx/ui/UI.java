@@ -39,6 +39,8 @@ import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.StringParameter;
 import heronarts.p3lx.P3LX;
+import heronarts.p3lx.ui.component.UILabel;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -493,6 +495,21 @@ public class UI implements LXEngine.Dispatch {
     lx.errorChanged.addListener((p) -> { showError(); });
     showError();
 
+    lx.failure.addListener((p) -> {
+      float width = getWidth() * .8f;
+      float height = getHeight() * .8f;
+      showContextOverlay(
+        new UILabel(getWidth() * .1f, getHeight() * .1f, width, height)
+        .setLabel(lx.failure.getString())
+        .setBreakLines(true)
+        .setPadding(8)
+        .setTextAlignment(PConstants.LEFT, PConstants.TOP)
+        .setBorderColor(this.theme.getAttentionColor())
+        .setBackgroundColor(this.theme.getDarkBackgroundColor())
+        .setBorderRounding(4)
+        .setFontColor(this.theme.getAttentionColor())
+      );
+    });
   }
 
   public void showError() {

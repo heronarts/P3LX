@@ -186,7 +186,7 @@ public class P3LX extends LX {
     String frameRateStr = "";
 
     // Give the engine a chance to sort itself out each frame
-    this.engine.onDraw();
+    this.engine.beforeP3LXDraw();
 
     if (this.engine.isThreaded()) {
       // NOTE: because we don't hold a lock, it is *possible* that the
@@ -197,7 +197,7 @@ public class P3LX extends LX {
       this.engine.copyFrameThreadSafe(this.uiFrame);
       if (this.flags.showFramerate) {
         frameRateStr =
-          "Engine: " + this.engine.frameRate() + " " +
+          "Engine: " + this.engine.getActualFrameRate() + " " +
           "UI: " + this.applet.frameRate;
         if (this.engine.isNetworkMultithreaded.isOn()) {
           frameRateStr += " Network: " + this.engine.network.frameRate();
