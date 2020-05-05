@@ -28,6 +28,7 @@ import heronarts.lx.LX;
 import heronarts.lx.LXEngine;
 import heronarts.lx.LXLoopTask;
 import heronarts.lx.LXMappingEngine;
+import heronarts.lx.command.LXCommandEngine;
 import heronarts.lx.midi.LXMidiEngine;
 import heronarts.lx.midi.LXMidiMapping;
 import heronarts.lx.mixer.LXBus;
@@ -485,6 +486,25 @@ public class UI implements LXEngine.Dispatch {
         }
       });
     }
+
+    lx.command.errorChanged.addListener((p) -> {
+      final LXCommandEngine.Error error = lx.command.getError();
+      if (error != null) {
+        if (error.cause != null) {
+          showContextOverlay(new UIDialogBox(
+            this,
+            error.message,
+            new String[] { "Copy Stack Trace", "Okay" },
+            new int[] { UIDialogBox.OPTION_WIDTH * 2, UIDialogBox.OPTION_WIDTH },
+            new Runnable[] {
+              () -> { lx.setSystemClipboardString(error.getStackTrace()); },
+              () -> { lx.command.popError(); }
+            }));
+        } else {
+          showContextOverlay(new UIDialogBox(this, error.message, () -> { lx.command.popError(); }));
+        }
+      }
+    });
 
     UI.instance = this;
   }
