@@ -200,7 +200,7 @@ public class P3LX extends LX {
           "Engine: " + this.engine.getActualFrameRate() + " " +
           "UI: " + this.applet.frameRate;
         if (this.engine.isNetworkMultithreaded.isOn()) {
-          frameRateStr += " Network: " + this.engine.network.frameRate();
+          frameRateStr += " Network: " + this.engine.networkThread.frameRate();
         }
       }
     } else {
@@ -213,7 +213,7 @@ public class P3LX extends LX {
       if (this.flags.showFramerate) {
         frameRateStr = "Framerate: " + this.applet.frameRate;
         if (this.engine.isNetworkMultithreaded.isOn()) {
-          frameRateStr += " Network: " + this.engine.network.frameRate();
+          frameRateStr += " Network: " + this.engine.networkThread.frameRate();
         }
       }
     }
