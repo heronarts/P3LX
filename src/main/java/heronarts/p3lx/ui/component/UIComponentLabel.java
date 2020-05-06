@@ -24,14 +24,19 @@
 
 package heronarts.p3lx.ui.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import heronarts.lx.LXComponent;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+import heronarts.lx.parameter.StringParameter;
 
 public class UIComponentLabel extends UILabel implements LXParameterListener {
 
   private LXComponent component;
   private String prefix = "";
+  private boolean canonical = true;
 
   public UIComponentLabel(float x, float y, float w, float h) {
     super(x, y, w, h);
@@ -45,19 +50,32 @@ public class UIComponentLabel extends UILabel implements LXParameterListener {
     return this;
   }
 
-  public UIComponentLabel setComponent(LXComponent component) {
-    if (this.component != component) {
+  public UIComponentLabel setCanonical(boolean canonical) {
+    if (this.canonical != canonical) {
+      this.canonical = canonical;
       if (this.component != null) {
-        LXComponent parent = this.component;
-        while (parent != null) {
-          parent.label.removeListener(this);
-          parent = parent.getParent();
-        }
+        setComponent(this.component, true);
       }
+    }
+    return this;
+  }
+
+  private List<StringParameter> listenTargets = new ArrayList<StringParameter>();
+
+  public UIComponentLabel setComponent(LXComponent component) {
+    return setComponent(component, false);
+  }
+
+  private UIComponentLabel setComponent(LXComponent component, boolean forceUpdate) {
+    if (forceUpdate || (this.component != component)) {
+      for (StringParameter listenTarget : this.listenTargets) {
+        listenTarget.removeListener(this);
+      }
+      this.listenTargets.clear();
       this.component = component;
       while (component != null) {
         component.label.addListener(this);
-        component = component.getParent();
+        component = this.canonical ? component.getParent() : null;
       }
       updateLabel();
     }
@@ -72,7 +90,7 @@ public class UIComponentLabel extends UILabel implements LXParameterListener {
     if (this.component == null) {
       setLabel("");
     } else {
-      setLabel((this.prefix != null ? this.prefix : "") + this.component.getCanonicalLabel());
+      setLabel((this.prefix != null ? this.prefix : "") + (this.canonical ? this.component.getCanonicalLabel() : this.component.getLabel()));
     }
   }
 }
