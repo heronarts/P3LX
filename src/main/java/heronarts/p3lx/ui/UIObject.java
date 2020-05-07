@@ -837,6 +837,8 @@ public abstract class UIObject extends UIEventHandler implements LXLoopTask {
 
   /**
    * Subclasses override when element is focused
+   *
+   * @param event Event that caused focus
    */
   protected void onFocus(Event event) {
   }
