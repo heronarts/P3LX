@@ -57,6 +57,25 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
     }
   }
 
+  public static class Trigger extends UIButton {
+
+    public static final int WIDTH = 16;
+
+    public Trigger(UI ui, float x, float y) {
+      this(ui, null, x, y);
+    }
+
+    public Trigger(UI ui, BooleanParameter trigger, float x, float y) {
+      super(x, y, WIDTH, 12);
+      setIcon(ui.theme.iconTrigger);
+      setMomentary(true);
+      setBorderRounding(4);
+      if (trigger != null) {
+        setParameter(trigger);
+      }
+    }
+  }
+
   protected boolean active = false;
   protected boolean isMomentary = false;
 
