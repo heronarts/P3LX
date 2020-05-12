@@ -868,78 +868,94 @@ public interface UIItemList {
       this.impl = new Impl(ui, this);
     }
 
+    @Override
     public UIItemList setFocusIndex(int focusIndex) {
       this.impl.setFocusIndex(focusIndex);
       return this;
     }
 
+    @Override
     public int getFocusedIndex() {
       return this.impl.getFocusedIndex();
     }
 
+    @Override
     public UIItemList.Item getFocusedItem() {
       return this.impl.getFocusedItem();
     }
 
+    @Override
     public UIItemList addSection(Section section) {
       this.impl.addSection(section);
       return this;
     }
 
+    @Override
     public UIItemList addItem(int index, Item item) {
       this.impl.addItem(index, item);
       return this;
     }
 
+    @Override
     public UIItemList addItem(Item item) {
       this.impl.addItem(item);
       return this;
     }
 
+    @Override
     public UIItemList moveItem(Item item, int index) {
       this.impl.moveItem(item, index);
       return this;
     }
 
+    @Override
     public UIItemList removeItem(Item item) {
       this.impl.removeItem(item);
       return this;
     }
 
+    @Override
     public UIItemList setItems(List<? extends Item> items) {
       this.impl.setItems(items);
       return this;
     }
 
+    @Override
     public UIItemList clearItems() {
       this.impl.clearItems();
       return this;
     }
 
+    @Override
     public List<? extends Item> getItems() {
       return this.impl.items;
     }
 
+    @Override
     public UIItemList setSingleClickActivate(boolean singleClickActivate) {
       this.impl.setSingleClickActivate(singleClickActivate);
       return this;
     }
 
+    @Override
     public UIItemList setShowCheckboxes(boolean showCheckboxes) {
       this.impl.setShowCheckboxes(showCheckboxes);
       return this;
     }
 
+    @Override
     public UIItemList setRenamable(boolean isRenamable) {
       this.impl.setRenamable(isRenamable);
       return this;
     }
 
+    @Override
     public UIItemList setMomentary(boolean momentary) {
       this.impl.setMomentary(momentary);
       return this;
     }
 
+    @Override
     public UIItemList setReorderable(boolean reorderable) {
       this.impl.setReorderable(reorderable);
       return this;
@@ -1031,73 +1047,100 @@ public interface UIItemList {
       this.impl = new Impl(ui, this);
     }
 
+    @Override
     public UIItemList setFocusIndex(int focusIndex) {
       this.impl.setFocusIndex(focusIndex, true);
       return this;
     }
 
+    @Override
     public int getFocusedIndex() {
       return this.impl.getFocusedIndex();
     }
 
+    @Override
     public UIItemList.Item getFocusedItem() {
       return this.impl.getFocusedItem();
     }
 
+    @Override
     public UIItemList addSection(Section section) {
       this.impl.addSection(section);
       return this;
     }
 
+    @Override
+    public UIItemList addItem(int index, Item item) {
+      this.impl.addItem(index, item);
+      return this;
+    }
+
+    @Override
     public UIItemList addItem(Item item) {
       this.impl.addItem(item);
       return this;
     }
 
+    @Override
+    public UIItemList moveItem(Item item, int index) {
+      this.impl.moveItem(item, index);
+      return this;
+    }
+
+    @Override
     public UIItemList removeItem(Item item) {
       this.impl.removeItem(item);
       return this;
     }
 
+    @Override
     public UIItemList setItems(List<? extends Item> items) {
       this.impl.setItems(items);
       return this;
     }
 
+    @Override
     public UIItemList clearItems() {
       this.impl.clearItems();
       return this;
     }
 
+    @Override
     public List<? extends Item> getItems() {
       return this.impl.items;
     }
 
+    @Override
     public UIItemList setSingleClickActivate(boolean singleClickActivate) {
       this.impl.setSingleClickActivate(singleClickActivate);
       return this;
     }
 
+    @Override
     public UIItemList setShowCheckboxes(boolean showCheckboxes) {
       this.impl.setShowCheckboxes(showCheckboxes);
       return this;
     }
 
+    @Override
     public UIItemList setRenamable(boolean isRenamable) {
       this.impl.setRenamable(isRenamable);
       return this;
     }
 
+    @Override
     public UIItemList setMomentary(boolean momentary) {
       this.impl.setMomentary(momentary);
       return this;
     }
 
+    @Override
     public UIItemList setReorderable(boolean reorderable) {
       this.impl.setReorderable(reorderable);
       return this;
     }
 
+    @Override
     public UIItemList setControlSurfaceFocus(int index, int length) {
       this.impl.setControlSurfaceFocus(index, length);
       return this;
@@ -1199,10 +1242,19 @@ public interface UIItemList {
   /**
    * Adds an item to the list
    *
-   * @param item Item to remove
+   * @param item Item to add
    * @return this
    */
   public UIItemList addItem(Item item);
+
+  /**
+   * Adds an item to the list at the given index
+   *
+   * @param int Index to add the item at
+   * @param item Item to add
+   * @return this
+   */
+  public UIItemList addItem(int index, Item item);
 
   /**
    * Removes an item from the list
@@ -1211,6 +1263,15 @@ public interface UIItemList {
    * @return this
    */
   public UIItemList removeItem(Item item);
+
+  /**
+   * Moves an item to another location in the list
+   *
+   * @param item Item to move
+   * @param index Index to move to
+   * @return this
+   */
+  public UIItemList moveItem(Item item, int index);
 
   /**
    * Sets the items in the list and redraws it
