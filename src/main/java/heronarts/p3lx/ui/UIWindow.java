@@ -26,7 +26,7 @@ package heronarts.p3lx.ui;
 
 import processing.event.Event;
 import processing.event.MouseEvent;
-import heronarts.lx.LXUtils;
+import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.component.UILabel;
 
 /**

@@ -24,7 +24,6 @@
 
 package heronarts.p3lx.ui.component;
 
-import heronarts.lx.LXUtils;
 import heronarts.lx.color.ColorParameter;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.command.LXCommand;
@@ -32,6 +31,7 @@ import heronarts.lx.modulation.LXCompoundModulation;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
+import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
 import processing.core.PConstants;

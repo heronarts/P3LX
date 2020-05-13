@@ -24,8 +24,8 @@
 
 package heronarts.p3lx.ui;
 
+import heronarts.lx.utils.LXUtils;
 import processing.event.MouseEvent;
-import heronarts.lx.LXUtils;
 
 public class UI2dScrollContext extends UI2dContext {
 

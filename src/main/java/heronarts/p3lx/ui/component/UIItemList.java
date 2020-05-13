@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import heronarts.lx.LXUtils;
+import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UI2dContainer;

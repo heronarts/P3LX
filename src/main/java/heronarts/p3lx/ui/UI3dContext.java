@@ -28,7 +28,6 @@ import com.google.gson.JsonObject;
 
 import heronarts.lx.LX;
 import heronarts.lx.LXSerializable;
-import heronarts.lx.LXUtils;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.modulator.Click;
 import heronarts.lx.modulator.DampedParameter;
@@ -40,6 +39,7 @@ import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.parameter.MutableParameter;
 import heronarts.lx.parameter.ObjectParameter;
+import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.component.UIInputBox;
 import processing.core.PConstants;
 import processing.core.PGraphics;

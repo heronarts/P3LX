@@ -24,12 +24,12 @@
 
 package heronarts.p3lx.ui.component;
 
-import heronarts.lx.LXUtils;
 import heronarts.lx.parameter.BoundedParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIModulationSource;
 import heronarts.p3lx.ui.UIModulationTarget;

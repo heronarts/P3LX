@@ -24,11 +24,11 @@
 
 package heronarts.p3lx.ui.component;
 
-import heronarts.lx.LXUtils;
 import heronarts.lx.command.LXCommand;
 import heronarts.lx.parameter.DiscreteParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UIFocus;
