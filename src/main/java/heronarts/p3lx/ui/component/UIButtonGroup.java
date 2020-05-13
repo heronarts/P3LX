@@ -53,7 +53,7 @@ public class UIButtonGroup extends UI2dContainer implements UIControlTarget, UIC
   public UIButtonGroup(final DiscreteParameter parameter, float x, float y, float w, float h, final boolean hideFirst) {
     super(x, y, w, h);
     setLayout(UI2dContainer.Layout.HORIZONTAL);
-    setChildMargin(DEFAULT_BUTTON_MARGIN);
+    setChildSpacing(DEFAULT_BUTTON_MARGIN);
 
     this.parameter = parameter;
     int range = parameter.getRange();
