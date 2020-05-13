@@ -1037,9 +1037,9 @@ public class UI implements LXEngine.Dispatch {
         LXBus bus = this.lx.engine.mixer.getFocusedChannel();
         if (bus instanceof LXChannel) {
           if (keyCode == java.awt.event.KeyEvent.VK_BRACELEFT) {
-            ((LXChannel) bus).goPrev();
+            ((LXChannel) bus).goPreviousPattern();
           } else {
-            ((LXChannel) bus).goNext();
+            ((LXChannel) bus).goNextPattern();
           }
         }
         break;
