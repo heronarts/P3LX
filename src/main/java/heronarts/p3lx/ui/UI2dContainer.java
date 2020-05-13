@@ -87,6 +87,10 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
     return setPadding(padding, padding, padding, padding);
   }
 
+  public UI2dContainer setPadding(float yPadding, float xPadding) {
+    return setPadding(yPadding, xPadding, yPadding, xPadding);
+  }
+
   public UI2dContainer setPadding(float topPadding, float rightPadding, float bottomPadding, float leftPadding) {
     boolean redraw = false;
     if (this.topPadding != topPadding) {
@@ -170,8 +174,8 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
       for (UIObject child : this) {
         if (child.isVisible()) {
           UI2dComponent component = (UI2dComponent) child;
-          component.setY(y);
-          y += component.getHeight() + this.childSpacingY;
+          component.setY(y + component.topMargin);
+          y += component.topMargin + component.getHeight() + component.bottomMargin + this.childSpacingY;
         }
       }
       y += this.bottomPadding;
@@ -181,8 +185,8 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
       for (UIObject child : this) {
         if (child.isVisible()) {
           UI2dComponent component = (UI2dComponent) child;
-          component.setX(x);
-          x += component.getWidth() + this.childSpacingX;
+          component.setX(x + component.leftMargin);
+          x += component.leftMargin + component.getWidth() + component.rightMargin + this.childSpacingX;
         }
       }
       x += this.rightPadding;
@@ -194,14 +198,14 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
       for (UIObject child : this) {
         if (child.isVisible()) {
           UI2dComponent component = (UI2dComponent) child;
-          if (y + component.getHeight() > getContentHeight()) {
+          if (y + component.topMargin + component.getHeight() > getContentHeight()) {
             x += w + this.childSpacingX;
             y = this.topPadding;
             w = 0;
           }
-          component.setPosition(x, y);
-          w = Math.max(0, component.getWidth());
-          y += component.getHeight() + this.childSpacingY;
+          component.setPosition(x + component.leftMargin, y + component.topMargin);
+          w = Math.max(w, component.getWidth() + component.leftMargin + component.rightMargin);
+          y += component.topMargin + component.getHeight() + component.bottomMargin + this.childSpacingY;
         }
       }
       setContentWidth(Math.max(this.minWidth, x + w));
@@ -212,14 +216,14 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
       for (UIObject child : this) {
         if (child.isVisible()) {
           UI2dComponent component = (UI2dComponent) child;
-          if (x + component.getWidth() > getContentWidth()) {
+          if (x + component.leftMargin + component.getWidth() > getContentWidth()) {
             y += h + this.childSpacingY;
             x = this.leftPadding;
             h = 0;
           }
-          component.setPosition(x, y);
-          h = Math.max(0, component.getHeight());
-          x += component.getWidth() + this.childSpacingX;
+          component.setPosition(x + component.leftMargin, y + component.topMargin);
+          h = Math.max(h, component.topMargin + component.getHeight() + component.bottomMargin);
+          x += component.leftMargin + component.getWidth() + component.rightMargin + this.childSpacingX;
         }
       }
       setContentHeight(Math.max(this.minHeight, y + h));

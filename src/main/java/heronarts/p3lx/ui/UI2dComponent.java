@@ -52,6 +52,8 @@ public abstract class UI2dComponent extends UIObject {
    */
   protected float height;
 
+  protected float topMargin = 0, rightMargin = 0, bottomMargin = 0, leftMargin = 0;
+
   float scrollX = 0;
 
   float scrollY = 0;
@@ -340,6 +342,100 @@ public abstract class UI2dComponent extends UIObject {
       }
       onResize();
       redrawContainer();
+    }
+    return this;
+  }
+
+  /**
+   * Sets the margins around this object when inside of a UI2dContainer with layout
+   *
+   * @param margin Margin on all sides
+   * @return this
+   */
+  public UI2dComponent setMargin(float margin) {
+    return setMargin(margin, margin, margin, margin);
+  }
+
+  /**
+   * Sets the margins around this object when inside of a UI2dContainer with layout
+   *
+   * @param yMargin Vertical margins
+   * @param xMargin Horizontal margins
+   * @return this
+   */
+  public UI2dComponent setMargin(float yMargin, float xMargin) {
+    return setMargin(yMargin, xMargin, yMargin, xMargin);
+  }
+
+  /**
+   * Sets the top margin around this object when inside a UI2dContainer with layout
+   *
+   * @param topMargin Top margin
+   * @return this
+   */
+  public UI2dComponent setTopMargin(float topMargin) {
+    return setMargin(topMargin, this.rightMargin, this.bottomMargin, this.leftMargin);
+  }
+
+  /**
+   * Sets the bottom margin around this object when inside a UI2dContainer with layout
+   *
+   * @param bottomMargin Bottom margin
+   * @return this
+   */
+  public UI2dComponent setBottomMargin(float bottomMargin) {
+    return setMargin(this.topMargin, this.rightMargin, bottomMargin, this.leftMargin);
+  }
+
+  /**
+   * Sets the left margin around this object when inside a UI2dContainer with layout
+   *
+   * @param leftMargin Left margin
+   * @return this
+   */
+  public UI2dComponent setLeftMargin(float leftMargin) {
+    return setMargin(this.topMargin, this.rightMargin, this.bottomMargin, leftMargin);
+  }
+
+  /**
+   * Sets the right margin around this object when inside a UI2dContainer with layout
+   *
+   * @param rightMargin Right margin
+   * @return this
+   */
+  public UI2dComponent setRightMargin(float rightMargin) {
+    return setMargin(this.topMargin, rightMargin, this.bottomMargin, this.leftMargin);
+  }
+
+  /**
+   * Sets the margins around this object when inside of a UI2dContainer with layout
+   *
+   * @param topMargin Top margin
+   * @param rightMargin Right margin
+   * @param bottomMargin Bottom margin
+   * @param leftMargin Left margin
+   * @return this
+   */
+  public UI2dComponent setMargin(float topMargin, float rightMargin, float bottomMargin, float leftMargin) {
+    boolean reflow = false;
+    if (this.topMargin != topMargin) {
+      this.topMargin = topMargin;
+      reflow = true;
+    }
+    if (this.rightMargin != rightMargin) {
+      this.rightMargin = rightMargin;
+      reflow = true;
+    }
+    if (this.bottomMargin != bottomMargin) {
+      this.bottomMargin = bottomMargin;
+      reflow = true;
+    }
+    if (this.leftMargin != leftMargin) {
+      this.leftMargin = leftMargin;
+      reflow = true;
+    }
+    if (reflow && (this.parent instanceof UI2dContainer)) {
+      ((UI2dContainer) this.parent).reflow();
     }
     return this;
   }
