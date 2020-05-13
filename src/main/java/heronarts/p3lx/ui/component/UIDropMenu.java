@@ -59,6 +59,14 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
     this(x, y, w, h, null);
   }
 
+  public UIDropMenu(float w, DiscreteParameter parameter) {
+    this(w, DEFAULT_HEIGHT, parameter);
+  }
+
+  public UIDropMenu(float w, float h, DiscreteParameter parameter) {
+    this(0, 0, w, h, parameter);
+  }
+
   public UIDropMenu(float x, float y, float w, float h, DiscreteParameter parameter) {
     super(x, y, w, h);
     this.contextMenu = new UIContextMenu(x, y, w, h);

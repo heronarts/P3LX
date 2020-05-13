@@ -59,6 +59,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
 
   public static class Trigger extends UIButton {
 
+    public static final int HEIGHT = 12;
     public static final int WIDTH = 16;
 
     public Trigger(UI ui, float x, float y) {
@@ -66,7 +67,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
     }
 
     public Trigger(UI ui, BooleanParameter trigger, float x, float y) {
-      super(x, y, WIDTH, 12);
+      super(x, y, WIDTH, HEIGHT);
       setIcon(ui.theme.iconTrigger);
       setMomentary(true);
       setBorderRounding(4);
@@ -115,6 +116,25 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
 
   public UIButton() {
     this(0, 0, 0, 0);
+  }
+
+  public UIButton(float w, BooleanParameter p) {
+    this(w, DEFAULT_HEIGHT, p);
+  }
+
+  public UIButton(float w, float h, BooleanParameter p) {
+    this(0, 0, w, h);
+    setParameter(p);
+    setLabel(p.getLabel());
+  }
+
+  public UIButton(float w, EnumParameter<?> p) {
+    this(w, DEFAULT_HEIGHT, p);
+  }
+
+  public UIButton(float w, float h, EnumParameter<?> p) {
+    this(0, 0, w, h);
+    setParameter(p);
   }
 
   public UIButton(float x, float y, float w, float h) {

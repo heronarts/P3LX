@@ -57,6 +57,15 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
     super(x, y, w, h);
   }
 
+  public UIIntegerBox(float w, DiscreteParameter parameter) {
+    this(w, DEFAULT_HEIGHT, parameter);
+  }
+
+  public UIIntegerBox(float w, float h, DiscreteParameter parameter) {
+    this(0, 0, w, h);
+    setParameter(parameter);
+  }
+
   @Override
   public String getDescription() {
     return UIParameterControl.getDescription(this.parameter);

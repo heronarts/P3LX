@@ -61,6 +61,11 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
     super(x, y, w, h);
   }
 
+  public UIDoubleBox(float w, BoundedParameter parameter) {
+    this(0, 0, w, DEFAULT_HEIGHT);
+    setParameter(parameter);
+  }
+
   public UIDoubleBox setEditMultiplier(double editMultiplier) {
     this.editMultiplier = editMultiplier;
     return this;

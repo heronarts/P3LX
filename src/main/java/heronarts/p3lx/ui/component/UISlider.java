@@ -27,6 +27,7 @@ package heronarts.p3lx.ui.component;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.modulation.LXCompoundModulation;
 import heronarts.lx.parameter.CompoundParameter;
+import heronarts.lx.parameter.LXListenableNormalizedParameter;
 import heronarts.lx.utils.LXUtils;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIFocus;
@@ -58,9 +59,23 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
     this(0, 0, 0, 0);
   }
 
+  public UISlider(float w, LXListenableNormalizedParameter parameter) {
+    this(w, DEFAULT_HEIGHT, parameter);
+  }
+
+  public UISlider(float w, float h, LXListenableNormalizedParameter parameter) {
+    this(Direction.HORIZONTAL, w, h, parameter);
+  }
+
+  public UISlider(Direction direction, float w, float h, LXListenableNormalizedParameter parameter) {
+    this(direction, 0, 0, w, h);
+    setParameter(parameter);
+  }
+
   public UISlider(float x, float y, float w, float h) {
     this(Direction.HORIZONTAL, x, y, w, h);
   }
+
 
   public UISlider(Direction direction, float x, float y, float w, float h) {
     super(x, y, w, h);

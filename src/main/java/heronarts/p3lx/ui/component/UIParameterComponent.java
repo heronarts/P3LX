@@ -13,6 +13,9 @@ import heronarts.p3lx.ui.UIContextActions;
 import processing.event.MouseEvent;
 
 public abstract class UIParameterComponent extends UI2dComponent implements UIContextActions {
+
+  public static final float DEFAULT_HEIGHT = 16;
+
   protected UIParameterComponent(float x, float y, float w, float h) {
     super(x, y, w, h);
   }
