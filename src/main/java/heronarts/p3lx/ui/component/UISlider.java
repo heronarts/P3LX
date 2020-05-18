@@ -55,10 +55,6 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
 
   private int fillColor = 0;;
 
-  public UISlider() {
-    this(0, 0, 0, 0);
-  }
-
   public UISlider(float w, LXListenableNormalizedParameter parameter) {
     this(w, DEFAULT_HEIGHT, parameter);
   }
@@ -68,14 +64,21 @@ public class UISlider extends UICompoundParameterControl implements UIFocus {
   }
 
   public UISlider(Direction direction, float w, float h, LXListenableNormalizedParameter parameter) {
-    this(direction, 0, 0, w, h);
+    this(direction, 0, 0, w, h, parameter);
+  }
+
+  public UISlider(Direction direction, float x, float y, float w, float h, LXListenableNormalizedParameter parameter) {
+    this(direction, x, y, w, h);
     setParameter(parameter);
+  }
+
+  public UISlider() {
+    this(0, 0, 0, 0);
   }
 
   public UISlider(float x, float y, float w, float h) {
     this(Direction.HORIZONTAL, x, y, w, h);
   }
-
 
   public UISlider(Direction direction, float x, float y, float w, float h) {
     super(x, y, w, h);

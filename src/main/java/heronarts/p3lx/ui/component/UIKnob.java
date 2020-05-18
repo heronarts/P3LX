@@ -53,7 +53,11 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
   private final static float ARC_END = ARC_START + ARC_RANGE;
 
   public UIKnob(LXListenableNormalizedParameter parameter) {
-    this();
+    this(0, 0, parameter);
+  }
+
+  public UIKnob(float x, float y, LXListenableNormalizedParameter parameter) {
+    this(x, y);
     setParameter(parameter);
   }
 
