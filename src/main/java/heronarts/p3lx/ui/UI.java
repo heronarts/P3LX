@@ -268,11 +268,11 @@ public class UI implements LXEngine.Dispatch {
    */
   private final List<Event> engineThreadInputEvents = new ArrayList<Event>();
 
-  public class Timer {
+  public class Profiler {
     public long drawNanos = 0;
   }
 
-  public final Timer timer = new Timer();
+  public final Profiler profiler = new Profiler();
 
   public final P3LX lx;
 
@@ -413,15 +413,15 @@ public class UI implements LXEngine.Dispatch {
     this.width = this.resizeWidth = lx.applet.width;
     this.height = this.resizeHeight = lx.applet.height;
     this.theme = new UITheme(applet);
-    LX.initTimer.log("P3LX: UI: Theme");
+    LX.initProfiler.log("P3LX: UI: Theme");
     this.root = new UIRoot();
     this.contextMenuOverlay = new UIContextOverlay();
-    LX.initTimer.log("P3LX: UI: Root");
+    LX.initProfiler.log("P3LX: UI: Root");
     applet.registerMethod("pre", this);
     applet.registerMethod("draw", this);
     applet.registerMethod("keyEvent", this);
     applet.registerMethod("mouseEvent", this);
-    LX.initTimer.log("P3LX: UI: register");
+    LX.initProfiler.log("P3LX: UI: register");
     if (lx != null) {
       lx.addProjectListener(new LX.ProjectListener() {
         @Override
@@ -853,7 +853,7 @@ public class UI implements LXEngine.Dispatch {
 
     endDraw();
 
-    this.timer.drawNanos = System.nanoTime() - drawStart;
+    this.profiler.drawNanos = System.nanoTime() - drawStart;
   }
 
 

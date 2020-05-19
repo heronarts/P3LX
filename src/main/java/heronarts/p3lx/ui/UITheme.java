@@ -97,9 +97,9 @@ public class UITheme {
 
   UITheme(PApplet applet) {
     this.controlFont = applet.loadFont("ArialUnicodeMS-10.vlw");
-    LX.initTimer.log("P3LX: UI: Theme: controlFont");
+    LX.initProfiler.log("P3LX: UI: Theme: controlFont");
     this.labelFont = this.deviceFont = this.windowTitleFont = applet.loadFont("Arial-Black-9.vlw");
-    LX.initTimer.log("P3LX: UI: Theme: windowTitleFont");
+    LX.initProfiler.log("P3LX: UI: Theme: windowTitleFont");
 
     this.iconNote = applet.loadImage("icon-note.png");
     this.iconTempo = applet.loadImage("icon-tempo.png");
@@ -117,7 +117,7 @@ public class UITheme {
     this.iconOpen = applet.loadImage("icon-open.png");
     this.iconKeyboard = applet.loadImage("icon-keyboard.png");
     this.iconPreferences = applet.loadImage("icon-preferences.png");
-    LX.initTimer.log("P3LX: UI: Theme: Icons");
+    LX.initProfiler.log("P3LX: UI: Theme: Icons");
   }
 
   /**

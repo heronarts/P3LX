@@ -80,12 +80,12 @@ public class P3LX extends LX {
 
   public final Flags flags;
 
-  public class Timer {
+  public class Profiler {
     public long drawNanos = 0;
     public long engineNanos = 0;
   }
 
-  public final Timer timer = new Timer();
+  public final Profiler profiler = new Profiler();
 
   public P3LX(PApplet applet) {
     this(applet, new LXModel());
@@ -122,14 +122,14 @@ public class P3LX extends LX {
     this.engine.getFrameNonThreadSafe(this.uiFrame);
 
     this.ui = buildUI();
-    LX.initTimer.log("P3LX: UI");
+    LX.initProfiler.log("P3LX: UI");
 
     applet.colorMode(PConstants.HSB, 360, 100, 100, 100);
-    LX.initTimer.log("P3LX: colorMode");
+    LX.initProfiler.log("P3LX: colorMode");
 
     applet.registerMethod("draw", this);
     applet.registerMethod("dispose", this);
-    LX.initTimer.log("P3LX: registerMethod");
+    LX.initProfiler.log("P3LX: registerMethod");
   }
 
   /**
@@ -221,14 +221,14 @@ public class P3LX extends LX {
         }
       }
     }
-    this.timer.engineNanos = System.nanoTime() - engineStart;
+    this.profiler.engineNanos = System.nanoTime() - engineStart;
 
     // Print framerate
     if (this.flags.showFramerate) {
       PApplet.println(frameRateStr);
     }
 
-    this.timer.drawNanos = System.nanoTime() - drawStart;
+    this.profiler.drawNanos = System.nanoTime() - drawStart;
   }
 
   @Override
