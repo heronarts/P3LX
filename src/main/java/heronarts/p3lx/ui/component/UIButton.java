@@ -135,6 +135,7 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
   public UIButton(float w, float h, EnumParameter<?> p) {
     this(0, 0, w, h);
     setParameter(p);
+    setLabel(p.getEnum().toString());
   }
 
   public UIButton(float x, float y, float w, float h) {
