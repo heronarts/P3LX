@@ -33,14 +33,14 @@ import processing.core.PGraphics;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class UIColorBox extends UI2dComponent implements UIFocus {
+public class UIDiscreteColorBox extends UI2dComponent implements UIFocus {
 
-  private class UIColorMenu extends UI2dComponent {
+  private class UIDiscreteColorMenu extends UI2dComponent {
 
     private final static int SPACING = 4;
     private final static int BOX_SIZE = 10;
 
-    private UIColorMenu(UI ui) {
+    private UIDiscreteColorMenu(UI ui) {
       super(0, 0, 8 * BOX_SIZE + SPACING * 9, 3 * BOX_SIZE + SPACING * 4);
       setBackgroundColor(ui.theme.getDarkBackgroundColor());
       setBorderColor(ui.theme.getControlBorderColor());
@@ -74,16 +74,16 @@ public class UIColorBox extends UI2dComponent implements UIFocus {
     }
   }
 
-  private final UIColorMenu colorMenu;
+  private final UIDiscreteColorMenu colorMenu;
 
   private final DiscreteColorParameter parameter;
 
-  public UIColorBox(UI ui, final DiscreteColorParameter parameter, float x, float y, float w, float h) {
+  public UIDiscreteColorBox(UI ui, final DiscreteColorParameter parameter, float x, float y, float w, float h) {
     super(x, y, w, h);
     setBorderColor(ui.theme.getControlBorderColor());
     setBackgroundColor(parameter.getColor());
     this.parameter = parameter;
-    this.colorMenu = new UIColorMenu(ui);
+    this.colorMenu = new UIDiscreteColorMenu(ui);
     this.colorMenu.setVisible(false);
     parameter.addListener((p) -> {
       setBackgroundColor(parameter.getColor());
@@ -103,7 +103,7 @@ public class UIColorBox extends UI2dComponent implements UIFocus {
   private void setExpanded(boolean expanded) {
     if (this.colorMenu.isVisible() != expanded) {
       if (expanded) {
-        this.colorMenu.setPosition(this, -this.colorMenu.getWidth() + UIColorMenu.BOX_SIZE + UIColorMenu.SPACING, -UIColorMenu.SPACING);
+        this.colorMenu.setPosition(this, -this.colorMenu.getWidth() + UIDiscreteColorMenu.BOX_SIZE + UIDiscreteColorMenu.SPACING, -UIDiscreteColorMenu.SPACING);
         getUI().showContextOverlay(this.colorMenu);
       } else {
         getUI().hideContextOverlay();
