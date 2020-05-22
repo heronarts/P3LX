@@ -147,7 +147,7 @@ public class UIToggleSet extends UIParameterComponent implements UIFocus, UICont
 
   public UIToggleSet setValue(String value) {
     for (int i = 0; i < this.options.length; ++i) {
-      if (this.options[i] == value) {
+      if (this.options[i].equals(value)) {
         return setValue(i);
       }
     }
