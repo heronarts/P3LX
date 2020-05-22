@@ -118,7 +118,7 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
   /**
    * Deprecated. Use {@link #setChildSpacing(float)} instead
    *
-   * @param childMargin
+   * @param childMargin Spacing between child objects
    * @return this
    */
   @Deprecated
@@ -126,10 +126,23 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
     return setChildSpacing(childMargin);
   }
 
+  /**
+   * Sets the spacing between child objects when a layout is in use
+   *
+   * @param childSpacing Spacing between child objects
+   * @return this
+   */
   public UI2dContainer setChildSpacing(float childSpacing) {
     return setChildSpacing(childSpacing, childSpacing);
   }
 
+  /**
+   * Sets the spacing between child objects when a layout is in use
+   *
+   * @param childSpacingY Vertical spacing between child objects
+   * @param childSpacingX Horizontal spacing between child objects
+   * @return this
+   */
   public UI2dContainer setChildSpacing(float childSpacingY, float childSpacingX) {
     if ((this.contentTarget.childSpacingX != childSpacingX) || (this.contentTarget.childSpacingY != childSpacingY)) {
       this.contentTarget.childSpacingX = childSpacingX;
