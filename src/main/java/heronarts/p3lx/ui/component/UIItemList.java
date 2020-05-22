@@ -1250,7 +1250,7 @@ public interface UIItemList {
   /**
    * Adds an item to the list at the given index
    *
-   * @param int Index to add the item at
+   * @param index Index to add the item at
    * @param item Item to add
    * @return this
    */

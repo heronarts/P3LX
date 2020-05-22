@@ -116,7 +116,7 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
   }
 
   /**
-   * Deprecated. Use {@link #setChildSpacing(float) instead
+   * Deprecated. Use {@link #setChildSpacing(float)} instead
    *
    * @param childMargin
    * @return this
