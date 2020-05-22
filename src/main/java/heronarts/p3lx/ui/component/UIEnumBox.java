@@ -24,6 +24,7 @@
 
 package heronarts.p3lx.ui.component;
 
+import heronarts.lx.parameter.EnumParameter;
 import processing.event.KeyEvent;
 
 public class UIEnumBox extends UIIntegerBox {
@@ -32,9 +33,20 @@ public class UIEnumBox extends UIIntegerBox {
     this(0, 0, 0, 0);
   }
 
+  public UIEnumBox(float w, EnumParameter<?> parameter) {
+    this(0, 0, w, DEFAULT_HEIGHT, parameter);
+  }
+
   public UIEnumBox(float x, float y, float w, float h) {
+    this(x, y, w, h, null);
+  }
+
+  public UIEnumBox(float x, float y, float w, float h, EnumParameter<?> parameter) {
     super(x, y, w, h);
     enableImmediateEdit(false);
+    if (parameter != null) {
+      setParameter(parameter);
+    }
   }
 
   @Override
