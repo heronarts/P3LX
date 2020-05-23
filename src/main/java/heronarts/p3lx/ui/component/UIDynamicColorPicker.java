@@ -20,6 +20,7 @@ package heronarts.p3lx.ui.component;
 
 import heronarts.lx.color.ColorParameter;
 import heronarts.lx.color.LXDynamicColor;
+import heronarts.lx.command.LXCommand;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UI2dContainer;
@@ -65,7 +66,7 @@ public class UIDynamicColorPicker extends UIColorPicker implements UIFocus {
       if (this.dynamicColor.getIndex() > 0) {
         consumeKeyEvent();
         hideOverlay();
-        this.dynamicColor.getSwatch().removeColor(this.dynamicColor.getIndex());
+        getLX().command.perform(new LXCommand.Palette.RemoveColor(this.dynamicColor));
       }
     }
     super.onKeyPressed(keyEvent, keyChar, keyCode);
