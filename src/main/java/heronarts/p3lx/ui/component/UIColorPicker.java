@@ -29,6 +29,8 @@ import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 import heronarts.lx.color.ColorParameter;
 import heronarts.lx.color.LXColor;
+import heronarts.lx.command.LXCommand;
+import heronarts.lx.parameter.LXParameterListener;
 import heronarts.lx.utils.LXUtils;
 
 public class UIColorPicker extends UI2dComponent {
@@ -42,8 +44,9 @@ public class UIColorPicker extends UI2dComponent {
 
   private Corner corner = Corner.BOTTOM_RIGHT;
 
-  private final ColorParameter color;
-  private final UIColorOverlay uiColorOverlay;
+  private ColorParameter color;
+
+  private UIColorOverlay uiColorOverlay = null;
 
   public UIColorPicker(ColorParameter color) {
     this(UIKnob.WIDTH, UIKnob.WIDTH, color);
@@ -54,24 +57,39 @@ public class UIColorPicker extends UI2dComponent {
   }
 
   public UIColorPicker(float x, float y, float w, float h, ColorParameter color) {
+    this(x, y, w, h, color, false);
+  }
+
+  public UIColorPicker(float x, float y, float w, float h, ColorParameter color, boolean isDynamic) {
     super(x, y, w, h);
     setBorderColor(UI.get().theme.getControlBorderColor());
     setBackgroundColor(color.getColor());
-
-    this.color = color;
-    this.uiColorOverlay = new UIColorOverlay();
+    setColor(color);
 
     // Redraw with color in real-time, if modulated
-    addLoopTask(new UITimerTask(30, UITimerTask.Mode.FPS) {
-      @Override
-      protected void run() {
-        setBackgroundColor(LXColor.hsb(
-          color.hue.getValuef(),
-          color.saturation.getValuef(),
-          color.brightness.getValuef()
-        ));
-      }
-    });
+    if (!isDynamic) {
+      setDescription(UIParameterControl.getDescription(color));
+      addLoopTask(new UITimerTask(30, UITimerTask.Mode.FPS) {
+        @Override
+        protected void run() {
+          setBackgroundColor(LXColor.hsb(
+            color.hue.getValuef(),
+            color.saturation.getValuef(),
+            color.brightness.getValuef()
+          ));
+        }
+      });
+    }
+  }
+
+  private final LXParameterListener redrawSwatch = (p) -> {
+    if (this.uiColorOverlay != null) {
+      this.uiColorOverlay.swatch.redraw();
+    }
+  };
+
+  protected UIColorOverlay buildColorOverlay(UI ui) {
+    return new UIColorOverlay();
   }
 
   public UIColorPicker setCorner(Corner corner) {
@@ -79,9 +97,27 @@ public class UIColorPicker extends UI2dComponent {
     return this;
   }
 
-  @Override
-  public void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
+  void setColor(ColorParameter color) {
+    if (this.color != null) {
+      this.color.removeListener(this.redrawSwatch);
+    }
+    this.color = color;
+    if (color != null) {
+      color.addListener(this.redrawSwatch);
+      redrawSwatch.onParameterChanged(color);
+    }
+  }
+
+  protected void hideOverlay() {
+    getUI().hideContextOverlay();
+  }
+
+  private void showOverlay() {
     final float overlap = 6;
+
+    if (this.uiColorOverlay == null) {
+      this.uiColorOverlay = buildColorOverlay(getUI());
+    }
 
     switch (this.corner) {
     case BOTTOM_LEFT:
@@ -97,32 +133,63 @@ public class UIColorPicker extends UI2dComponent {
       this.uiColorOverlay.setPosition(this, this.width - overlap, overlap - this.uiColorOverlay.getHeight());
       break;
     }
+
     getUI().showContextOverlay(this.uiColorOverlay);
   }
 
-  private class UIColorOverlay extends UI2dContainer {
+  @Override
+  public void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
+    consumeMousePress();
+    showOverlay();
+    super.onMousePressed(mouseEvent, mx, my);
+  }
+
+  @Override
+  public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
+    if (keyCode == java.awt.event.KeyEvent.VK_ENTER || keyCode == java.awt.event.KeyEvent.VK_SPACE) {
+      consumeKeyEvent();
+      showOverlay();
+    } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+      if ((this.uiColorOverlay != null) && (this.uiColorOverlay.isVisible())) {
+        consumeKeyEvent();
+        hideOverlay();
+      }
+    }
+    super.onKeyPressed(keyEvent, keyChar, keyCode);
+  }
+
+  protected class UIColorOverlay extends UI2dContainer {
+
+    private final UISwatch swatch;
+
     UIColorOverlay() {
-      super(0, 0, 240, UISwatch.HEIGHT + 8);
+      this(8);
+    }
+
+    UIColorOverlay(float extraHeight) {
+      super(0, 0, 240, UISwatch.HEIGHT + extraHeight);
+
       setBackgroundColor(UI.get().theme.getDeviceBackgroundColor());
       setBorderColor(UI.get().theme.getControlBorderColor());
       setBorderRounding(6);
 
-      new UISwatch().addToContainer(this);
+      this.swatch = new UISwatch();
+      this.swatch.addToContainer(this);
 
-      float xp = UISwatch.WIDTH;
+      float xp = this.swatch.getX() + this.swatch.getWidth();
       float yp = 16;
-      new UIDoubleBox(xp, yp, 60, color.hue).addToContainer(this);
-      new UILabel(xp, yp + 16, 60, "Hue").setTextAlignment(PConstants.CENTER).addToContainer(this);
+      new UIDoubleBox(xp, yp, 56, color.hue).addToContainer(this);
+      new UILabel(xp, yp + 16, 56, "Hue").setTextAlignment(PConstants.CENTER).addToContainer(this);
 
       yp += 40;
 
-      new UIDoubleBox(xp, yp, 60, color.saturation).addToContainer(this);
-      new UILabel(xp, yp + 16, 60, "Sat").setTextAlignment(PConstants.CENTER).addToContainer(this);
+      new UIDoubleBox(xp, yp, 56, color.saturation).addToContainer(this);
+      new UILabel(xp, yp + 16, 56, "Sat").setTextAlignment(PConstants.CENTER).addToContainer(this);
 
       yp += 40;
 
-      new UIDoubleBox(xp, yp, 60, color.brightness).addToContainer(this);
-      new UILabel(xp, yp + 16, 60, "Bright").setTextAlignment(PConstants.CENTER).addToContainer(this);
+      new UIDoubleBox(xp, yp, 56, color.brightness).addToContainer(this);
+      new UILabel(xp, yp + 16, 56, "Bright").setTextAlignment(PConstants.CENTER).addToContainer(this);
 
     }
 
@@ -204,20 +271,33 @@ public class UIColorPicker extends UI2dComponent {
       }
 
       private boolean draggingBrightness = false;
+      private LXCommand.Parameter.SetValue setBrightness = null;
+      private LXCommand.Parameter.SetColor setColor = null;
 
       @Override
       public void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
-        this.draggingBrightness = (mx > GRID_X + GRID_WIDTH);
-        if (!this.draggingBrightness) {
+        this.setBrightness = null;
+        this.setColor = null;
+        if (this.draggingBrightness = (mx > GRID_X + GRID_WIDTH)) {
+          this.setBrightness = new LXCommand.Parameter.SetValue(color.brightness, color.brightness.getBaseValue());
+        } else {
+          this.setColor = new LXCommand.Parameter.SetColor(color);
           setHueSaturation(mx, my);
         }
+      }
+
+      @Override
+      public void onMouseReleased(MouseEvent mouseEvent, float mx, float my) {
+        this.setBrightness = null;
+        this.setColor = null;
       }
 
       private void setHueSaturation(float mx, float my) {
         mx = LXUtils.clampf(mx - GRID_X, 0, GRID_WIDTH);
         my = LXUtils.clampf(my - GRID_Y, 0, GRID_WIDTH);
-        color.hue.setValue(mx / GRID_WIDTH * 360);
-        color.saturation.setValue(100 - my / GRID_HEIGHT * 100);
+        double hue = mx / GRID_WIDTH * 360;
+        double saturation = 100 - my / GRID_HEIGHT * 100;
+        getLX().command.perform(this.setColor.update(hue, saturation));
       }
 
       @Override
@@ -226,7 +306,7 @@ public class UIColorPicker extends UI2dComponent {
           if (dy != 0) {
             float brightness = color.brightness.getBaseValuef();
             brightness = LXUtils.clampf(brightness - 100 * dy / BRIGHT_SLIDER_HEIGHT, 0, 100);
-            color.brightness.setValue(brightness);
+            getLX().command.perform(this.setBrightness.update(brightness));
           }
         } else {
           setHueSaturation(mx, my);
@@ -238,16 +318,24 @@ public class UIColorPicker extends UI2dComponent {
         float inc = keyEvent.isShiftDown() ? 10 : 2;
         if (keyCode == java.awt.event.KeyEvent.VK_UP) {
           consumeKeyEvent();
-          color.saturation.setValue(LXUtils.clampf(color.saturation.getBaseValuef() + inc, 0, 100));
+          getLX().command.perform(new LXCommand.Parameter.SetValue(color.saturation,
+            LXUtils.clampf(color.saturation.getBaseValuef() + inc, 0, 100)
+          ));
         } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
           consumeKeyEvent();
-          color.saturation.setValue(LXUtils.clampf(color.saturation.getBaseValuef() - inc, 0, 100));
+          getLX().command.perform(new LXCommand.Parameter.SetValue(color.saturation,
+            LXUtils.clampf(color.saturation.getBaseValuef() - inc, 0, 100)
+          ));
         } else if (keyCode == java.awt.event.KeyEvent.VK_LEFT) {
           consumeKeyEvent();
-          color.hue.setValue(LXUtils.clampf(color.hue.getBaseValuef() - 3*inc, 0, 360));
+          getLX().command.perform(new LXCommand.Parameter.SetValue(color.hue,
+            LXUtils.clampf(color.hue.getBaseValuef() - 3*inc, 0, 360)
+          ));
         } else if (keyCode == java.awt.event.KeyEvent.VK_RIGHT) {
           consumeKeyEvent();
-          color.hue.setValue(LXUtils.clampf(color.hue.getBaseValuef() + 3*inc, 0, 360));
+          getLX().command.perform(new LXCommand.Parameter.SetValue(color.hue,
+            LXUtils.clampf(color.hue.getBaseValuef() + 3*inc, 0, 360)
+          ));
         }
       }
 
