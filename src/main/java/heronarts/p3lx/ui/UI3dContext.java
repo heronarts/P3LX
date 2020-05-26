@@ -110,7 +110,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   /**
    * Perspective of view
    */
-  public final BoundedParameter perspective = (BoundedParameter)
+  public final BoundedParameter perspective =
     new BoundedParameter("Perspective", 60, 15, 150)
     .setExponent(2)
     .setDescription("Camera perspective factor");
@@ -301,10 +301,32 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   private final int y;
   private PGraphics pg;
 
-  public UI3dContext(UI ui) {
-    this(ui, null, 0, 0);
+  /**
+   * Creates a UI3dContext which draws into the parent Processing
+   * graphics context, bypassing any compositing of UI layers. This
+   * context will not have its own PGraphics state. Calls
+   * will modify the global draw state. Use this only if you intend
+   * to draw directly to the main Processing context
+   *
+   * @param ui UI object
+   * @return UI3dContext
+   */
+  public static UI3dContext newTopLevelContext(UI ui) {
+    return new UI3dContext(ui, null, 0, 0);
   }
 
+  /**
+   * Creates a UI3dContext with the given frame position. The
+   * context has its own PGraphics context and state. Draw calls
+   * should be made against the passed pg object which will be
+   * appropriately composited into the larger context.
+   *
+   * @param ui UI context
+   * @param x Frame x-position
+   * @param y Frame y-position
+   * @param w Frame width
+   * @param h Frame height
+   */
   public UI3dContext(UI ui, int x, int y, int w, int h) {
     this(ui, ui.applet.createGraphics(w, h, PConstants.P3D), x, y);
   }
