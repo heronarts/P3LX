@@ -52,6 +52,8 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
   protected boolean hasFill = false;
   protected int fillColor = 0;
 
+  protected boolean returnKeyEdit = true;
+
   private boolean immediateEdit = false;
 
   private ProgressIndicator progressMeter;
@@ -119,6 +121,11 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
         }
       });
     }
+    return this;
+  }
+
+  public UIInputBox enableReturnKeyEdit(boolean returnKeyEdit) {
+    this.returnKeyEdit = returnKeyEdit;
     return this;
   }
 
@@ -308,9 +315,11 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
           this.editBuffer = Character.toString(keyChar);
           redraw();
         } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
-          consumeKeyEvent();
-          edit();
-          redraw();
+          if (this.returnKeyEdit) {
+            consumeKeyEvent();
+            edit();
+            redraw();
+          }
         } else if ((keyCode == java.awt.event.KeyEvent.VK_LEFT) || (keyCode == java.awt.event.KeyEvent.VK_DOWN)) {
           decrementValue(keyEvent);
         } else if ((keyCode == java.awt.event.KeyEvent.VK_RIGHT) || (keyCode == java.awt.event.KeyEvent.VK_UP)) {
