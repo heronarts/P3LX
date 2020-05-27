@@ -712,7 +712,18 @@ public class UI implements LXEngine.Dispatch {
    * @return this
    */
   public UI addLayer(UI2dContext layer) {
-    layer.addToContainer(this.root);
+    return addLayer(layer, -1);
+  }
+
+  /**
+   * Add a 2d context to this UI at the given index
+   *
+   * @param layer UI layer
+   * @param index Index
+   * @return this
+   */
+  public UI addLayer(UI2dContext layer, int index) {
+    layer.addToContainer(this.root, index);
     return this;
   }
 
@@ -734,7 +745,22 @@ public class UI implements LXEngine.Dispatch {
    * @return this UI
    */
   public UI addLayer(UI3dContext layer) {
-    this.root.mutableChildren.add(layer);
+    return addLayer(layer, -1);
+  }
+
+  /**
+   * Add a 3d context to this UI, at the given index
+   *
+   * @param layer 3d context
+   * @param index Index in the UI stack
+   * @return this UI
+   */
+  public UI addLayer(UI3dContext layer, int index) {
+    if (index < 0) {
+      this.root.mutableChildren.add(layer);
+    } else {
+      this.root.mutableChildren.add(index, layer);
+    }
     layer.parent = this.root;
     layer.setUI(this);
     return this;
