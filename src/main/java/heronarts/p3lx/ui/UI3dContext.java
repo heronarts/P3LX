@@ -24,6 +24,10 @@
 
 package heronarts.p3lx.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.google.gson.JsonObject;
 
 import heronarts.lx.LX;
@@ -54,6 +58,37 @@ import processing.event.MouseEvent;
 public class UI3dContext extends UIObject implements LXSerializable, UITabFocus {
 
   public static final int NUM_CAMERA_POSITIONS = 6;
+
+  public static interface MovementListener {
+    public void translate(float x, float y, float z);
+    public void rotate(float theta, float phi);
+  }
+
+  /**
+   * Mode of mouse interaction
+   */
+  public enum MouseMode {
+    /**
+     * Mouse dragging events alter the camera view
+     */
+    VIEW,
+
+    /**
+     * Mouse dragging events invoke object movement callbacks
+     */
+    OBJECT;
+
+    @Override
+    public String toString() {
+      switch (this) {
+      case OBJECT:
+        return "Move Fixtures";
+      default:
+      case VIEW:
+        return "Move Camera";
+      }
+    }
+  }
 
   /**
    * Mode of interaction from keyboard mouse events
@@ -92,6 +127,13 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
       }
     }
   };
+
+  /**
+   * Mouse interaction mode
+   */
+  public EnumParameter<MouseMode> mouseMode =
+    new EnumParameter<MouseMode>("Mouse Mode", MouseMode.VIEW)
+    .setDescription("Mouse interaction mode");
 
   /**
    * Camera motion mode
@@ -168,6 +210,26 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
    * Acceleration used to change rotation (theta/phi)
    */
   public final MutableParameter rotationAcceleration = new MutableParameter("RAcl", 0);
+
+  /**
+   * List of movement listeners when in OBJECT mouse mode
+   */
+  private final List<MovementListener> movementListeners = new ArrayList<MovementListener>();
+
+  public final void addMovementistener(MovementListener listener) {
+    Objects.requireNonNull(listener, "Cannot add null UI3dContext.MovementListener");
+    if (this.movementListeners.contains(listener)) {
+      throw new IllegalStateException("Cannot add duplicate UI3dContext.MovementListener: " + listener);
+    }
+    this.movementListeners.add(listener);
+  }
+
+  public final void removeMovementListener(MovementListener listener) {
+    if (!this.movementListeners.contains(listener)) {
+      throw new IllegalStateException("Cannot remove non-registered UI3dContext.MovementListener: " + listener);
+    }
+    this.movementListeners.remove(listener);
+  }
 
   public class Camera implements LXSerializable {
 
@@ -300,6 +362,9 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   private final int x;
   private final int y;
   private PGraphics pg;
+
+  private int backgroundColor = 0;
+  private boolean hasBackground = false;
 
   /**
    * Creates a UI3dContext which draws into the parent Processing
@@ -454,8 +519,36 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
     return this;
   }
 
-  protected void onResize() {}
+  /**
+   * Sets the background color for this 3d context
+   *
+   * @param backgroundColor Background color
+   * @return this
+   */
+  public UI3dContext setBackgroundColor(int backgroundColor) {
+    this.backgroundColor = backgroundColor;
+    this.hasBackground = true;
+    return this;
+  }
 
+  /**
+   * Sets whether this context has a background or not
+   *
+   * @param hasBackground Whether there's a background, if false content cleared each frame
+   * @return this
+   */
+  public UI3dContext setBackground(boolean hasBackground) {
+    this.hasBackground = hasBackground;
+    return this;
+  }
+
+  /**
+   * Subclasses may override to handle situation in which the size of the graphics
+   * context has changed.
+   */
+  protected void onResize() {
+
+  }
 
   /**
    * Adds a component to the layer
@@ -748,7 +841,11 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
     if (this.pg != null) {
       pg = this.pg;
       pg.beginDraw();
-      pg.clear();
+      if (this.hasBackground) {
+        pg.background(this.backgroundColor);
+      } else {
+        pg.clear();
+      }
     }
 
     // Set the camera
@@ -847,62 +944,119 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
     this.animating.stop();
   }
 
+  private enum MouseInteraction {
+    ROTATE_VIEW,
+    ROTATE_OBJECT,
+    ZOOM,
+    TRANSLATE_XY,
+    TRANSLATE_Z,
+  }
+
+  private MouseInteraction getInteraction(MouseEvent mouseEvent) {
+    switch (this.mouseMode.getEnum()) {
+    case OBJECT:
+     if (mouseEvent.isShiftDown()) {
+       if (mouseEvent.isMetaDown() || mouseEvent.isControlDown()) {
+         return MouseInteraction.ROTATE_VIEW;
+       }
+       return MouseInteraction.TRANSLATE_Z;
+      } else if (mouseEvent.isMetaDown() || mouseEvent.isControlDown()) {
+        return MouseInteraction.ROTATE_OBJECT;
+      }
+      return MouseInteraction.TRANSLATE_XY;
+
+    default:
+    case VIEW:
+      switch (this.interactionMode.getEnum()) {
+      case MOVE:
+        if (mouseEvent.isMetaDown() || mouseEvent.isControlDown() || mouseEvent.isShiftDown()) {
+          return MouseInteraction.TRANSLATE_XY;
+        }
+        return MouseInteraction.ROTATE_VIEW;
+
+      default:
+      case ZOOM:
+        if (mouseEvent.isShiftDown()) {
+          return MouseInteraction.ZOOM;
+        } else if (mouseEvent.isMetaDown() || mouseEvent.isControlDown()) {
+          return MouseInteraction.TRANSLATE_XY;
+        }
+        return MouseInteraction.ROTATE_VIEW;
+
+      }
+    }
+  }
+
   @Override
   protected void onMouseDragged(MouseEvent mouseEvent, float mx, float my, float dx, float dy) {
-    switch (this.interactionMode.getEnum()) {
-    case ZOOM:
-      if (mouseEvent.isShiftDown()) {
-        float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
-        this.camera.radius.incrementValue(this.camera.radius.getValue() * dy * 2.f / getHeight() * tanPerspective);
-      } else if (mouseEvent.isMetaDown() || mouseEvent.isControlDown()) {
-        float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
-        float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
-        float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
-        float sinPhi = (float) Math.sin(this.phiDamped.getValue());
-        float cosPhi = (float) Math.cos(this.phiDamped.getValue());
-
-        float dcx = dx * 2.f / getWidth() * this.radiusDamped.getValuef() * tanPerspective;
-        float dcy = dy * 2.f / getHeight() * this.radiusDamped.getValuef() * tanPerspective;
-
-        this.camera.x.incrementValue(-dcx * cosTheta - dcy * sinTheta * sinPhi);
-        this.camera.y.incrementValue(dcy * cosPhi);
-        this.camera.z.incrementValue(-dcx * sinTheta + dcy * cosTheta * sinPhi);
-
+    MouseInteraction interaction = getInteraction(mouseEvent);
+    switch (interaction) {
+    case ROTATE_VIEW:
+    case ROTATE_OBJECT:
+      // NOTE: this is counter-intuitive but the rotation in the theta plane is divided relative
+      // to height, as we're almost always in a non-square aspect ratio and want horizontal rotation
+      // to feel consistent with vertical, in terms of same number of pixels mouse-movement should
+      // yield same number of degrees rotation independent of the plane
+      float rt = -dx / getHeight() * 1.5f * (float) Math.PI;
+      float rp = dy / getHeight() * 1.5f * (float) Math.PI;
+      if (interaction == MouseInteraction.ROTATE_VIEW) {
+        this.camera.theta.incrementValue(rt);
+        this.camera.phi.incrementValue(rp);
+        updateFocusedCamera();
       } else {
-        this.camera.theta.incrementValue(-dx / getWidth() * 1.5 * Math.PI);
-        this.camera.phi.incrementValue(dy / getHeight() * 1.5 * Math.PI);
-      }
-      break;
-    case MOVE:
-      if (mouseEvent.isMetaDown() || mouseEvent.isControlDown() || mouseEvent.isShiftDown()) {
-
-        float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
-        float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
-        float cosPhi = (float) Math.cos(this.phiDamped.getValue());
-        float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
-
-        float dcx = dx * 2.f / getWidth() * this.radiusDamped.getValuef() * tanPerspective;
-        float dcy = dy * 2.f / getHeight() * this.radiusDamped.getValuef() * tanPerspective;
-
-        float dex = dcx * cosTheta;
-        float dez = -dcx * sinTheta;
-        float dey = -dcy * cosPhi;
-
-        if (mouseEvent.isShiftDown()) {
-          dex -= dy * sinTheta;
-          dez -= dy * cosTheta;
-          dey = 0;
+        for (MovementListener listener : this.movementListeners) {
+          listener.rotate(rt, rp);
         }
-        this.camera.x.incrementValue(dex);
-        this.camera.y.incrementValue(dey);
-        this.camera.z.incrementValue(dez);
-      } else {
-        this.camera.theta.incrementValue(dx / getWidth() * Math.PI);
-        this.camera.phi.incrementValue(-dy / getHeight() * Math.PI);
       }
       break;
+
+    case ZOOM:
+      this.camera.radius.incrementValue(dy * 2.f / getHeight() * this.camera.radius.getValue());
+      updateFocusedCamera();
+      break;
+
+    case TRANSLATE_XY:
+    case TRANSLATE_Z:
+      float tanPerspective = (float) Math.tan(.5 * this.perspective.getValue() * Math.PI / 180.);
+      float sinTheta = (float) Math.sin(this.thetaDamped.getValue());
+      float cosTheta = (float) Math.cos(this.thetaDamped.getValue());
+      float sinPhi = (float) Math.sin(this.phiDamped.getValue());
+      float cosPhi = (float) Math.cos(this.phiDamped.getValue());
+
+      // NOTE: this is counter-intuitive but don't be fooled, the dcx value is intentionally
+      // divided by the height, not the width, because aspect ratio is factored into perspective
+      float dcx = dx * 2.f / getHeight() * this.radiusDamped.getValuef() * tanPerspective;
+
+      float dcy = dy * 2.f / getHeight() * this.radiusDamped.getValuef() * tanPerspective;
+
+      float tx = 0, ty = 0, tz = 0;
+      if (interaction == MouseInteraction.TRANSLATE_XY) {
+        // Horizontal mouse movement goes "left and right" on screen
+        // Vertical mouse movement goes "up and down" on screen
+        tx = -dcx * cosTheta - dcy * sinTheta * sinPhi;
+        ty = dcy * cosPhi;
+        tz = -dcx * sinTheta + dcy * cosTheta * sinPhi;
+      } else if (interaction == MouseInteraction.TRANSLATE_Z) {
+        // Horizontal mouse movement is ignored
+        // Vertical mouse movement goes "in and out" of screen
+        tx = -dcy * sinTheta * cosPhi;
+        ty = -dcy * sinPhi;
+        tz = dcy * cosTheta * cosPhi;
+      }
+
+      if (this.mouseMode.getEnum() == MouseMode.VIEW) {
+        this.camera.x.incrementValue(tx);
+        this.camera.y.incrementValue(ty);
+        this.camera.z.incrementValue(tz);
+        updateFocusedCamera();
+      } else {
+        for (MovementListener listener : this.movementListeners) {
+          listener.translate(tx, ty, tz);
+        }
+      }
+      break;
+
     }
-    updateFocusedCamera();
   }
 
   @Override
