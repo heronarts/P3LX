@@ -59,13 +59,23 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
   private UI2dContainer contentTarget;
 
   public static UI2dContainer newHorizontalContainer(float height) {
-    return newHorizontalContainer(height, 0);
+    return newHorizontalContainer(height, 0, (UI2dComponent[]) null);
   }
 
   public static UI2dContainer newHorizontalContainer(float height, float childSpacing) {
-    return new UI2dContainer(0, 0, 0, height)
+    return newHorizontalContainer(height, childSpacing, (UI2dComponent[]) null);
+  }
+
+  public static UI2dContainer newHorizontalContainer(float height, float childSpacing, UI2dComponent ... children) {
+    UI2dContainer container = new UI2dContainer(0, 0, 0, height)
       .setLayout(UI2dContainer.Layout.HORIZONTAL)
       .setChildSpacing(childSpacing);
+    if (children != null) {
+      for (UI2dComponent child : children) {
+        child.addToContainer(container);
+      }
+    }
+    return container;
   }
 
   public static UI2dContainer newVerticalContainer(float width) {
@@ -73,9 +83,19 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
   }
 
   public static UI2dContainer newVerticalContainer(float width, float childSpacing) {
-    return new UI2dContainer(0, 0, width, 0)
+    return newVerticalContainer(width, childSpacing, (UI2dComponent[]) null);
+  }
+
+  public static UI2dContainer newVerticalContainer(float width, float childSpacing, UI2dComponent ... children) {
+    UI2dContainer container = new UI2dContainer(0, 0, width, 0)
       .setLayout(UI2dContainer.Layout.VERTICAL)
       .setChildSpacing(childSpacing);
+    if (children != null) {
+      for (UI2dComponent child : children) {
+        child.addToContainer(container);
+      }
+    }
+    return container;
   }
 
   public UI2dContainer(float x, float y, float w, float h) {
