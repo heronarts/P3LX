@@ -201,6 +201,13 @@ public class UI2dContainer extends UI2dComponent implements UIContainer, Iterabl
     return this;
   }
 
+  public UI2dContainer addChildren(UI2dComponent ... children) {
+    for (UI2dComponent child : children) {
+      child.addToContainer(this);
+    }
+    return this;
+  }
+
   protected void reflow() {
     if (this.layout == Layout.VERTICAL) {
       float y = this.topPadding;
