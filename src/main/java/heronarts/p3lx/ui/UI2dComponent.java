@@ -290,7 +290,7 @@ public abstract class UI2dComponent extends UIObject {
    * @param offsetY Y offset
    * @return this
    */
-  public UI2dComponent setPosition(UI2dComponent parent, float offsetX, float offsetY) {
+  public UI2dComponent setPosition(UIObject parent, float offsetX, float offsetY) {
     float x = offsetX, y = offsetY;
     while (parent != null) {
       x += parent.getX();
@@ -300,7 +300,7 @@ public abstract class UI2dComponent extends UIObject {
         x += scrollContext.getScrollX();
         y += scrollContext.getScrollY();
       }
-      parent = parent.getContainer();
+      parent = parent.getParent();
     }
     setPosition(x, y);
     return this;
