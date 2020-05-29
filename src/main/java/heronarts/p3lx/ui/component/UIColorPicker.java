@@ -48,6 +48,8 @@ public class UIColorPicker extends UI2dComponent {
 
   private UIColorOverlay uiColorOverlay = null;
 
+  private boolean enabled = true;
+
   public UIColorPicker(ColorParameter color) {
     this(UIKnob.WIDTH, UIKnob.WIDTH, color);
   }
@@ -80,6 +82,11 @@ public class UIColorPicker extends UI2dComponent {
         }
       });
     }
+  }
+
+  public UIColorPicker setEnabled(boolean enabled) {
+    this.enabled = enabled;
+    return this;
   }
 
   private final LXParameterListener redrawSwatch = (p) -> {
@@ -139,20 +146,24 @@ public class UIColorPicker extends UI2dComponent {
 
   @Override
   public void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
-    consumeMousePress();
-    showOverlay();
+    if (this.enabled) {
+      consumeMousePress();
+      showOverlay();
+    }
     super.onMousePressed(mouseEvent, mx, my);
   }
 
   @Override
   public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
-    if (keyCode == java.awt.event.KeyEvent.VK_ENTER || keyCode == java.awt.event.KeyEvent.VK_SPACE) {
-      consumeKeyEvent();
-      showOverlay();
-    } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
-      if ((this.uiColorOverlay != null) && (this.uiColorOverlay.isVisible())) {
+    if (this.enabled) {
+      if (keyCode == java.awt.event.KeyEvent.VK_ENTER || keyCode == java.awt.event.KeyEvent.VK_SPACE) {
         consumeKeyEvent();
-        hideOverlay();
+        showOverlay();
+      } else if (keyCode == java.awt.event.KeyEvent.VK_ESCAPE) {
+        if ((this.uiColorOverlay != null) && (this.uiColorOverlay.isVisible())) {
+          consumeKeyEvent();
+          hideOverlay();
+        }
       }
     }
     super.onKeyPressed(keyEvent, keyChar, keyCode);
