@@ -50,11 +50,21 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       this(0, 0, w, h);
     }
 
+    public Action(float w, float h, String label) {
+      this(0, 0, w, h, label);
+    }
+
     public Action(float x, float y, float w, float h) {
       super(x, y, w, h);
       setBorderRounding(8);
       setMomentary(true);
     }
+
+    public Action(float x, float y, float w, float h, String label) {
+      this(x, y, w, h);
+      setLabel(label);
+    }
+
   }
 
   public static class Trigger extends UIButton {
