@@ -46,6 +46,7 @@ import heronarts.lx.command.LXCommand;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UIControlTarget;
 import heronarts.p3lx.ui.UICopy;
+import heronarts.p3lx.ui.UIKeyEvent;
 import heronarts.p3lx.ui.UIModulationSource;
 import heronarts.p3lx.ui.UIModulationTarget;
 import heronarts.p3lx.ui.UIPaste;
@@ -353,7 +354,7 @@ public abstract class UIParameterControl extends UIInputBox implements UIControl
       if ((keyCode == java.awt.event.KeyEvent.VK_SPACE) || (keyCode == java.awt.event.KeyEvent.VK_ENTER)) {
         consumeKeyEvent();
         setShowValue(true);
-      } else if (isEnabled() && isEditable() && keyEvent.isShiftDown() && keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
+      } else if (isEnabled() && isEditable() && keyEvent.isShiftDown() && UIKeyEvent.isDelete(keyEvent, keyCode)) {
         consumeKeyEvent();
         if (this.parameter != null) {
           this.parameter.reset();

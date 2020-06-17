@@ -35,6 +35,7 @@ import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UI2dContainer;
 import heronarts.p3lx.ui.UI2dScrollContext;
 import heronarts.p3lx.ui.UIFocus;
+import heronarts.p3lx.ui.UIKeyEvent;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.event.Event;
@@ -813,7 +814,7 @@ public interface UIItemList {
             }
             activate();
           }
-        } else if (keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE) {
+        } else if (UIKeyEvent.isDelete(keyEvent, keyCode)) {
           consume = true;
           delete();
         } else if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
