@@ -72,6 +72,8 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
     public static final int HEIGHT = 12;
     public static final int WIDTH = 16;
 
+    private LXParameter controlTarget = null;
+
     public Trigger(UI ui, float x, float y) {
       this(ui, null, x, y);
     }
@@ -84,6 +86,19 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (trigger != null) {
         setParameter(trigger);
       }
+    }
+
+    public Trigger setControlTarget(LXParameter controlTarget) {
+      this.controlTarget = controlTarget;
+      return this;
+    }
+
+    @Override
+    public LXParameter getControlTarget() {
+      if (this.controlTarget != null) {
+        return this.controlTarget;
+      }
+      return super.getControlTarget();
     }
   }
 
