@@ -132,6 +132,14 @@ public class P3LX extends LX {
     LX.initProfiler.log("P3LX: registerMethod");
   }
 
+  @Override
+  protected void showConfirmUnsavedProjectDialog(String message, Runnable confirm) {
+    this.ui.showConfirmDialog(
+      "Your project has unsaved changes, really " + message + "?",
+      confirm
+    );
+  }
+
   /**
    * Subclass may override.
    *
