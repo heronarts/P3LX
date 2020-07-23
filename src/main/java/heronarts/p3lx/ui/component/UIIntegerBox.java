@@ -43,10 +43,8 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
   protected DiscreteParameter parameter = null;
   protected int editMultiplier = 1;
 
-  private final LXParameterListener parameterListener = new LXParameterListener() {
-    public void onParameterChanged(LXParameter p) {
-      setValue(parameter.getValuei(), false);
-    }
+  private final LXParameterListener parameterListener = (p) -> {
+    setValue(this.parameter.getValuei(), false);
   };
 
   public UIIntegerBox() {
@@ -69,6 +67,11 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
   @Override
   public String getDescription() {
     return UIParameterControl.getDescription(this.parameter);
+  }
+
+  @Override
+  public LXParameter getParameter() {
+    return this.parameter;
   }
 
   public UIIntegerBox setParameter(final DiscreteParameter parameter) {

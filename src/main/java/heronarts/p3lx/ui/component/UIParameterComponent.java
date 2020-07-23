@@ -20,9 +20,7 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
     super(x, y, w, h);
   }
 
-  public LXParameter getParameter() {
-    return null;
-  }
+  public abstract LXParameter getParameter();
 
   public String getOscAddress() {
     LXParameter parameter = getParameter();
