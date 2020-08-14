@@ -65,8 +65,16 @@ public class UIDoubleBox extends UINumberBox implements UIControlTarget, UIModul
     this(0, 0, w, parameter);
   }
 
+  public UIDoubleBox(float w, float h, BoundedParameter parameter) {
+    this(0, 0, w, h, parameter);
+  }
+
   public UIDoubleBox(float x, float y, float w, BoundedParameter parameter) {
-    this(x, y, w, DEFAULT_HEIGHT);
+    this(x, y, w, DEFAULT_HEIGHT, parameter);
+  }
+
+  public UIDoubleBox(float x, float y, float w, float h, BoundedParameter parameter) {
+    this(x, y, w, h);
     setParameter(parameter);
   }
 
