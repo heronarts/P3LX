@@ -16,6 +16,8 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
 
   public static final float DEFAULT_HEIGHT = 16;
 
+  protected boolean useCommandEngine = true;
+
   protected UIParameterComponent(float x, float y, float w, float h) {
     super(x, y, w, h);
   }
@@ -28,6 +30,11 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
       return LXOscEngine.getOscAddress(parameter);
     }
     return null;
+  }
+
+  public UIParameterComponent setUseCommandEngine(boolean useCommandEngine) {
+    this.useCommandEngine = useCommandEngine;
+    return this;
   }
 
   @Override
@@ -51,7 +58,9 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
     super.onMousePressed(mouseEvent, mx, my);
     LXParameter parameter = getParameter();
     if (parameter != null && parameter instanceof LXNormalizedParameter) {
-      this.mouseEditCommand = new LXCommand.Parameter.SetNormalized((LXNormalizedParameter) parameter);
+      if (this.useCommandEngine) {
+        this.mouseEditCommand = new LXCommand.Parameter.SetNormalized((LXNormalizedParameter) parameter);
+      }
     }
   }
 
@@ -67,7 +76,11 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
     } else {
       LXParameter parameter = getParameter();
       if (parameter != null && parameter instanceof LXNormalizedParameter) {
-        getLX().command.perform(new LXCommand.Parameter.SetNormalized((LXNormalizedParameter) parameter, newValue));
+        if (this.useCommandEngine) {
+          getLX().command.perform(new LXCommand.Parameter.SetNormalized((LXNormalizedParameter) parameter, newValue));
+        } else {
+          ((LXNormalizedParameter) parameter).setNormalized(newValue);
+        }
       }
     }
   }

@@ -197,9 +197,17 @@ public class UIKnob extends UICompoundParameterControl implements UIFocus {
     if (isEditable() && (this.parameter != null) && (mouseEvent.getCount() > 1)) {
       LXCompoundModulation modulation = getModulation(mouseEvent.isShiftDown());
       if (modulation != null && (mouseEvent.isControlDown() || mouseEvent.isMetaDown())) {
-        getLX().command.perform(new LXCommand.Parameter.Reset(modulation.range));
+        if (this.useCommandEngine) {
+          getLX().command.perform(new LXCommand.Parameter.Reset(modulation.range));
+        } else {
+          modulation.range.reset();
+        }
       } else {
-        getLX().command.perform(new LXCommand.Parameter.Reset(this.parameter));
+        if (this.useCommandEngine) {
+          getLX().command.perform(new LXCommand.Parameter.Reset(this.parameter));
+        } else {
+          this.parameter.reset();
+        }
       }
     }
   }

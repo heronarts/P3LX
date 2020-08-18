@@ -153,7 +153,11 @@ public class UIIntegerBox extends UINumberBox implements UIControlTarget {
       }
       this.value = min + (value - min) % range;
       if (this.parameter != null && pushToParameter) {
-        getLX().command.perform(new LXCommand.Parameter.SetValue(this.parameter, this.value));
+        if (this.useCommandEngine) {
+          getLX().command.perform(new LXCommand.Parameter.SetValue(this.parameter, this.value));
+        } else {
+          this.parameter.setValue(this.value);
+        }
       }
       this.onValueChange(this.value);
       redraw();

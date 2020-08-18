@@ -345,7 +345,11 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
     if (this.mouseDragSetValue != null) {
       getLX().command.perform(this.mouseDragSetValue.update(value));
     } else if (getParameter() != null){
-      getLX().command.perform(new LXCommand.Parameter.SetValue(getParameter(), value));
+      if (this.useCommandEngine) {
+        getLX().command.perform(new LXCommand.Parameter.SetValue(getParameter(), value));
+      } else {
+        getParameter().setValue(value);
+      }
     }
   }
 
@@ -355,7 +359,9 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
     this.dAccum = 0;
     LXParameter parameter = getParameter();
     if (parameter != null) {
-      this.mouseDragSetValue = new LXCommand.Parameter.SetValue(parameter, 0);
+      if (this.useCommandEngine) {
+        this.mouseDragSetValue = new LXCommand.Parameter.SetValue(parameter, 0);
+      }
     }
   }
 

@@ -98,7 +98,11 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
     if (!this.value.equals(value)) {
       this.value = value;
       if (pushToParameter && (this.parameter != null)) {
-        getUI().lx.command.perform(new LXCommand.Parameter.SetString(this.parameter, value));
+        if (this.useCommandEngine) {
+          getUI().lx.command.perform(new LXCommand.Parameter.SetString(this.parameter, value));
+        } else {
+          this.parameter.setValue(value);
+        }
       }
       this.onValueChange(this.value);
       redraw();

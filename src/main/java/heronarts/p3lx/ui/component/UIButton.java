@@ -404,13 +404,21 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (pushToParameter) {
         if (this.enumParameter != null) {
           if (active) {
-            getLX().command.perform(new LXCommand.Parameter.Increment(this.enumParameter));
+            if (this.useCommandEngine) {
+              getLX().command.perform(new LXCommand.Parameter.Increment(this.enumParameter));
+            } else {
+              this.enumParameter.increment();
+            }
           }
         } else if (this.booleanParameter != null) {
           if (this.isMomentary) {
             this.booleanParameter.setValue(active);
           } else {
-            getLX().command.perform(new LXCommand.Parameter.SetNormalized(this.booleanParameter, active));
+            if (this.useCommandEngine) {
+              getLX().command.perform(new LXCommand.Parameter.SetNormalized(this.booleanParameter, active));
+            } else {
+              this.booleanParameter.setValue(active);
+            }
           }
 
         }
