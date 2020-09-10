@@ -581,7 +581,7 @@ public class UI implements LXEngine.Dispatch {
     return this.midiMapping || this.modulationSourceMapping || this.modulationTargetMapping || this.triggerSourceMapping || this.triggerTargetMapping;
   }
 
-  void setMouseoverHelpText(String helpText) {
+  public void setMouseoverHelpText(String helpText) {
     if (!isMapping()) {
       this.contextualHelpText.setValue(helpText);
     }
