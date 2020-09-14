@@ -60,6 +60,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   public static final int NUM_CAMERA_POSITIONS = 6;
 
   public static interface MovementListener {
+    public void reset();
     public void translate(float x, float y, float z);
     public void rotate(float theta, float phi);
   }
@@ -216,7 +217,7 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
    */
   private final List<MovementListener> movementListeners = new ArrayList<MovementListener>();
 
-  public final void addMovementistener(MovementListener listener) {
+  public final void addMovementListener(MovementListener listener) {
     Objects.requireNonNull(listener, "Cannot add null UI3dContext.MovementListener");
     if (this.movementListeners.contains(listener)) {
       throw new IllegalStateException("Cannot add duplicate UI3dContext.MovementListener: " + listener);
@@ -936,6 +937,9 @@ public class UI3dContext extends UIObject implements LXSerializable, UITabFocus 
   protected void onMousePressed(MouseEvent mouseEvent, float mx, float my) {
     if (mouseEvent.getCount() > 1) {
       focus(mouseEvent);
+    }
+    for (MovementListener listener : this.movementListeners) {
+      listener.reset();
     }
   }
 
