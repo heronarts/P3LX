@@ -69,9 +69,17 @@ public class UIButtonGroup extends UI2dContainer implements UIControlTarget, UIC
         public void onToggle(boolean enabled) {
           if (!inParameterUpdate) {
             if (enabled) {
-              getLX().command.perform(new LXCommand.Parameter.SetValue(parameter, iv));
+              if (this.useCommandEngine) {
+                getLX().command.perform(new LXCommand.Parameter.SetValue(parameter, iv));
+              } else {
+                parameter.setValue(iv);
+              }
             } else if (hideFirst) {
-              getLX().command.perform(new LXCommand.Parameter.SetValue(parameter, 0));
+              if (this.useCommandEngine) {
+                getLX().command.perform(new LXCommand.Parameter.SetValue(parameter, 0));
+              } else {
+                parameter.setValue(0);
+              }
             }
           }
         }

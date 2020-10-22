@@ -25,6 +25,7 @@ import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UI2dComponent;
 import heronarts.p3lx.ui.UI2dContainer;
 import heronarts.p3lx.ui.UIFocus;
+import heronarts.p3lx.ui.UIKeyEvent;
 import heronarts.p3lx.ui.UITimerTask;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -62,7 +63,7 @@ public class UIDynamicColorPicker extends UIColorPicker implements UIFocus {
 
   @Override
   public void onKeyPressed(KeyEvent keyEvent, char keyChar, int keyCode) {
-    if (keyCode == java.awt.event.KeyEvent.VK_BACK_SPACE || keyCode == java.awt.event.KeyEvent.VK_DELETE) {
+    if (UIKeyEvent.isDelete(keyEvent, keyCode)) {
       if (this.dynamicColor.getIndex() > 0) {
         consumeKeyEvent();
         hideOverlay();

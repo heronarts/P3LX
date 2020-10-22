@@ -40,10 +40,8 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
   private String value = NO_VALUE;
   private StringParameter parameter = null;
 
-  private final LXParameterListener parameterListener = new LXParameterListener() {
-    public void onParameterChanged(LXParameter p) {
-      setValue(parameter.getString(), false);
-    }
+  private final LXParameterListener parameterListener = (p) -> {
+    setValue(this.parameter.getString(), false);
   };
 
   public UITextBox() {
@@ -52,6 +50,11 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   public UITextBox(float x, float y, float w, float h) {
     super(x, y, w, h);
+  }
+
+  @Override
+  public LXParameter getParameter() {
+    return this.parameter;
   }
 
   public UITextBox setParameter(StringParameter parameter) {
@@ -95,7 +98,11 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
     if (!this.value.equals(value)) {
       this.value = value;
       if (pushToParameter && (this.parameter != null)) {
-        getUI().lx.command.perform(new LXCommand.Parameter.SetString(this.parameter, value));
+        if (this.useCommandEngine) {
+          getUI().lx.command.perform(new LXCommand.Parameter.SetString(this.parameter, value));
+        } else {
+          this.parameter.setValue(value);
+        }
       }
       this.onValueChange(this.value);
       redraw();

@@ -50,17 +50,29 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       this(0, 0, w, h);
     }
 
+    public Action(float w, float h, String label) {
+      this(0, 0, w, h, label);
+    }
+
     public Action(float x, float y, float w, float h) {
       super(x, y, w, h);
       setBorderRounding(8);
       setMomentary(true);
     }
+
+    public Action(float x, float y, float w, float h, String label) {
+      this(x, y, w, h);
+      setLabel(label);
+    }
+
   }
 
   public static class Trigger extends UIButton {
 
     public static final int HEIGHT = 12;
     public static final int WIDTH = 16;
+
+    private LXParameter controlTarget = null;
 
     public Trigger(UI ui, float x, float y) {
       this(ui, null, x, y);
@@ -74,6 +86,19 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (trigger != null) {
         setParameter(trigger);
       }
+    }
+
+    public Trigger setControlTarget(LXParameter controlTarget) {
+      this.controlTarget = controlTarget;
+      return this;
+    }
+
+    @Override
+    public LXParameter getControlTarget() {
+      if (this.controlTarget != null) {
+        return this.controlTarget;
+      }
+      return super.getControlTarget();
     }
   }
 
@@ -379,13 +404,21 @@ public class UIButton extends UIParameterComponent implements UIControlTarget, U
       if (pushToParameter) {
         if (this.enumParameter != null) {
           if (active) {
-            getLX().command.perform(new LXCommand.Parameter.Increment(this.enumParameter));
+            if (this.useCommandEngine) {
+              getLX().command.perform(new LXCommand.Parameter.Increment(this.enumParameter));
+            } else {
+              this.enumParameter.increment();
+            }
           }
         } else if (this.booleanParameter != null) {
           if (this.isMomentary) {
             this.booleanParameter.setValue(active);
           } else {
-            getLX().command.perform(new LXCommand.Parameter.SetNormalized(this.booleanParameter, active));
+            if (this.useCommandEngine) {
+              getLX().command.perform(new LXCommand.Parameter.SetNormalized(this.booleanParameter, active));
+            } else {
+              this.booleanParameter.setValue(active);
+            }
           }
 
         }
