@@ -156,10 +156,8 @@ public class P3LX extends LX {
    */
   @Override
   public void dispose() {
-    // TODO(mclsee): possible bug here, this is called on the processing UI
-    // thread but the LX.dispose() method expects to be run on the LX engine
-    // thread. Not a big deal since we're already quitting at this point,
-    // but could be slightly improved.
+    // Stops and joins the LX engine thread, if separate
+    this.engine.onP3DidDispose();
     super.dispose();
   }
 
