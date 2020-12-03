@@ -18,11 +18,19 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
 
   protected boolean useCommandEngine = true;
 
+  private boolean enableContextActions = true;
+
+
   protected UIParameterComponent(float x, float y, float w, float h) {
     super(x, y, w, h);
   }
 
   public abstract LXParameter getParameter();
+
+  public UIParameterComponent setEnableContextActions(boolean enableContextActions) {
+    this.enableContextActions = enableContextActions;
+    return this;
+  }
 
   public String getOscAddress() {
     LXParameter parameter = getParameter();
@@ -39,6 +47,9 @@ public abstract class UIParameterComponent extends UI2dComponent implements UICo
 
   @Override
   public List<Action> getContextActions() {
+    if (!this.enableContextActions) {
+      return null;
+    }
     List<Action> actions = new ArrayList<Action>();
     LXParameter parameter = getParameter();
     if (parameter != null && !(parameter instanceof BooleanParameter)) {
