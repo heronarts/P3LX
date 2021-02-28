@@ -32,7 +32,8 @@ import processing.core.PShape;
 
 public class UIPShape extends UI3dComponent {
 
-  private final PShape shape;
+  public final PShape shape;
+
   private float x = 0;
   private float y = 0;
   private float w = 0;
