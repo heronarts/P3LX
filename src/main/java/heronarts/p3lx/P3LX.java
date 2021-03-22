@@ -121,15 +121,15 @@ public class P3LX extends LX {
     this.uiFrame = new LXEngine.Frame(this);
     this.engine.getFrameNonThreadSafe(this.uiFrame);
 
+    applet.registerMethod("draw", this);
+    applet.registerMethod("dispose", this);
+    LX.initProfiler.log("P3LX: registerMethod");
+
     this.ui = buildUI();
     LX.initProfiler.log("P3LX: UI");
 
     applet.colorMode(PConstants.HSB, 360, 100, 100, 100);
     LX.initProfiler.log("P3LX: colorMode");
-
-    applet.registerMethod("draw", this);
-    applet.registerMethod("dispose", this);
-    LX.initProfiler.log("P3LX: registerMethod");
   }
 
   @Override
