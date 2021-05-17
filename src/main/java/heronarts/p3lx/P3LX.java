@@ -71,6 +71,7 @@ public class P3LX extends LX {
   public static class Flags extends LX.Flags {
     public boolean keyboardTempo = false;
     public boolean showFramerate = false;
+    public boolean headless = false;
 
     public Flags(PApplet applet) {
       this.isP3LX = true;
@@ -125,8 +126,12 @@ public class P3LX extends LX {
     applet.registerMethod("dispose", this);
     LX.initProfiler.log("P3LX: registerMethod");
 
-    this.ui = buildUI();
-    LX.initProfiler.log("P3LX: UI");
+    if (flags.headless) {
+      this.ui = null;
+    } else {
+      this.ui = buildUI();
+      LX.initProfiler.log("P3LX: UI");
+    }
 
     applet.colorMode(PConstants.HSB, 360, 100, 100, 100);
     LX.initProfiler.log("P3LX: colorMode");
@@ -134,10 +139,14 @@ public class P3LX extends LX {
 
   @Override
   protected void showConfirmUnsavedProjectDialog(String message, Runnable confirm) {
-    this.ui.showConfirmDialog(
-      "Your project has unsaved changes, really " + message + "?",
-      confirm
-    );
+    if (this.ui != null) {
+      this.ui.showConfirmDialog(
+        "Your project has unsaved changes, really " + message + "?",
+        confirm
+      );
+    } else {
+      super.showConfirmUnsavedProjectDialog(message, confirm);
+    }
   }
 
   /**
