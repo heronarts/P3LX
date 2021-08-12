@@ -96,9 +96,12 @@ public class UITheme {
   public final PImage iconPreferences;
 
   UITheme(PApplet applet) {
-    this.controlFont = applet.loadFont("ArialUnicodeMS-10.vlw");
+    // this.controlFont = applet.loadFont("ArialUnicodeMS-10.vlw");
+    this.controlFont = applet.createFont("Inter-SemiBold.ttf", 10);
     LX.initProfiler.log("P3LX: UI: Theme: controlFont");
-    this.labelFont = this.deviceFont = this.windowTitleFont = applet.loadFont("Arial-Black-9.vlw");
+
+    // this.labelFont = this.deviceFont = this.windowTitleFont = applet.loadFont("Arial-Black-9.vlw");
+    this.labelFont = this.deviceFont = this.windowTitleFont = applet.createFont("Inter-Black.ttf", 10);
     LX.initProfiler.log("P3LX: UI: Theme: windowTitleFont");
 
     this.iconNote = applet.loadImage("icon-note.png");

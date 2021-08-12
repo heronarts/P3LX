@@ -637,10 +637,10 @@ public interface UIItemList {
           pg.fill(UI.BLACK);
           pg.rect(textX-2, yp+1, rowWidth - PADDING - textX + 2, ROW_HEIGHT-2, 4);
           pg.fill(UI.WHITE);
-          pg.text(UI2dComponent.clipTextToWidth(pg, this.renameBuffer, rowWidth - textX - 2), textX, yp + 4);
+          pg.text(UI2dComponent.clipTextToWidth(pg, this.renameBuffer, rowWidth - textX - 2), textX, yp + 2);
         } else {
           pg.fill(textColor);
-          pg.text(UI2dComponent.clipTextToWidth(pg, item.getLabel(), rowWidth - textX - 2), textX, yp + 4);
+          pg.text(UI2dComponent.clipTextToWidth(pg, item.getLabel(), rowWidth - textX - 2), textX, yp + 2);
         }
         yp += ROW_SPACING;
 

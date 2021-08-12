@@ -176,10 +176,9 @@ public class UIDropMenu extends UIParameterComponent implements UIFocus, UIContr
     pg.textFont(hasFont() ? getFont() : ui.theme.getControlFont());
     pg.fill(this.enabled ? ui.theme.getControlTextColor() : ui.theme.getControlDisabledTextColor());
     pg.textAlign(PConstants.LEFT, PConstants.TOP);
-    pg.text(clipTextToWidth(pg, text, this.width - 12), 4 + this.textOffsetX, 4 + this.textOffsetY);
+    pg.text(clipTextToWidth(pg, text, this.width - 12), 4 + this.textOffsetX, 2 + this.textOffsetY);
     pg.textAlign(PConstants.RIGHT, PConstants.TOP);
-    pg.text("\u25BC", this.width-4, 4 + this.textOffsetY);
-
+    pg.text("\u25BC", this.width-4, 2 + this.textOffsetY);
   }
 
   private void toggleExpanded() {
