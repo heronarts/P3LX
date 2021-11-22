@@ -6,6 +6,43 @@
     <artifactId>p3lx</artifactId>
     <version>0.2.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	
+	<name>P3LX</name>
+	<description>Libraries for real-time procedural 3-D lighting animation and control.</description>
+	<url>http://lx.studio</url>
+	
+	<licenses>
+		<license>
+			<name>LX Studio Software License and Distribution Agreement</name>
+			<url>http://lx.studio/license</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Mark Slee</name>
+			<email>mark@heronarts.com</email>
+			<organization>Heron Arts</organization>
+			<organizationUrl>http://github.com/heronarts/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/heronarts/P3LX.git</connection>
+		<developerConnection>scm:git:git://github.com/heronarts/P3LX.git</developerConnection>
+		<url>http://github.com/heronarts/P3LX/tree/master</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -38,7 +75,7 @@
         <dependency>
             <groupId>org.processing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.7</version>
+            <version>3.5.4</version>
             <scope>provided</scope>
         </dependency>
         
@@ -46,6 +83,28 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <groupId>org.processing</groupId>
+                    <artifactId>core</artifactId>
+                    <version>3.5.4</version>
+                    <packaging>jar</packaging>
+                    <file>${basedir}/classpath/core-3.5.4.jar</file>
+                    <generatePom>true</generatePom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-jar-lib</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -71,7 +130,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <bottom>P3LX library by Mark C. Slee. (C) 2012-2020</bottom>
+                    <bottom>P3LX library by Mark C. Slee. &copy; 2012-2021</bottom>
                     <verbose>false</verbose>
                     <stylesheetfile>build/stylesheet.css</stylesheetfile>
                     <doctitle>P3LX API Specification</doctitle>
@@ -114,9 +173,40 @@
 	                    </goals>
 	                </execution>
 	            </executions>
-        	</plugin>            
-
+        	</plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <id>deploy</id>
+           	<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+            </distributionManagement>
+            <build>
+	            <plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+	            </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
