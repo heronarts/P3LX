@@ -64,8 +64,8 @@ public class UICollapsibleSection extends UI2dContainer implements UIMouseFocus 
     setFocusBackgroundColor(ui.theme.getDeviceFocusedBackgroundColor());
     setBorderRounding(4);
 
-    this.title = new UILabel(PADDING, PADDING + 1, this.width - PADDING - CHEVRON_PADDING, TITLE_LABEL_HEIGHT);
-    this.title.setTextAlignment(PConstants.LEFT, PConstants.TOP).setTextOffset(0,  1);
+    this.title = new UILabel(PADDING, PADDING, this.width - PADDING - CHEVRON_PADDING, TITLE_LABEL_HEIGHT);
+    this.title.setTextAlignment(PConstants.LEFT, PConstants.TOP);
     addTopLevelComponent(this.title);
 
     setHeight(this.expandedHeight = (int) Math.max(CLOSED_HEIGHT, h));

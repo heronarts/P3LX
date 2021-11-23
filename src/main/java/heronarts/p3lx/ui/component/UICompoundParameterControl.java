@@ -31,9 +31,12 @@ import heronarts.lx.parameter.LXListenableParameter;
 import heronarts.lx.parameter.LXNormalizedParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.LXParameterListener;
+import heronarts.lx.command.LXCommand;
 import heronarts.lx.modulation.LXCompoundModulation;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.p3lx.ui.UITimerTask;
+import heronarts.p3lx.ui.UI;
+import heronarts.p3lx.ui.UIContextActions;
 
 public class UICompoundParameterControl extends UIParameterControl {
   private double lastParameterValue = 0;
@@ -99,4 +102,22 @@ public class UICompoundParameterControl extends UIParameterControl {
       }
     }
   }
+
+  @Override
+  public List<UIContextActions.Action> getContextActions() {
+    List<UIContextActions.Action> actions = super.getContextActions();
+    if (this.parameter instanceof CompoundParameter) {
+      final CompoundParameter cp = (CompoundParameter) this.parameter;
+      if (!cp.modulations.isEmpty()) {
+        actions.add(new UIContextActions.Action("Remove Modulation") {
+          @Override
+          public void onContextAction(UI ui) {
+            ui.lx.command.perform(new LXCommand.Modulation.RemoveModulations(cp));
+          }
+        });
+      }
+    }
+    return actions;
+  }
+
 }

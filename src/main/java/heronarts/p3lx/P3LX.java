@@ -71,6 +71,7 @@ public class P3LX extends LX {
   public static class Flags extends LX.Flags {
     public boolean keyboardTempo = false;
     public boolean showFramerate = false;
+    public boolean headless = false;
 
     public Flags(PApplet applet) {
       this.isP3LX = true;
@@ -121,23 +122,31 @@ public class P3LX extends LX {
     this.uiFrame = new LXEngine.Frame(this);
     this.engine.getFrameNonThreadSafe(this.uiFrame);
 
-    this.ui = buildUI();
-    LX.initProfiler.log("P3LX: UI");
-
-    applet.colorMode(PConstants.HSB, 360, 100, 100, 100);
-    LX.initProfiler.log("P3LX: colorMode");
-
     applet.registerMethod("draw", this);
     applet.registerMethod("dispose", this);
     LX.initProfiler.log("P3LX: registerMethod");
+
+    if (flags.headless) {
+      this.ui = null;
+    } else {
+      this.ui = buildUI();
+      LX.initProfiler.log("P3LX: UI");
+    }
+
+    applet.colorMode(PConstants.HSB, 360, 100, 100, 100);
+    LX.initProfiler.log("P3LX: colorMode");
   }
 
   @Override
   protected void showConfirmUnsavedProjectDialog(String message, Runnable confirm) {
-    this.ui.showConfirmDialog(
-      "Your project has unsaved changes, really " + message + "?",
-      confirm
-    );
+    if (this.ui != null) {
+      this.ui.showConfirmDialog(
+        "Your project has unsaved changes, really " + message + "?",
+        confirm
+      );
+    } else {
+      super.showConfirmUnsavedProjectDialog(message, confirm);
+    }
   }
 
   /**
@@ -156,10 +165,8 @@ public class P3LX extends LX {
    */
   @Override
   public void dispose() {
-    // TODO(mclsee): possible bug here, this is called on the processing UI
-    // thread but the LX.dispose() method expects to be run on the LX engine
-    // thread. Not a big deal since we're already quitting at this point,
-    // but could be slightly improved.
+    // Stops and joins the LX engine thread, if separate
+    this.engine.onP3DidDispose();
     super.dispose();
   }
 

@@ -257,10 +257,10 @@ public abstract class UIInputBox extends UIParameterComponent implements UIFocus
       displayString = clipTextToWidth(pg, displayString, this.width - TEXT_MARGIN);
       if (this.textAlignHorizontal == PConstants.LEFT) {
         pg.textAlign(PConstants.LEFT, PConstants.CENTER);
-        pg.text(displayString, 2, this.height / 2);
+        pg.text(displayString, 2, this.height / 2 - 1);
       } else {
         pg.textAlign(PConstants.CENTER, PConstants.CENTER);
-        pg.text(displayString, this.width / 2, this.height / 2);
+        pg.text(displayString, this.width / 2, this.height / 2 - 1);
       }
 
     }

@@ -12,19 +12,12 @@ Directly working with the P3LX library is only recommended for advanced users of
 
 ### Development Environment ###
 
-The recommended IDE for LX is Eclipse, with simple `ant` tasks for command-line build. Create a folder to work in and clone both the LX and P3LX repositories side-by-side.
+The recommended IDE for LX is Eclipse, using `mvn` for command-line build. Create a folder to work in and clone both the LX and P3LX repositories side-by-side.
 ```
 $ mkdir workspace
 $ cd workspace
 $ git clone https://github.com/heronarts/LX.git
 $ git clone https://github.com/heronarts/P3LX.git
-```
-
-To build the project:
-```
-$ cd P3LX/build
-$ ant
-$ cp ../bin/P3LX.jar <wherever you need it>
 ```
 
 To open the project in Eclipse:
@@ -36,14 +29,19 @@ Select root directory...
 
 Go through this process for both the LX and P3LX projects, selecting `workspace/LX` and `workspace/P3LX` as the root directories.
 
-#### Alternate build process: Maven ####
+#### Maven Build Process ####
+
 First: Install Maven for your platform. Google is your friend.
 
-You'll still want to check out both LX and this repo locally (as of this writing neither is published to a public Maven repo):
+P3LX depends upon the Processing core library JAR file, which is not available in Maven central. First, you will need to install this to your local Maven repository using the `mvn validate` command. 
 ```
-$ git clone https://github.com/heronarts/LX.git
-$ git clone https://github.com/heronarts/P3LX.git
-$ cd LX
+$ cd P3LX
+# mvn validate
+```
+
+Once you have done this, you can build and install both the LX and P3LX packages
+```
+$ cd ../LX
 $ mvn install
 $ cd ../P3LX
 $ mvn install
@@ -57,6 +55,15 @@ in `P3LX/target`:
 1. javadoc html files for publishing to web: `apidocs`
 
 The Maven build is IDE-agnostic, so any IDE that can import Maven projects (Eclipse, IntelliJ) should have no problem importing and building this repo.
+
+#### Deployment ####
+
+Deployment requires access to the central Sonatype repository and appropriate GPG keys.
+
+```
+$ cd P3LX
+$ mvn deploy -Pdeploy
+```
 
 ### Contact and Collaboration ###
 

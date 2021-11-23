@@ -816,7 +816,13 @@ public class UI implements LXEngine.Dispatch {
   }
 
   void redraw(UI2dComponent object) {
-    this.threadSafeRedrawList.add(object);
+    // NOTE(mcslee): determined empirically that it's worth putting this check here
+    // to avoid contention on this synchronized list between the UI and engine threads.
+    // adding the same container to be redrawn loads of times slows down. keeping the
+    // redraw list short is better.
+    if (!this.threadSafeRedrawList.contains(object)) {
+      this.threadSafeRedrawList.add(object);
+    }
   }
 
   public void resize(int width, int height) {
