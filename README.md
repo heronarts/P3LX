@@ -56,6 +56,15 @@ in `P3LX/target`:
 
 The Maven build is IDE-agnostic, so any IDE that can import Maven projects (Eclipse, IntelliJ) should have no problem importing and building this repo.
 
+#### Deployment ####
+
+Deployment requires access to the central Sonatype repository and appropriate GPG keys.
+
+```
+$ cd ../P3LX
+$ mvn deploy -Pdeploy
+```
+
 ### Contact and Collaboration ###
 
 Building a big cool project? I'm probably interested in hearing about it! Want to solicit some help, request new framework features, or just ask a random question? Drop me a line: mark@heronarts.com

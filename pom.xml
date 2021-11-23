@@ -130,7 +130,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <bottom>P3LX library by Mark C. Slee. &copy; 2012-2021</bottom>
+                    <bottom>P3LX library by Mark C. Slee. &#169; 2012-2021</bottom>
                     <verbose>false</verbose>
                     <stylesheetfile>build/stylesheet.css</stylesheetfile>
                     <doctitle>P3LX API Specification</doctitle>
