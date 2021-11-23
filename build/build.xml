@@ -168,7 +168,7 @@ ${line}
 
 	<target name="generate.javadoc">
 		<!-- create the java reference of the library -->
-		<javadoc bottom="Processing library ${project.name} by ${author.name}. ${library.copyright}" classpath="${classpath.local.location}/core-3.5.4.jar;${classpath.local.location}/jogl-all-2.3.2.jar;${project.lib}/coremidi4j-1.4.jar;${project.lib}/gson-2.8.0.jar;{project.bin}" destdir="${project.tmp}/${project.name}/reference" verbose="false" stylesheetfile="build/stylesheet.css" doctitle="${project.name} API Specification" version="false" windowtitle="${project.name} API">
+		<javadoc bottom="Processing library ${project.name} by ${author.name}. ${library.copyright}" classpath="${classpath.local.location}/core-3.5.4.jar;${classpath.local.location}/jogl-all-2.3.2.jar;${project.lib}/coremidi4j-1.6.jar;${project.lib}/gson-2.8.9.jar;{project.bin}" destdir="${project.tmp}/${project.name}/reference" verbose="false" stylesheetfile="build/stylesheet.css" doctitle="${project.name} API Specification" version="false" windowtitle="${project.name} API">
 
 			<link href="${javadoc.java.href}" />
 			<link href="${javadoc.processing.href}" />
@@ -237,8 +237,8 @@ ${line}
 		<jar jarfile="${project.bin}/${project.jar.name}" basedir="${project.bin}">
 			<fileset dir="${basedir}" includes="LICENSE VERSION" />
 			<fileset dir="${project.resources}" includes="data/**" />
-			<zipgroupfileset dir="${project.lib}" includes="coremidi4j-1.4.jar" />
-			<zipgroupfileset dir="${project.lib}" includes="gson-2.8.6.jar" />
+			<zipgroupfileset dir="${project.lib}" includes="coremidi4j-1.6.jar" />
+			<zipgroupfileset dir="${project.lib}" includes="gson-2.8.9.jar" />
 		</jar>
 	</target>
 

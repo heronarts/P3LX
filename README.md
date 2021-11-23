@@ -61,7 +61,7 @@ The Maven build is IDE-agnostic, so any IDE that can import Maven projects (Ecli
 Deployment requires access to the central Sonatype repository and appropriate GPG keys.
 
 ```
-$ cd ../P3LX
+$ cd P3LX
 $ mvn deploy -Pdeploy
 ```
 
