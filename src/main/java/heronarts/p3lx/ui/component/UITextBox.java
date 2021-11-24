@@ -39,6 +39,7 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   private String value = NO_VALUE;
   private StringParameter parameter = null;
+  private boolean isEmptyValueAllowed = false;
 
   private final LXParameterListener parameterListener = (p) -> {
     setValue(this.parameter.getString(), false);
@@ -90,6 +91,11 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
     return this.value;
   }
 
+  public UITextBox setEmptyValueAllowed(boolean isEmptyValueAllowed) {
+    this.isEmptyValueAllowed = isEmptyValueAllowed;
+    return this;
+  }
+
   public UITextBox setValue(String value) {
     return setValue(value, true);
   }
@@ -121,7 +127,7 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
   @Override
   protected void saveEditBuffer() {
     String value = this.editBuffer.trim();
-    if (value.length() > 0) {
+    if (this.isEmptyValueAllowed || (value.length() > 0)) {
       setValue(value);
     }
   }
