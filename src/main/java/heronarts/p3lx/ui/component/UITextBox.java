@@ -36,10 +36,13 @@ import heronarts.p3lx.ui.UIPaste;
 public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   private final static String NO_VALUE = "-";
+  private static final String VALID_CHARACTERS =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.<>?;':\"[]{}-=_+`~!@#$%^&*()|1234567890/\\";
 
   private String value = NO_VALUE;
   private StringParameter parameter = null;
   private boolean isEmptyValueAllowed = false;
+  private String validCharacters = VALID_CHARACTERS;
 
   private final LXParameterListener parameterListener = (p) -> {
     setValue(this.parameter.getString(), false);
@@ -132,8 +135,16 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
     }
   }
 
-  private static final String VALID_CHARACTERS =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.<>?;':\"[]{}-=_+`~!@#$%^&*()|1234567890/\\";
+  /**
+   * Set a custom list of valid characters for this text box
+   *
+   * @param validCharacters Valid characters
+   * @return this
+   */
+  public UITextBox setValidCharacters(String validCharacters) {
+    this.validCharacters = validCharacters;
+    return this;
+  }
 
   public static boolean isValidTextCharacter(char keyChar) {
     return VALID_CHARACTERS.indexOf(keyChar) >= 0;
@@ -141,7 +152,7 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   @Override
   protected boolean isValidCharacter(char keyChar) {
-    return isValidTextCharacter(keyChar);
+    return this.validCharacters.indexOf(keyChar) >= 0;
   }
 
   @Override
