@@ -4,7 +4,7 @@
 
     <groupId>com.heronarts</groupId>
     <artifactId>p3lx</artifactId>
-    <version>0.2.3-SNAPSHOT</version>
+    <version>0.2.3</version>
 	<packaging>jar</packaging>
 	
 	<name>P3LX</name>
