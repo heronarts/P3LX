@@ -36,9 +36,13 @@ import heronarts.p3lx.ui.UIPaste;
 public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   private final static String NO_VALUE = "-";
+  private static final String VALID_CHARACTERS =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.<>?;':\"[]{}-=_+`~!@#$%^&*()|1234567890/\\";
 
   private String value = NO_VALUE;
   private StringParameter parameter = null;
+  private boolean isEmptyValueAllowed = false;
+  private String validCharacters = VALID_CHARACTERS;
 
   private final LXParameterListener parameterListener = (p) -> {
     setValue(this.parameter.getString(), false);
@@ -90,6 +94,11 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
     return this.value;
   }
 
+  public UITextBox setEmptyValueAllowed(boolean isEmptyValueAllowed) {
+    this.isEmptyValueAllowed = isEmptyValueAllowed;
+    return this;
+  }
+
   public UITextBox setValue(String value) {
     return setValue(value, true);
   }
@@ -121,13 +130,21 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
   @Override
   protected void saveEditBuffer() {
     String value = this.editBuffer.trim();
-    if (value.length() > 0) {
+    if (this.isEmptyValueAllowed || (value.length() > 0)) {
       setValue(value);
     }
   }
 
-  private static final String VALID_CHARACTERS =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.<>?;':\"[]{}-=_+`~!@#$%^&*()|1234567890/\\";
+  /**
+   * Set a custom list of valid characters for this text box
+   *
+   * @param validCharacters Valid characters
+   * @return this
+   */
+  public UITextBox setValidCharacters(String validCharacters) {
+    this.validCharacters = validCharacters;
+    return this;
+  }
 
   public static boolean isValidTextCharacter(char keyChar) {
     return VALID_CHARACTERS.indexOf(keyChar) >= 0;
@@ -135,7 +152,7 @@ public class UITextBox extends UIInputBox implements UICopy, UIPaste {
 
   @Override
   protected boolean isValidCharacter(char keyChar) {
-    return isValidTextCharacter(keyChar);
+    return this.validCharacters.indexOf(keyChar) >= 0;
   }
 
   @Override
