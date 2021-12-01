@@ -8,6 +8,8 @@ Please note that LX is not open-source software. The license grants permission t
 
 With the arrival of Processing 4, development of P3LX will not continue. New work will be conducted on the [P4LX](https://github.com/heronarts/P4LX) project, which maintains all P3LX version history. Upgrading is highly recommend, Processing 3 is already proving unreliable on newer Mac machines, as the JOGL libraries in Processing 3 are quite out of date. This is recommend by the Processing team, for context see: https://github.com/processing/processing/issues/6121
 
+---
+
 ### P3LX Overview ###
 
 P3LX is a Processing 3 wrapper library for the [LX](https://github.com/heronarts/LX) lighting engine and the basis of the [LX Studio](http://lx.studio/) application. It allows you to simply embed LX inside a Processing sketch with a rich UI library that makes it easy and painless to render 3D simulations alongside versatile 2D controls.
