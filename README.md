@@ -1,4 +1,5 @@
-### END OF LIFECYCLE NOTICE ###
+END OF LIFECYCLE NOTICE
+===
 
 With the arrival of Processing 4, development of P3LX will not continue. New work will be conducted on the [P4LX](https://github.com/heronarts/P4LX) project, which maintains all P3LX version history. Upgrading is highly recommend, Processing 3 is already proving unreliable on newer Mac machines, as the JOGL libraries in Processing 3 are quite out of date. This is recommend by the Processing team, for context see: https://github.com/processing/processing/issues/6121
 
