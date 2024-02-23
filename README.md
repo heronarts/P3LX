@@ -1,12 +1,12 @@
-**BY DOWNLOADING OR USING THE LX SOFTWARE OR ANY PART THEREOF, YOU AGREE TO THE TERMS AND CONDITIONS OF THE [LX STUDIO SOFTWARE LICENSE AND DISTRIBUTION AGREEMENT](http://lx.studio/license).**
-
-Please note that LX is not open-source software. The license grants permission to use this software freely in non-commercial applications. Commercial use is subject to a total annual revenue limit of $25K on any and all projects associated with the software. If this licensing is obstructive to your needs or you are unclear as to whether your desired use case is compliant, contact me to discuss proprietary licensing: mark@heronarts.com
-
----
-
 ### END OF LIFECYCLE NOTICE ###
 
 With the arrival of Processing 4, development of P3LX will not continue. New work will be conducted on the [P4LX](https://github.com/heronarts/P4LX) project, which maintains all P3LX version history. Upgrading is highly recommend, Processing 3 is already proving unreliable on newer Mac machines, as the JOGL libraries in Processing 3 are quite out of date. This is recommend by the Processing team, for context see: https://github.com/processing/processing/issues/6121
+
+---
+
+**BY DOWNLOADING OR USING THE LX SOFTWARE OR ANY PART THEREOF, YOU AGREE TO THE TERMS AND CONDITIONS OF THE [LX STUDIO SOFTWARE LICENSE AND DISTRIBUTION AGREEMENT](http://lx.studio/license).**
+
+Please note that LX is not open-source software. The license grants permission to use this software freely in non-commercial applications. Commercial use is subject to a total annual revenue limit of $25K on any and all projects associated with the software. If this licensing is obstructive to your needs or you are unclear as to whether your desired use case is compliant, contact me to discuss proprietary licensing: mark@heronarts.com
 
 ---
 
